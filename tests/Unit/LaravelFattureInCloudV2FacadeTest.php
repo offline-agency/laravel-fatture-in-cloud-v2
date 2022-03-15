@@ -19,7 +19,8 @@ class LaravelFattureInCloudV2FacadeTest extends TestCase
                 return Mockery::mock(LaravelFattureInCloudV2::class, function ($mock) {
                     $mock->shouldReceive('test');
                 });
-            });
+            }
+        );
 
         \LaravelFattureInCloudV2::test();
     }
