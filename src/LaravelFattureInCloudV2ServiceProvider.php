@@ -21,7 +21,7 @@ class LaravelFattureInCloudV2ServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/fatture-in-cloud-v2.php' => config_path('laravel-fatture-in-cloud-v2.php'),
+                __DIR__.'/../config/fatture-in-cloud-v2.php' => config_path('fatture-in-cloud-v2.php'),
             ], 'config');
 
             // Publishing the views.
@@ -52,7 +52,7 @@ class LaravelFattureInCloudV2ServiceProvider extends ServiceProvider
         // Automatically apply the package configuration
         $this->mergeConfigFrom(
             __DIR__.'/../config/fatture-in-cloud-v2.php',
-            'laravel-fatture-in-cloud-v2'
+            'fatture-in-cloud-v2'
         );
 
         // Register the main class to use with the facade
