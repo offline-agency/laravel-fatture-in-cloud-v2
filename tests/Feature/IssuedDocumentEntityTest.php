@@ -13,9 +13,9 @@ class IssuedDocumentEntityTest extends TestCase
 
         $response = Http::withHeaders([
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . config('fatture-in-cloud-v2.bearer')
+            'Authorization' => 'Bearer ' . config('fatture-in-cloud-v2.bearer'),
         ])->get('https://api-v2.fattureincloud.it/c/' . $company_id . '/issued_documents', [
-            'type' => 'invoice'
+            'type' => 'invoice',
         ]);
 
         $this->assertEquals(200, $response->status());
