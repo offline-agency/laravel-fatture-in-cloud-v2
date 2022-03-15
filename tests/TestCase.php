@@ -18,17 +18,15 @@ abstract class TestCase extends BaseTestCase
 
     public function getPackageProviders(
         $app
-    ): array
-    {
+    ): array {
         return [
-            LaravelFattureInCloudV2ServiceProvider::class
+            LaravelFattureInCloudV2ServiceProvider::class,
         ];
     }
 
     public function getPackageAliases(
         $app
-    ): array
-    {
+    ): array {
         return [
             'LaravelFattureInCloudV2' => LaravelFattureInCloudV2Facade::class,
         ];

@@ -57,7 +57,7 @@ class LaravelFattureInCloudV2ServiceProvider extends ServiceProvider
 
         // Register the main class to use with the facade
         $this->app->singleton('laravel-fatture-in-cloud-v2', function () {
-            return new LaravelFattureInCloudV2;
+            return new LaravelFattureInCloudV2();
         });
     }
 }
