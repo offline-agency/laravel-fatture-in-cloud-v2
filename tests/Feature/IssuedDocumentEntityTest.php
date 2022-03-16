@@ -20,7 +20,7 @@ class IssuedDocumentEntityTest extends TestCase
             ),
         ]);
 
-        $issued_documents = new IssuedDocument;
+        $issued_documents = new IssuedDocument();
         $response = $issued_documents->list($company_id, $type);
 
         $this->assertIsArray($response);

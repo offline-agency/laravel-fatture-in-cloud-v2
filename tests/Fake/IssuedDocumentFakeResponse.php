@@ -2,8 +2,6 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Fake;
 
-use Illuminate\Support\Arr;
-
 class IssuedDocumentFakeResponse extends FakeResponse
 {
     public function getIssuedDocumentsFakeList()
@@ -33,7 +31,7 @@ class IssuedDocumentFakeResponse extends FakeResponse
                         'country' => 'fake_country',
                         'certified_email' => 'fake_certified_email',
                         'ei_code' => 'fake_ei_code',
-                        'type' => null
+                        'type' => null,
                     ],
                     'date' => 'fake_date',
                     'number' => 1,
@@ -62,13 +60,13 @@ class IssuedDocumentFakeResponse extends FakeResponse
                         'country' => 'fake_country',
                         'certified_email' => 'fake_certified_email',
                         'ei_code' => 'fake_ei_code',
-                        'type' => null
+                        'type' => null,
                     ],
                     'date' => 'fake_date',
                     'number' => 2,
                     'next_due_date' => null,
                     'url' => 'fake_url',
-                ]
+                ],
             ],
             'first_page_url' => 'fake_',
             'from' => 1,
@@ -79,7 +77,7 @@ class IssuedDocumentFakeResponse extends FakeResponse
             'per_page' => 50,
             'prev_page_url' => null,
             'to' => 50,
-            'total' => 50
+            'total' => 50,
         ]);
     }
 }
