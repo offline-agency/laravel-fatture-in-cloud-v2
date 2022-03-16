@@ -23,7 +23,7 @@
         "ext-json": "*"
     },
     "require-dev": {
-        "orchestra/testbench": "^6.0",
+        "orchestra/testbench": "^3.0|^4.0|^5.0|^6.0",
         "phpunit/phpunit": "^9.0"
     },
     "autoload": {
