@@ -9,8 +9,7 @@ class Api extends LaravelFattureInCloudV2
     protected function get(
         string $url,
         array  $query_parameters = []
-    ): object
-    {
+    ): object {
         $url = $this->baseUrl . $url;
 
         $response = $this->header->get($url, $query_parameters);
@@ -21,8 +20,7 @@ class Api extends LaravelFattureInCloudV2
     protected function data(
         array $data,
         array $fields
-    ): array
-    {
+    ): array {
         $parsed_data = [];
         foreach ($data as $key => $value) {
             if (in_array($key, $fields)) {
@@ -37,7 +35,7 @@ class Api extends LaravelFattureInCloudV2
     {
         return (object)[
             'success' => $response->status() === 200,
-            'data' => json_decode($response)
+            'data' => json_decode($response),
         ];
     }
 }

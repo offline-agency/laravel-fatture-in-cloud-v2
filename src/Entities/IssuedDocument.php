@@ -73,5 +73,4 @@ class IssuedDocument extends AbstractEntity
      * @var string
      */
     public $url;
-
 }

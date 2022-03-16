@@ -11,14 +11,13 @@ class IssuedDocument extends Api
         string $company_id,
         string $type,
         ?array $additional_data = []
-    )
-    {
+    ) {
         $additional_data = array_merge($additional_data, [
-           'type' => $type
+           'type' => $type,
         ]);
 
         $additional_data = $this->data($additional_data, [
-            'type', 'fields', 'fieldset', 'sort', 'page', 'per_page'
+            'type', 'fields', 'fieldset', 'sort', 'page', 'per_page',
         ]);
 
         $response = $this->get(
@@ -26,7 +25,7 @@ class IssuedDocument extends Api
             $additional_data
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 

@@ -30,7 +30,7 @@ class LaravelFattureInCloudV2
     {
         $this->header = Http::withHeaders([
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . config('fatture-in-cloud-v2.bearer')
+            'Authorization' => 'Bearer ' . config('fatture-in-cloud-v2.bearer'),
         ]);
     }
 }
