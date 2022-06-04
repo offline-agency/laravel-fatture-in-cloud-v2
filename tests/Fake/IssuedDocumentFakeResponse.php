@@ -2,6 +2,8 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Fake;
 
+use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument\Document;
+
 class IssuedDocumentFakeResponse extends FakeResponse
 {
     public function getIssuedDocumentsFakeList()
@@ -78,6 +80,13 @@ class IssuedDocumentFakeResponse extends FakeResponse
             'prev_page_url' => null,
             'to' => 50,
             'total' => 50,
+        ]);
+    }
+
+    public function getIssuedDocumentFakeDetail()
+    {
+        return json_encode((object)[
+            'data' => (new Document())->getIssuedDocumentFakeDetail()
         ]);
     }
 }
