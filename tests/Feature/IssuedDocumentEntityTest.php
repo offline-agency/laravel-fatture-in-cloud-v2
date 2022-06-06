@@ -22,7 +22,7 @@ class IssuedDocumentEntityTest extends TestCase
         ]);
 
         $issued_documents = new IssuedDocument();
-        $response = $issued_documents->list($company_id, $type);
+        $response = $issued_documents->list($type);
 
         $this->assertIsArray($response);
         $this->assertCount(2, $response);
@@ -40,7 +40,7 @@ class IssuedDocumentEntityTest extends TestCase
         ]);
 
         $issued_documents = new IssuedDocument();
-        $response = $issued_documents->detail($company_id, $document_id);
+        $response = $issued_documents->detail($document_id);
 
         $this->assertNotNull($response);
         $this->assertInstanceOf(IssuedDocumentEntity::class, $response);

@@ -9,7 +9,6 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Document\IssuedDocument as Si
 class IssuedDocument extends Api
 {
     public function list(
-        int    $company_id,
         string $type,
         ?array $additional_data = []
     )
@@ -23,7 +22,7 @@ class IssuedDocument extends Api
         ]);
 
         $response = $this->get(
-            $company_id . '/issued_documents',
+            $this->company_id . '/issued_documents',
             $additional_data
         );
 
@@ -39,7 +38,6 @@ class IssuedDocument extends Api
     }
 
     public function detail(
-        int    $company_id,
         int    $document_id,
         ?array $additional_data = []
     )
@@ -49,7 +47,7 @@ class IssuedDocument extends Api
         ]);
 
         $response = $this->get(
-            $company_id . '/issued_documents/' . $document_id,
+            $this->company_id . '/issued_documents/' . $document_id,
             $additional_data
         );
 

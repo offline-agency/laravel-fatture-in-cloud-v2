@@ -8,20 +8,26 @@ use Illuminate\Support\Facades\Http;
 
 class LaravelFattureInCloudV2
 {
+    private $company;
     private $bearer;
     protected $baseUrl;
     protected $header;
+    protected $company_id;
 
     /**
      * @throws Exception
      */
     public function __construct(
-        ?string $company = null
+        ?string $company_name = null
     )
     {
-        $this->setBearer($company);
+        $this->setCompany($company_name);
+
+        $this->setBearer();
 
         $this->setBaseUrl();
+
+        $this->setCompanyId();
 
         $this->setHeader();
     }
@@ -29,6 +35,22 @@ class LaravelFattureInCloudV2
     private function setBaseUrl()
     {
         $this->baseUrl = config('fatture-in-cloud-v2.baseUrl');
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function setCompanyId()
+    {
+        $company = $this->getCompany();
+
+        $company_id = Arr::get($company, 'id');
+
+        if ($company_id === '') {
+            throw new Exception('Set company ID on your config/fatture-in-cloud-v2!');
+        }
+
+        $this->company_id = $company_id;
     }
 
     private function setHeader()
@@ -39,7 +61,7 @@ class LaravelFattureInCloudV2
         ]);
     }
 
-    public function getBearer()
+    private function getBearer()
     {
         return $this->bearer;
     }
@@ -47,13 +69,9 @@ class LaravelFattureInCloudV2
     /**
      * @throws Exception
      */
-    public function setBearer($company): void
+    private function setBearer(): void
     {
-        $companies = config('fatture-in-cloud-v2.companies');
-
-        $company = is_null($company)
-            ? reset($companies)
-            : Arr::get($companies, $company);
+        $company = $this->getCompany();
 
         $bearer = Arr::get($company, 'bearer');
 
@@ -62,5 +80,19 @@ class LaravelFattureInCloudV2
         }
 
         $this->bearer = $bearer;
+    }
+
+    private function getCompany()
+    {
+        return $this->company;
+    }
+
+    private function setCompany($company_name): void
+    {
+        $companies = config('fatture-in-cloud-v2.companies');
+
+        $this->company = is_null($company_name)
+            ? reset($companies)
+            : Arr::get($companies, $company_name);
     }
 }
