@@ -59,4 +59,36 @@ class IssuedDocument extends Api
 
         return new SingleIssuedDocumentEntity($issued_document);
     }
+
+    public function bin(
+        int    $document_id
+    )
+    {
+        $response = $this->get(
+            $this->company_id . '/bin/issued_documents/' . $document_id
+        );
+
+        if (!$response->success) {
+            return new Error($response->data);
+        }
+
+        $issued_document = $response->data->data;
+
+        return new SingleIssuedDocumentEntity($issued_document);
+    }
+
+    public function delete(
+        int    $document_id
+    )
+    {
+        $response = $this->destroy(
+            $this->company_id . '/issued_documents/' . $document_id
+        );
+
+        if (!$response->success) {
+            return new Error($response->data);
+        }
+
+        return 'Document deleted';
+    }
 }
