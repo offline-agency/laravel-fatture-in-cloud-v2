@@ -8,6 +8,6 @@ class EiRaw extends FakeResponse
 {
     public function getEiRawFake()
     {
-        return (object)[];
+        return (object) [];
     }
 }

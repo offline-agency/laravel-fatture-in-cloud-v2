@@ -8,28 +8,28 @@ class PaymentMethod extends FakeResponse
 {
     public function getPaymentMethodFake()
     {
-        return (object)[
-            'id' => null,
-            'name' => '',
+        return (object) [
+            'id'      => null,
+            'name'    => '',
             'details' => [
-                (object)[
-                    'title' => '',
+                (object) [
+                    'title'       => '',
                     'description' => '',
                 ],
-                (object)[
-                    'title' => '',
+                (object) [
+                    'title'       => '',
                     'description' => '',
                 ],
-                (object)[
-                    'title' => '',
+                (object) [
+                    'title'       => '',
                     'description' => '',
                 ],
-                (object)[
-                    'title' => '',
+                (object) [
+                    'title'       => '',
                     'description' => '',
                 ],
-                (object)[
-                    'title' => '',
+                (object) [
+                    'title'       => '',
                     'description' => '',
                 ],
             ],

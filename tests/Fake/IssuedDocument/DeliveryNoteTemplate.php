@@ -8,6 +8,6 @@ class DeliveryNoteTemplate extends FakeResponse
 {
     public function getDeliveryNoteTemplateFake()
     {
-        return (object)[];
+        return (object) [];
     }
 }
