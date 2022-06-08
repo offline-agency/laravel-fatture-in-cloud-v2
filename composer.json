@@ -1,18 +1,19 @@
 {
     "name": "offline-agency/laravel-fatture-in-cloud-v2",
-    "description": "A simple Laravel integration with Fatture in Cloud APIs v2",
+    "description": "A wrapper plugin with Fatture in Cloud Api V2 written in Laravel PHP",
     "keywords": [
-        "offline-agency",
-        "laravel-fatture-in-cloud-v2"
-    ],
+    "laravel",
+    "integration",
+    "api",
+    "fatture in cloud"
+  ],
     "homepage": "https://github.com/offline-agency/laravel-fatture-in-cloud-v2",
     "license": "MIT",
     "type": "library",
     "authors": [
         {
             "name": "Offline Agency",
-            "email": "support@offlineagency.it",
-            "role": "Developer"
+            "email": "info@offlineagency.it"
         }
     ],
     "require": {
@@ -24,7 +25,7 @@
         "illuminate/http": "^6.0|^7.0|^8.0|^9.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^4.0|^6.0",
+        "orchestra/testbench": "^3.1|^4.0|^5.0|^6.0|^7.0",
         "phpstan/phpstan": "^1.7",
         "phpunit/phpunit": "^6.0|^7.0|^8.0|^9.0"
     },
