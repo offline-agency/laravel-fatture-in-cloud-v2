@@ -79,6 +79,11 @@ class IssuedDocument extends AbstractEntity
     /**
      * @var float
      */
+    public $rivalsa_taxable;
+
+    /**
+     * @var float
+     */
     public $cassa;
 
     /**
@@ -155,6 +160,16 @@ class IssuedDocument extends AbstractEntity
      * @var bool
      */
     public $use_split_payment;
+
+    /**
+     * @var null|object
+     */
+    public $merged_in; //TODO: relate another class
+
+    /**
+     * @var null|object
+     */
+    public $original_document; //TODO: relate another class
 
     /**
      * @var bool
@@ -317,6 +332,16 @@ class IssuedDocument extends AbstractEntity
     public $is_marked;
 
     /**
+     * @var string
+     */
+    public $created_at; //TODO: date format
+
+    /**
+     * @var string
+     */
+    public $updated_at; //TODO: date format
+
+    /**
      * @var float
      */
     public $amount_net;
@@ -364,7 +389,7 @@ class IssuedDocument extends AbstractEntity
     /**
      * @var float
      */
-    public $amount_other_withholding_tax_taxable;
+    public $other_withholding_tax_taxable;
 
     /**
      * @var float
@@ -400,6 +425,11 @@ class IssuedDocument extends AbstractEntity
      * @var object
      */
     public $ei_raw; //TODO: relate another class
+
+    /**
+     * @var object
+     */
+    public $ei_ts_data; //TODO: relate another class
 
     /**
      * @var string
