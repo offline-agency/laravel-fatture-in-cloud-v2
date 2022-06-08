@@ -25,7 +25,7 @@ class IssuedDocument extends Api
             $additional_data
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -49,7 +49,7 @@ class IssuedDocument extends Api
             $additional_data
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -65,7 +65,7 @@ class IssuedDocument extends Api
             $this->company_id.'/bin/issued_documents/'.$document_id
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -81,7 +81,7 @@ class IssuedDocument extends Api
             $this->company_id.'/issued_documents/'.$document_id
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
