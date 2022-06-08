@@ -7,7 +7,7 @@ use Illuminate\Support\Arr;
 class FakeResponse
 {
     public function value(
-        array  $params,
+        array $params,
         string $key,
         $default
     ) {

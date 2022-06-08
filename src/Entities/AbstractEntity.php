@@ -7,7 +7,7 @@ abstract class AbstractEntity
     public function __construct($parameters)
     {
         if (is_null($parameters)) {
-            return null;
+            return;
         }
 
         if (is_object($parameters)) {

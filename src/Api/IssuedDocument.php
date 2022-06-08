@@ -2,18 +2,18 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Document\IssuedDocument as SingleIssuedDocumentEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument as IssuedDocumentEntity;
 
 class IssuedDocument extends Api
 {
     public function list(
-        string $company_id,
         string $type,
         ?array $additional_data = []
     ) {
         $additional_data = array_merge($additional_data, [
-           'type' => $type,
+            'type' => $type,
         ]);
 
         $additional_data = $this->data($additional_data, [
@@ -21,7 +21,7 @@ class IssuedDocument extends Api
         ]);
 
         $response = $this->get(
-            $company_id . '/issued_documents',
+            $this->company_id.'/issued_documents',
             $additional_data
         );
 
@@ -34,5 +34,57 @@ class IssuedDocument extends Api
         return array_map(function ($document) {
             return new IssuedDocumentEntity($document);
         }, $issued_documents->data);
+    }
+
+    public function detail(
+        int $document_id,
+        ?array $additional_data = []
+    ) {
+        $additional_data = $this->data($additional_data, [
+            'fields', 'fieldset',
+        ]);
+
+        $response = $this->get(
+            $this->company_id.'/issued_documents/'.$document_id,
+            $additional_data
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $issued_document = $response->data->data;
+
+        return new SingleIssuedDocumentEntity($issued_document);
+    }
+
+    public function bin(
+        int $document_id
+    ) {
+        $response = $this->get(
+            $this->company_id.'/bin/issued_documents/'.$document_id
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $issued_document = $response->data->data;
+
+        return new SingleIssuedDocumentEntity($issued_document);
+    }
+
+    public function delete(
+        int $document_id
+    ) {
+        $response = $this->destroy(
+            $this->company_id.'/issued_documents/'.$document_id
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        return 'Document deleted';
     }
 }
