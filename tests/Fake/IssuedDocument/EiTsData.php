@@ -8,10 +8,10 @@ class EiTsData extends FakeResponse
 {
     public function getEiTsDataFake()
     {
-        return (object)[
+        return (object) [
             'status' => 0,
-            'id' => null,
-            'info' => null,
+            'id'     => null,
+            'info'   => null,
         ];
     }
 }

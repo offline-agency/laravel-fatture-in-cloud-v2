@@ -8,7 +8,7 @@ class Language extends FakeResponse
 {
     public function getLanguageFake()
     {
-        return (object)[
+        return (object) [
             'code' => 'it',
             'name' => 'Italiano',
         ];

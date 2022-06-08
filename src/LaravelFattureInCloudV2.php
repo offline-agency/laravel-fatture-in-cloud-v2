@@ -19,8 +19,7 @@ class LaravelFattureInCloudV2
      */
     public function __construct(
         ?string $company_name = null
-    )
-    {
+    ) {
         $this->setCompany($company_name);
 
         $this->setBearer();
@@ -56,8 +55,8 @@ class LaravelFattureInCloudV2
     private function setHeader()
     {
         $this->header = Http::withHeaders([
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $this->getBearer(),
+            'Accept'        => 'application/json',
+            'Authorization' => 'Bearer '.$this->getBearer(),
         ]);
     }
 

@@ -2,17 +2,16 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Document\IssuedDocument as SingleIssuedDocumentEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument as IssuedDocumentEntity;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Document\IssuedDocument as SingleIssuedDocumentEntity;
 
 class IssuedDocument extends Api
 {
     public function list(
         string $type,
         ?array $additional_data = []
-    )
-    {
+    ) {
         $additional_data = array_merge($additional_data, [
             'type' => $type,
         ]);
@@ -22,7 +21,7 @@ class IssuedDocument extends Api
         ]);
 
         $response = $this->get(
-            $this->company_id . '/issued_documents',
+            $this->company_id.'/issued_documents',
             $additional_data
         );
 
@@ -38,16 +37,15 @@ class IssuedDocument extends Api
     }
 
     public function detail(
-        int    $document_id,
+        int $document_id,
         ?array $additional_data = []
-    )
-    {
+    ) {
         $additional_data = $this->data($additional_data, [
-            'fields', 'fieldset'
+            'fields', 'fieldset',
         ]);
 
         $response = $this->get(
-            $this->company_id . '/issued_documents/' . $document_id,
+            $this->company_id.'/issued_documents/'.$document_id,
             $additional_data
         );
 
@@ -61,11 +59,10 @@ class IssuedDocument extends Api
     }
 
     public function bin(
-        int    $document_id
-    )
-    {
+        int $document_id
+    ) {
         $response = $this->get(
-            $this->company_id . '/bin/issued_documents/' . $document_id
+            $this->company_id.'/bin/issued_documents/'.$document_id
         );
 
         if (!$response->success) {
@@ -78,11 +75,10 @@ class IssuedDocument extends Api
     }
 
     public function delete(
-        int    $document_id
-    )
-    {
+        int $document_id
+    ) {
         $response = $this->destroy(
-            $this->company_id . '/issued_documents/' . $document_id
+            $this->company_id.'/issued_documents/'.$document_id
         );
 
         if (!$response->success) {

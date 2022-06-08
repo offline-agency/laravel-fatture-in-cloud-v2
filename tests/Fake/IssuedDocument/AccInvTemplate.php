@@ -8,6 +8,6 @@ class AccInvTemplate extends FakeResponse
 {
     public function getAccInvTemplateFake()
     {
-        return (object)[];
+        return (object) [];
     }
 }

@@ -15,7 +15,7 @@ class IssuedDocumentEntityTest extends TestCase
         $type = 'invoice';
 
         Http::fake([
-            'issued_documents?type=' . $type => Http::response(
+            'issued_documents?type='.$type => Http::response(
                 (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList()
             ),
         ]);
@@ -32,7 +32,7 @@ class IssuedDocumentEntityTest extends TestCase
         $document_id = 1;
 
         Http::fake([
-            'issued_documents/' . $document_id => Http::response(
+            'issued_documents/'.$document_id => Http::response(
                 (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeDetail()
             ),
         ]);
@@ -49,7 +49,7 @@ class IssuedDocumentEntityTest extends TestCase
         $document_id = 1;
 
         Http::fake([
-            'bin/issued_documents/' . $document_id => Http::response(
+            'bin/issued_documents/'.$document_id => Http::response(
                 (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeDetail()
             ),
         ]);
@@ -66,7 +66,7 @@ class IssuedDocumentEntityTest extends TestCase
         $document_id = 1;
 
         Http::fake([
-            'issued_documents/' . $document_id => Http::response(),
+            'issued_documents/'.$document_id => Http::response(),
         ]);
 
         $issued_documents = new IssuedDocument('test');
