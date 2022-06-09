@@ -13,16 +13,15 @@ jobs:
       fail-fast: true
       matrix:
         os: [ubuntu-latest, macos-latest]
-        php: [7.4, 8.0, 8.1]
-        laravel: [5.8.*, 6.*, 7.*, 8.*, 9.*]
-        stability: [prefer-stable]
+        php: [7.3, 7.4, 8.0, 8.1]
+        laravel: [6.*, 7.*, 8.*, 9.*]
         exclude:
             - laravel: 9.*
               php: 7.4
             - laravel: 9.*
               php: 7.3
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v2
@@ -46,7 +45,7 @@ jobs:
           restore-keys: ${{ matrix.os }}-composer-
       - name: Install dependencies
         run: |
-          composer install --no-interaction
+          composer update --prefer-dist --no-interaction
       - name: Run tests
         run: |
           ./vendor/bin/phpunit --coverage-clover coverage.xml
