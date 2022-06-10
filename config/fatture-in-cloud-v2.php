@@ -22,7 +22,7 @@ return [
         'default' => [
             'id' => env('FCV2_DEFAULT_ID', ''),
             'bearer' => env('FCV2_DEFAULT_BEARER', ''),
-        ]
+        ],
     ],
 
     /*
@@ -37,6 +37,6 @@ return [
     'limits' => [
         'default' => 300000,
         '403' => 300000,
-        '429' => 3600000
-    ]
+        '429' => 3600000,
+    ],
 ];

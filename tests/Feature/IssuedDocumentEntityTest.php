@@ -75,4 +75,3 @@ class IssuedDocumentEntityTest extends TestCase
         $this->assertEquals('Document deleted', $response);
     }
 }
-
