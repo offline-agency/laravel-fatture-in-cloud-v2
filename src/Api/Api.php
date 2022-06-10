@@ -8,10 +8,9 @@ class Api extends LaravelFattureInCloudV2
 {
     protected function get(
         string $url,
-        array  $query_parameters = []
-    ): object
-    {
-        $complete_url = $this->baseUrl . $url;
+        array $query_parameters = []
+    ): object {
+        $complete_url = $this->baseUrl.$url;
 
         $response = $this->header->get($complete_url, $query_parameters);
 
@@ -28,10 +27,9 @@ class Api extends LaravelFattureInCloudV2
 
     protected function destroy(
         string $url,
-        array  $query_parameters = []
-    ): object
-    {
-        $url = $this->baseUrl . $url;
+        array $query_parameters = []
+    ): object {
+        $url = $this->baseUrl.$url;
 
         $response = $this->header->delete($url, $query_parameters);
 
@@ -49,8 +47,7 @@ class Api extends LaravelFattureInCloudV2
     protected function data(
         array $data,
         array $fields
-    ): array
-    {
+    ): array {
         $parsed_data = [];
         foreach ($data as $key => $value) {
             if (in_array($key, $fields)) {
@@ -63,8 +60,7 @@ class Api extends LaravelFattureInCloudV2
 
     private function waitThrottle(
         int $status
-    )
-    {
+    ) {
         switch ($status) {
             case 403:
                 usleep(config('fatture-in-cloud-v2.limits.403'));
@@ -80,10 +76,9 @@ class Api extends LaravelFattureInCloudV2
 
     private function parseResponse($response): object
     {
-        return (object)[
+        return (object) [
             'success' => $response->status() === 200,
             'data' => json_decode($response),
         ];
     }
 }
-
