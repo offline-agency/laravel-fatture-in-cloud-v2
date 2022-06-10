@@ -20,7 +20,7 @@ class IssuedDocumentEntityTest extends TestCase
             ),
         ]);
 
-        $issued_documents = new IssuedDocument('test');
+        $issued_documents = new IssuedDocument();
         $response = $issued_documents->list($type);
 
         $this->assertIsArray($response);
@@ -37,7 +37,7 @@ class IssuedDocumentEntityTest extends TestCase
             ),
         ]);
 
-        $issued_documents = new IssuedDocument('test');
+        $issued_documents = new IssuedDocument();
         $response = $issued_documents->detail($document_id);
 
         $this->assertNotNull($response);
@@ -54,7 +54,7 @@ class IssuedDocumentEntityTest extends TestCase
             ),
         ]);
 
-        $issued_documents = new IssuedDocument('test');
+        $issued_documents = new IssuedDocument();
         $response = $issued_documents->bin($document_id);
 
         $this->assertNotNull($response);
@@ -69,7 +69,7 @@ class IssuedDocumentEntityTest extends TestCase
             'issued_documents/'.$document_id => Http::response(),
         ]);
 
-        $issued_documents = new IssuedDocument('test');
+        $issued_documents = new IssuedDocument();
         $response = $issued_documents->delete($document_id);
 
         $this->assertEquals('Document deleted', $response);

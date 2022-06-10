@@ -10,9 +10,17 @@ class Api extends LaravelFattureInCloudV2
         string $url,
         array $query_parameters = []
     ): object {
-        $url = $this->baseUrl.$url;
+        $complete_url = $this->baseUrl.$url;
 
-        $response = $this->header->get($url, $query_parameters);
+        $response = $this->header->get($complete_url, $query_parameters);
+
+        $response_status = $response->status();
+
+        if ($response_status === 403 || $response_status === 429) {
+            $this->waitThrottle($response_status);
+
+            $this->get($url, $query_parameters);
+        }
 
         return $this->parseResponse($response);
     }
@@ -24,6 +32,14 @@ class Api extends LaravelFattureInCloudV2
         $url = $this->baseUrl.$url;
 
         $response = $this->header->delete($url, $query_parameters);
+
+        $response_status = $response->status();
+
+        if ($response_status === 403 || $response_status === 429) {
+            $this->waitThrottle($response_status);
+
+            $this->destroy($url, $query_parameters);
+        }
 
         return $this->parseResponse($response);
     }
@@ -42,11 +58,27 @@ class Api extends LaravelFattureInCloudV2
         return $parsed_data;
     }
 
+    private function waitThrottle(
+        int $status
+    ) {
+        switch ($status) {
+            case 403:
+                usleep(config('fatture-in-cloud-v2.limits.403'));
+                break;
+            case 429:
+                usleep(config('fatture-in-cloud-v2.limits.429'));
+                break;
+            default:
+                usleep(config('fatture-in-cloud-v2.limits.default'));
+                break;
+        }
+    }
+
     private function parseResponse($response): object
     {
         return (object) [
             'success' => $response->status() === 200,
-            'data'    => json_decode($response),
+            'data' => json_decode($response),
         ];
     }
 }
