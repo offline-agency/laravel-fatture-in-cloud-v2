@@ -30,6 +30,8 @@ You should publish config file with:
 php artisan vendor:publish --provider="Offlineagency\LaravelWebex\Providers\LaravelWebexServiceProvider"
 ```
 
+## Configuration
+
 Package provide multiple-companies handling. In your config you can provide more companies like that 
 ```php
 ... 
@@ -58,6 +60,21 @@ $issued_documents = new IssuedDocument();
 // specify company
 $issued_documents = new IssuedDocument('first_company');
 ```
+
+## Features
+
+### Rate limit
+
+Package provide a method to intercept throttle errors (403, 429) and automatically retry. You can specify limits on your config, remember to use ms:
+
+```php
+'limits' => [
+    'default' => 300000,
+    '403' => 300000,
+    '429' => 3600000,
+],
+```
+
 ## Usage
 
 Each callback accept a number of parameters equals to the sum of the required parameters +1 that is $additional_data
