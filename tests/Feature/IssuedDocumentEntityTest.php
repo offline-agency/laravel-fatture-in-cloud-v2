@@ -4,7 +4,7 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 
 use Illuminate\Support\Facades\Http;
 use OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Document\IssuedDocument as IssuedDocumentEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument as IssuedDocumentEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocumentFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
 

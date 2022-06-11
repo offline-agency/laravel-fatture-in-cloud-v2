@@ -2,7 +2,6 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Document\IssuedDocument as SingleIssuedDocumentEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument as IssuedDocumentEntity;
 
@@ -55,7 +54,7 @@ class IssuedDocument extends Api
 
         $issued_document = $response->data->data;
 
-        return new SingleIssuedDocumentEntity($issued_document);
+        return new IssuedDocumentEntity($issued_document);
     }
 
     public function bin(
@@ -71,7 +70,7 @@ class IssuedDocument extends Api
 
         $issued_document = $response->data->data;
 
-        return new SingleIssuedDocumentEntity($issued_document);
+        return new IssuedDocumentEntity($issued_document);
     }
 
     public function delete(
