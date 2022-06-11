@@ -1,8 +1,6 @@
 <?php
 
-namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Document;
-
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
+namespace OfflineAgency\LaravelFattureInCloudV2\Entities;
 
 class IssuedDocument extends AbstractEntity
 {
