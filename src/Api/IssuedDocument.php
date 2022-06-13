@@ -2,9 +2,9 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Document\IssuedDocument as SingleIssuedDocumentEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument as IssuedDocumentEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentList;
 
 class IssuedDocument extends Api
 {
@@ -17,7 +17,7 @@ class IssuedDocument extends Api
         ]);
 
         $additional_data = $this->data($additional_data, [
-            'type', 'fields', 'fieldset', 'sort', 'page', 'per_page',
+            'type', 'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
         ]);
 
         $response = $this->get(
@@ -29,11 +29,9 @@ class IssuedDocument extends Api
             return new Error($response->data);
         }
 
-        $issued_documents = $response->data;
+        $issued_document_response = $response->data;
 
-        return array_map(function ($document) {
-            return new IssuedDocumentEntity($document);
-        }, $issued_documents->data);
+        return new IssuedDocumentList($issued_document_response);
     }
 
     public function detail(
@@ -55,7 +53,7 @@ class IssuedDocument extends Api
 
         $issued_document = $response->data->data;
 
-        return new SingleIssuedDocumentEntity($issued_document);
+        return new IssuedDocumentEntity($issued_document);
     }
 
     public function bin(
@@ -71,7 +69,7 @@ class IssuedDocument extends Api
 
         $issued_document = $response->data->data;
 
-        return new SingleIssuedDocumentEntity($issued_document);
+        return new IssuedDocumentEntity($issued_document);
     }
 
     public function delete(

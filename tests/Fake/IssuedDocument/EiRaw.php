@@ -6,8 +6,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\FakeResponse;
 
 class EiRaw extends FakeResponse
 {
-    public function getEiRawFake()
-    {
-        return (object) [];
+    public function getEiRawFake(
+        array $params = []
+    ): array {
+        return [];
     }
 }
