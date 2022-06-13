@@ -1,6 +1,6 @@
 <?php
 
-namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Document;
+namespace OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
 

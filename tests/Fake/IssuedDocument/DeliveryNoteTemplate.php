@@ -6,8 +6,10 @@ use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\FakeResponse;
 
 class DeliveryNoteTemplate extends FakeResponse
 {
-    public function getDeliveryNoteTemplateFake()
+    public function getDeliveryNoteTemplateFake(
+        array $params = []
+    ): array
     {
-        return (object) [];
+        return [];
     }
 }

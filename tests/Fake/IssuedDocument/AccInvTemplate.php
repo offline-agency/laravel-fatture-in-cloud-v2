@@ -6,8 +6,10 @@ use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\FakeResponse;
 
 class AccInvTemplate extends FakeResponse
 {
-    public function getAccInvTemplateFake()
+    public function getAccInvTemplateFake(
+        array $params = []
+    ): array
     {
-        return (object) [];
+        return [];
     }
 }
