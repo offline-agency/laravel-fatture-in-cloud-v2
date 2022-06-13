@@ -3,7 +3,8 @@
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument as IssuedDocumentEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentList;
 
 class IssuedDocument extends Api
 {
@@ -28,11 +29,9 @@ class IssuedDocument extends Api
             return new Error($response->data);
         }
 
-        $issued_documents = $response->data;
+        $issued_document_response = $response->data;
 
-        return array_map(function ($document) {
-            return new IssuedDocumentEntity($document);
-        }, $issued_documents->data);
+        return new IssuedDocumentList($issued_document_response);
     }
 
     public function detail(

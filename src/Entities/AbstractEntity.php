@@ -17,7 +17,7 @@ abstract class AbstractEntity
         $this->build($parameters);
     }
 
-    public function build(array $parameters): void
+    private function build(array $parameters): void
     {
         foreach ($parameters as $property => $value) {
             if (property_exists($this, $property)) {

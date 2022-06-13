@@ -4,7 +4,9 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 
 use Illuminate\Support\Facades\Http;
 use OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument as IssuedDocumentEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentList;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPagination;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocumentFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
 
@@ -23,8 +25,10 @@ class IssuedDocumentEntityTest extends TestCase
         $issued_documents = new IssuedDocument();
         $response = $issued_documents->list($type);
 
-        $this->assertIsArray($response);
-        $this->assertCount(2, $response);
+        $this->assertInstanceOf(IssuedDocumentList::class, $response);
+        $this->assertInstanceOf(IssuedDocumentPagination::class, $response->getPagination());
+        $this->assertIsArray($response->getItems());
+        $this->assertCount(2, $response->getItems());
     }
 
     public function test_detail_issued_document()
