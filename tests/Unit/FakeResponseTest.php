@@ -14,7 +14,7 @@ class FakeResponseTest extends TestCase
         $per_page = 50;
 
         $pagination = (new PaginationFakeResponse())->getPaginationFake([
-            'per_page' => $per_page
+            'per_page' => $per_page,
         ]);
 
         $this->assertEquals(50, Arr::get($pagination, 'per_page'));
@@ -26,8 +26,8 @@ class FakeResponseTest extends TestCase
 
         $issued_document = (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeDetail([
             'entity' => [
-                'name' => $entity_name
-            ]
+                'name' => $entity_name,
+            ],
         ]);
 
         $issued_document = json_decode($issued_document);

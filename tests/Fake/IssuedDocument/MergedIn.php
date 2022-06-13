@@ -8,8 +8,7 @@ class MergedIn extends FakeResponse
 {
     public function getMergedInFake(
         array $params = []
-    ): array
-    {
+    ): array {
         return [
             'id' => $this->value($params, 'merged_in.id', 1),
             'date' => $this->value($params, 'merged_in.date', 'fake_date'),
@@ -17,7 +16,7 @@ class MergedIn extends FakeResponse
             'numeration' => $this->value($params, 'merged_in.numeration', ''),
             'type' => $this->value($params, 'merged_in.type', 'fake_type'),
             'link_type' => $this->value($params, 'merged_in.link_type', 'fake_link_type'),
-            'description' => $this->value($params, 'merged_in.description', 'fake_description')
+            'description' => $this->value($params, 'merged_in.description', 'fake_description'),
         ];
     }
 }

@@ -8,8 +8,7 @@ class EiData extends FakeResponse
 {
     public function getEiDataFake(
         array $params = []
-    ): array
-    {
+    ): array {
         return [
             'vat_kind' => $this->value($params, 'ei_data.vat_kind', null),
             'original_document_type' => $this->value($params, 'ei_data.original_document_type', null),
@@ -20,7 +19,7 @@ class EiData extends FakeResponse
             'payment_method' => $this->value($params, 'ei_data.payment_method', 'MP08'),
             'bank_name' => $this->value($params, 'ei_data.bank_name', ''),
             'bank_iban' => $this->value($params, 'ei_data.bank_iban', ''),
-            'bank_beneficiary' => $this->value($params, 'ei_data.bank_beneficiary', '')
+            'bank_beneficiary' => $this->value($params, 'ei_data.bank_beneficiary', ''),
         ];
     }
 }

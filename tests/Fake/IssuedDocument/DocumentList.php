@@ -8,8 +8,7 @@ class DocumentList extends FakeResponse
 {
     public function getListDocumentFake(
         array $params = []
-    ): array
-    {
+    ): array {
         return [
             'id' => $this->value($params, 'id', 1),
             'type' => $this->value($params, 'type', 'fake_type'),
@@ -24,7 +23,7 @@ class DocumentList extends FakeResponse
             'date' => $this->value($params, 'date', 'fake_date'),
             'number' => $this->value($params, 'number', 1),
             'next_due_date' => $this->value($params, 'next_due_date', null),
-            'url' => $this->value($params, 'url', 'fake_url')
+            'url' => $this->value($params, 'url', 'fake_url'),
         ];
     }
 }

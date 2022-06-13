@@ -8,8 +8,7 @@ class Entity extends FakeResponse
 {
     public function getEntityFake(
         array $params = []
-    ): array
-    {
+    ): array {
         return [
             'name' => $this->value($params, 'entity.name', 'John Doe'),
             'vat_number' => $this->value($params, 'entity.vat_number', ''),
@@ -35,7 +34,7 @@ class Entity extends FakeResponse
             'has_intent_declaration' => $this->value($params, 'entity.has_intent_declaration', false),
             'intent_declaration_protocol_number' => $this->value($params, 'entity.intent_declaration_protocol_number', null),
             'intent_declaration_protocol_date' => $this->value($params, 'entity.intent_declaration_protocol_date', null),
-            'originalName' => $this->value($params, 'entity.originalName', null)
+            'originalName' => $this->value($params, 'entity.originalName', null),
         ];
     }
 }

@@ -8,8 +8,7 @@ class Document extends FakeResponse
 {
     public function getIssuedDocumentFakeDetail(
         array $params = []
-    ): array
-    {
+    ): array {
         return [
             'id' => $this->value($params, 'id', 1),
             'type' => $this->value($params, 'type', 'invoice'),
@@ -95,7 +94,7 @@ class Document extends FakeResponse
             'ei_status' => $this->value($params, 'ei_status', 'not_sent'),
             'locked' => $this->value($params, 'locked', false),
             'has_ts_pay_pending_payment' => $this->value($params, 'has_ts_pay_pending_payment', false),
-            'is_first_e_invoice' => $this->value($params, 'is_first_e_invoice', false)
+            'is_first_e_invoice' => $this->value($params, 'is_first_e_invoice', false),
         ];
     }
 }

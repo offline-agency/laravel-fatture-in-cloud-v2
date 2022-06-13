@@ -9,14 +9,13 @@ class IssuedDocumentFakeResponse extends FakeResponse
 {
     public function getIssuedDocumentsFakeList(
         array $params = []
-    )
-    {
+    ) {
         return json_encode(array_merge(
             [
                 'data' => [
                     (new DocumentList())->getListDocumentFake($params),
-                    (new DocumentList())->getListDocumentFake($params)
-                ]
+                    (new DocumentList())->getListDocumentFake($params),
+                ],
             ],
             (new PaginationFakeResponse())->getPaginationFake($params)
         ));
@@ -24,17 +23,15 @@ class IssuedDocumentFakeResponse extends FakeResponse
 
     public function getIssuedDocumentFakeDetail(
         array $params = []
-    )
-    {
+    ) {
         return json_encode([
-            'data' => (new Document())->getIssuedDocumentFakeDetail($params)
+            'data' => (new Document())->getIssuedDocumentFakeDetail($params),
         ]);
     }
 
     public function getIssuedDocumentFakeError(
         array $params = []
-    )
-    {
+    ) {
         return json_encode((new ErrorFakeResponse())->getErrorFake($params));
     }
 }

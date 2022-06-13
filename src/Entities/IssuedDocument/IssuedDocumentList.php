@@ -33,8 +33,7 @@ class IssuedDocumentList
 
     private function setItems(
         $issued_document_response
-    ): void
-    {
+    ): void {
         $this->items = array_map(function ($document) {
             return new IssuedDocumentEntity($document);
         }, $issued_document_response->data);
@@ -42,8 +41,7 @@ class IssuedDocumentList
 
     private function setPagination(
         $issued_document_response
-    ): void
-    {
+    ): void {
         $this->pagination = new IssuedDocumentPagination($issued_document_response);
     }
 }

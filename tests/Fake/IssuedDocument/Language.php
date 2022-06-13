@@ -8,8 +8,7 @@ class Language extends FakeResponse
 {
     public function getLanguageFake(
         array $params = []
-    ): array
-    {
+    ): array {
         return [
             'code' => $this->value($params, 'language.code', 'it'),
             'name' => $this->value($params, 'language.name', 'Italiano'),

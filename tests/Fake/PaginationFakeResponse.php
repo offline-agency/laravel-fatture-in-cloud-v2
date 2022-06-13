@@ -6,8 +6,7 @@ class PaginationFakeResponse extends FakeResponse
 {
     public function getPaginationFake(
         array $params = []
-    ): array
-    {
+    ): array {
         return [
             'current_page' => $this->value($params, 'current_page', 1),
             'first_page_url' => $this->value($params, 'first_page_url', 'https://fake_url/entity?per_page=10&page=1'),
@@ -19,7 +18,7 @@ class PaginationFakeResponse extends FakeResponse
             'per_page' => $this->value($params, 'per_page', 10),
             'prev_page_url' => $this->value($params, 'prev_page_url', null),
             'to' => $this->value($params, 'to', 10),
-            'total' => $this->value($params, 'total', 15)
+            'total' => $this->value($params, 'total', 15),
         ];
     }
 }

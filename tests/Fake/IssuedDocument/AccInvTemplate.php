@@ -8,8 +8,7 @@ class AccInvTemplate extends FakeResponse
 {
     public function getAccInvTemplateFake(
         array $params = []
-    ): array
-    {
+    ): array {
         return [];
     }
 }
