@@ -6,12 +6,11 @@ class ErrorFakeResponse extends FakeResponse
 {
     public function getErrorFake(
         array $params = []
-    ): array
-    {
+    ): array {
         return [
             'error' => [
-                'message' => $this->value($params, 'error.message', 'fake_error')
-            ]
+                'message' => $this->value($params, 'error.message', 'fake_error'),
+            ],
         ];
     }
 }

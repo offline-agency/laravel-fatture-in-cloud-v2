@@ -70,8 +70,7 @@ class Pagination extends AbstractEntity
 
     public function getQueryParams(
         string $url
-    ): array
-    {
+    ): array {
         $url = parse_url($url);
 
         parse_str(

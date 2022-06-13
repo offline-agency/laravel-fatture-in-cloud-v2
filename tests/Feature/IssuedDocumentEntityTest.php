@@ -37,7 +37,7 @@ class IssuedDocumentEntityTest extends TestCase
 
     public function test_query_parameters_parsing()
     {
-        $issued_document_pagination = new IssuedDocumentPagination((object)[]);
+        $issued_document_pagination = new IssuedDocumentPagination((object) []);
 
         $query_params = $issued_document_pagination->getParsedQueryParams('https://fake_url.com/entity?first=Lorem&type=document_type&second=Ipsum');
 

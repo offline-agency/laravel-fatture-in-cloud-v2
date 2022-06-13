@@ -8,8 +8,7 @@ class DeliveryNoteTemplate extends FakeResponse
 {
     public function getDeliveryNoteTemplateFake(
         array $params = []
-    ): array
-    {
+    ): array {
         return [];
     }
 }
