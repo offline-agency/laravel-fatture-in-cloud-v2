@@ -4,7 +4,9 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Entities;
 
 abstract class AbstractEntity
 {
-    public function __construct($parameters)
+    public function __construct(
+        ?object $parameters
+    )
     {
         if (is_null($parameters)) {
             return;
@@ -17,7 +19,9 @@ abstract class AbstractEntity
         $this->build($parameters);
     }
 
-    private function build(array $parameters): void
+    private function build(
+        array $parameters
+    ): void
     {
         foreach ($parameters as $property => $value) {
             if (property_exists($this, $property)) {

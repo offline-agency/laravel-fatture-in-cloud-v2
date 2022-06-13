@@ -17,7 +17,7 @@ class IssuedDocument extends Api
         ]);
 
         $additional_data = $this->data($additional_data, [
-            'type', 'fields', 'fieldset', 'sort', 'page', 'per_page',
+            'type', 'fields', 'fieldset', 'sort', 'page', 'per_page', 'q'
         ]);
 
         $response = $this->get(

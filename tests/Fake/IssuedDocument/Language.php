@@ -6,11 +6,13 @@ use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\FakeResponse;
 
 class Language extends FakeResponse
 {
-    public function getLanguageFake()
+    public function getLanguageFake(
+        array $params = []
+    ): array
     {
-        return (object) [
-            'code' => 'it',
-            'name' => 'Italiano',
+        return [
+            'code' => $this->value($params, 'language.code', 'it'),
+            'name' => $this->value($params, 'language.name', 'Italiano'),
         ];
     }
 }

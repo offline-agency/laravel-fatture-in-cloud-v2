@@ -6,33 +6,35 @@ use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\FakeResponse;
 
 class PaymentMethod extends FakeResponse
 {
-    public function getPaymentMethodFake()
+    public function getPaymentMethodFake(
+        array $params = []
+    ): array
     {
-        return (object) [
-            'id'      => null,
-            'name'    => '',
-            'details' => [
-                (object) [
-                    'title'       => '',
+        return [
+            'id' => $this->value($params, 'payment_method.id', null),
+            'name' => $this->value($params, 'payment_method.name', ''),
+            'details' => $this->value($params, 'payment_method.details', [
+                (object)[
+                    'title' => '',
                     'description' => '',
                 ],
-                (object) [
-                    'title'       => '',
+                (object)[
+                    'title' => '',
                     'description' => '',
                 ],
-                (object) [
-                    'title'       => '',
+                (object)[
+                    'title' => '',
                     'description' => '',
                 ],
-                (object) [
-                    'title'       => '',
+                (object)[
+                    'title' => '',
                     'description' => '',
                 ],
-                (object) [
-                    'title'       => '',
+                (object)[
+                    'title' => '',
                     'description' => '',
                 ],
-            ],
+            ]),
         ];
     }
 }

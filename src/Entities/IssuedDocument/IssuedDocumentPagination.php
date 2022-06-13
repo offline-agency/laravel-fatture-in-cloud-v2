@@ -26,7 +26,7 @@ class IssuedDocumentPagination extends Pagination
 
     // helpers
 
-    private function getParsedQueryParams($url): object
+    public function getParsedQueryParams($url): object
     {
         $query_params = $this->getQueryParams($url);
 

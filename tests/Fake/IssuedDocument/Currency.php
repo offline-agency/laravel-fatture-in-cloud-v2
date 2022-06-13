@@ -6,12 +6,14 @@ use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\FakeResponse;
 
 class Currency extends FakeResponse
 {
-    public function getCurrencyFake()
+    public function getCurrencyFake(
+        array $params = []
+    ): array
     {
-        return (object) [
-            'id'            => 'EUR',
-            'exchange_rate' => '1.00000',
-            'symbol'        => '€',
+        return [
+            'id' => $this->value($params, 'currency.id', 'EUR'),
+            'exchange_rate' => $this->value($params, 'currency.exchange_rate', '1.00000'),
+            'symbol' => $this->value($params, 'currency.symbol', '€')
         ];
     }
 }
