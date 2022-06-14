@@ -32,16 +32,16 @@ class ProductList
     }
 
     private function setItems(
-        $issued_document_response
+        $product_response
     ): void {
-        $this->items = array_map(function ($document) {
-            return new ProductEntity($document);
-        }, $issued_document_response->data);
+        $this->items = array_map(function ($product) {
+            return new ProductEntity($product);
+        }, $product_response->data);
     }
 
     private function setPagination(
-        $issued_document_response
+        $product_response
     ): void {
-        $this->pagination = new ProductPagination($issued_document_response);
+        $this->pagination = new ProductPagination($product_response);
     }
 }

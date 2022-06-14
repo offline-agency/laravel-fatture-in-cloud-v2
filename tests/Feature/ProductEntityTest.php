@@ -127,4 +127,35 @@ class ProductEntityTest extends TestCase
     }
 
     // single
+
+    public function test_detail_product()
+    {
+        $product_id = 1;
+
+        Http::fake([
+            'products/' . $product_id => Http::response(
+                (new ProductFakeResponse())->getProductsFakeDetail()
+            ),
+        ]);
+
+        $product = new Product();
+        $response = $product->detail($product_id);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(ProductEntity::class, $response);
+    }
+
+    public function test_delete_product()
+    {
+        $product_id = 1;
+
+        Http::fake([
+            'products/' . $product_id => Http::response(),
+        ]);
+
+        $product = new Product();
+        $response = $product->delete($product_id);
+
+        $this->assertEquals('Product deleted', $response);
+    }
 }

@@ -20,4 +20,16 @@ class ProductFakeResponse extends FakeResponse
             (new PaginationFakeResponse())->getPaginationFake($params)
         ));
     }
+
+    public function getProductsFakeDetail(
+        array $params = []
+    )
+    {
+        return json_encode([
+                'data' => (object)[
+                    (new SingleProduct())->getProductFakeDetail($params)
+                ]
+            ]
+        );
+    }
 }
