@@ -28,7 +28,7 @@ class IssuedDocumentPagination extends Pagination
 
     public function goToPrevPage()
     {
-        if (!$this->hasPrevPage()) {
+        if (! $this->hasPrevPage()) {
             return null;
         }
 
@@ -37,7 +37,7 @@ class IssuedDocumentPagination extends Pagination
 
     public function goToNextPage()
     {
-        if (!$this->hasNextPage()) {
+        if (! $this->hasNextPage()) {
             return null;
         }
 
@@ -48,8 +48,7 @@ class IssuedDocumentPagination extends Pagination
 
     private function changePage(
         string $url
-    )
-    {
+    ) {
         $query_params = $this->getParsedQueryParams($url);
 
         $issued_document = new IssuedDocument;
