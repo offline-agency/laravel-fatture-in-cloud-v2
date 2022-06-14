@@ -10,16 +10,16 @@ class PaginationTest extends TestCase
 {
     public function test_is_single_page_function()
     {
-        $pagination = new Pagination((object)[
+        $pagination = new Pagination((object) [
             'total' => 1,
-            'per_page' => 10
+            'per_page' => 10,
         ]);
 
         $this->assertTrue($pagination->isSinglePage());
 
-        $pagination = new Pagination((object)[
+        $pagination = new Pagination((object) [
             'total' => 15,
-            'per_page' => 10
+            'per_page' => 10,
         ]);
 
         $this->assertFalse($pagination->isSinglePage());
@@ -27,7 +27,7 @@ class PaginationTest extends TestCase
 
     public function test_params_retrieving()
     {
-        $pagination = new Pagination((object)[]);
+        $pagination = new Pagination((object) []);
 
         $query_params = $pagination->getQueryParams('https://fake_url.com/entity?first=Lorem&second=Ipsum');
 

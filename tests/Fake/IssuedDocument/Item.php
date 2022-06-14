@@ -8,8 +8,7 @@ class Item extends FakeResponse
 {
     public function getItemFake(
         array $params = []
-    ): array
-    {
+    ): array {
         return [
             'product_id' => $this->value($params, 'item.product_id', 0),
             'code' => $this->value($params, 'item.code', ''),
@@ -24,7 +23,7 @@ class Item extends FakeResponse
             'discount_highlight' => $this->value($params, 'item.discount_highlight', false),
             'in_dn' => $this->value($params, 'item.in_dn', false),
             'qty' => $this->value($params, 'item.qty', 1),
-            'vat' => $this->value($params, 'item.vat', (object)[
+            'vat' => $this->value($params, 'item.vat', (object) [
                 'id' => $this->value($params, 'item.vat.id', 46),
                 'value' => $this->value($params, 'item.vat.value', 0),
                 'description' => $this->value($params, 'item.vat.description', 'Esente Art.10 DPR 633/72'),
@@ -32,7 +31,7 @@ class Item extends FakeResponse
             'stock' => $this->value($params, 'item.stock', null),
             'description' => $this->value($params, 'item.description', 'fake_description'),
             'not_taxable' => $this->value($params, 'item.not_taxable', false),
-            'ei_raw' => $this->value($params, 'item.ei_raw', null)
+            'ei_raw' => $this->value($params, 'item.ei_raw', null),
         ];
     }
 }

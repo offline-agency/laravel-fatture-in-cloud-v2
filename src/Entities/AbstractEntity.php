@@ -6,8 +6,7 @@ abstract class AbstractEntity
 {
     public function __construct(
         ?object $parameters
-    )
-    {
+    ) {
         if (is_null($parameters)) {
             return;
         }
@@ -21,8 +20,7 @@ abstract class AbstractEntity
 
     private function build(
         array $parameters
-    ): void
-    {
+    ): void {
         foreach ($parameters as $property => $value) {
             if (property_exists($this, $property)) {
                 $this->$property = $value;

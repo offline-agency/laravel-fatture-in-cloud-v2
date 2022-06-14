@@ -8,8 +8,7 @@ class ExtraData extends FakeResponse
 {
     public function getExtraDataFake(
         array $params = []
-    ): array
-    {
+    ): array {
         return [
             'show_sofort_button' => $this->value($params, 'extra_data.show_sofort_button', false),
             'multifatture_sent' => $this->value($params, 'extra_data.multifatture_sent', null),
@@ -24,7 +23,7 @@ class ExtraData extends FakeResponse
             'ts_sent_date' => $this->value($params, 'extra_data.ts_sent_date', null),
             'ts_full_amount' => $this->value($params, 'extra_data.ts_full_amount', false),
             'imported_by' => $this->value($params, 'extra_data.imported_by', null),
-            'ts_single_sending' => $this->value($params, 'extra_data.ts_single_sending', null)
+            'ts_single_sending' => $this->value($params, 'extra_data.ts_single_sending', null),
         ];
     }
 }

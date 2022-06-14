@@ -3,8 +3,8 @@
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument;
 
 use Illuminate\Support\Arr;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Pagination;
 use OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Pagination;
 
 class IssuedDocumentPagination extends Pagination
 {
@@ -34,9 +34,9 @@ class IssuedDocumentPagination extends Pagination
 
         unset($query_params['type']);
 
-        return (object)[
+        return (object) [
             'type' => $type,
-            'additional_data' => $query_params
+            'additional_data' => $query_params,
         ];
     }
 }

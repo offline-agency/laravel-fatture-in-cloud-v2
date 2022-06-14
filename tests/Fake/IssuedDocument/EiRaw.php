@@ -8,8 +8,7 @@ class EiRaw extends FakeResponse
 {
     public function getEiRawFake(
         array $params = []
-    ): array
-    {
+    ): array {
         return [];
     }
 }

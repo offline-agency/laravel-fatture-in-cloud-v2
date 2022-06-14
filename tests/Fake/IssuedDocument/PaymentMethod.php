@@ -8,29 +8,28 @@ class PaymentMethod extends FakeResponse
 {
     public function getPaymentMethodFake(
         array $params = []
-    ): array
-    {
+    ): array {
         return [
             'id' => $this->value($params, 'payment_method.id', null),
             'name' => $this->value($params, 'payment_method.name', ''),
             'details' => $this->value($params, 'payment_method.details', [
-                (object)[
+                (object) [
                     'title' => '',
                     'description' => '',
                 ],
-                (object)[
+                (object) [
                     'title' => '',
                     'description' => '',
                 ],
-                (object)[
+                (object) [
                     'title' => '',
                     'description' => '',
                 ],
-                (object)[
+                (object) [
                     'title' => '',
                     'description' => '',
                 ],
-                (object)[
+                (object) [
                     'title' => '',
                     'description' => '',
                 ],
