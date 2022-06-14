@@ -28,7 +28,7 @@ class SingleProduct extends FakeResponse
             'average_cost' => $this->value($params, 'average_cost', 100.00),
             'average_price' => $this->value($params, 'average_price', 122.00),
             'created_at' => $this->value($params, 'created_at', ''),
-            'updated_at' => $this->value($params, 'updated_at', '')
+            'updated_at' => $this->value($params, 'updated_at', ''),
         ];
     }
 }

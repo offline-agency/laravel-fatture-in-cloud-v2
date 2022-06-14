@@ -70,12 +70,12 @@ class Pagination extends AbstractEntity
 
     public function hasNextPage(): bool
     {
-        return !is_null($this->next_page_url);
+        return ! is_null($this->next_page_url);
     }
 
     public function hasPrevPage(): bool
     {
-        return !is_null($this->prev_page_url);
+        return ! is_null($this->prev_page_url);
     }
 
     // helper

@@ -54,7 +54,7 @@ class ProductEntityTest extends TestCase
     {
         $product_list = new ProductList(json_decode(
             (new ProductFakeResponse())->getProductsFakeList([
-                'next_page_url' => 'https://fake_url/entity?per_page=10&page=2'
+                'next_page_url' => 'https://fake_url/entity?per_page=10&page=2',
             ])
         ));
 
@@ -73,7 +73,7 @@ class ProductEntityTest extends TestCase
     {
         $product_list = new ProductList(json_decode(
             (new ProductFakeResponse())->getProductsFakeList([
-                'prev_page_url' => 'https://fake_url/entity?per_page=10&page=1'
+                'prev_page_url' => 'https://fake_url/entity?per_page=10&page=1',
             ])
         ));
 
@@ -92,7 +92,7 @@ class ProductEntityTest extends TestCase
     {
         $product_list = new ProductList(json_decode(
             (new ProductFakeResponse())->getProductsFakeList([
-                'first_page_url' => 'https://fake_url/entity?per_page=10&page=1'
+                'first_page_url' => 'https://fake_url/entity?per_page=10&page=1',
             ])
         ));
 
@@ -111,7 +111,7 @@ class ProductEntityTest extends TestCase
     {
         $product_list = new ProductList(json_decode(
             (new ProductFakeResponse())->getProductsFakeList([
-                'last_page_url' => 'https://fake_url/entity?per_page=10&page=2'
+                'last_page_url' => 'https://fake_url/entity?per_page=10&page=2',
             ])
         ));
 
@@ -133,7 +133,7 @@ class ProductEntityTest extends TestCase
         $product_id = 1;
 
         Http::fake([
-            'products/' . $product_id => Http::response(
+            'products/'.$product_id => Http::response(
                 (new ProductFakeResponse())->getProductsFakeDetail()
             ),
         ]);
@@ -150,7 +150,7 @@ class ProductEntityTest extends TestCase
         $product_id = 1;
 
         Http::fake([
-            'products/' . $product_id => Http::response(),
+            'products/'.$product_id => Http::response(),
         ]);
 
         $product = new Product();

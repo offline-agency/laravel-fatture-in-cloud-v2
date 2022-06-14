@@ -2,8 +2,8 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Product;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Pagination;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Product as ProductApi;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Pagination;
 
 class ProductPagination extends Pagination
 {
@@ -27,7 +27,7 @@ class ProductPagination extends Pagination
 
     public function goToPrevPage()
     {
-        if (!$this->hasPrevPage()) {
+        if (! $this->hasPrevPage()) {
             return null;
         }
 
@@ -36,7 +36,7 @@ class ProductPagination extends Pagination
 
     public function goToNextPage()
     {
-        if (!$this->hasNextPage()) {
+        if (! $this->hasNextPage()) {
             return null;
         }
 
@@ -47,8 +47,7 @@ class ProductPagination extends Pagination
 
     private function changePage(
         string $url
-    )
-    {
+    ) {
         $query_params = $this->getQueryParams($url);
 
         $product = new ProductApi();
