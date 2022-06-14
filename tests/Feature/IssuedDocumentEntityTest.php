@@ -71,7 +71,7 @@ class IssuedDocumentEntityTest extends TestCase
         $this->assertCount(2, $query_params->additional_data);
     }
 
-    public function test_go_to_next_page()
+    public function test_go_to_issued_document_next_page()
     {
         $type = 'invoice';
 
@@ -91,7 +91,7 @@ class IssuedDocumentEntityTest extends TestCase
         $this->assertInstanceOf(IssuedDocumentList::class, $next_page_response);
     }
 
-    public function test_go_to_prev_page()
+    public function test_go_to_issued_document_prev_page()
     {
         $type = 'invoice';
 
@@ -111,7 +111,7 @@ class IssuedDocumentEntityTest extends TestCase
         $this->assertInstanceOf(IssuedDocumentList::class, $next_page_response);
     }
 
-    public function test_go_to_first_page()
+    public function test_go_to_issued_document_first_page()
     {
         $type = 'invoice';
 
@@ -131,7 +131,7 @@ class IssuedDocumentEntityTest extends TestCase
         $this->assertInstanceOf(IssuedDocumentList::class, $next_page_response);
     }
 
-    public function test_go_to_last_page()
+    public function test_go_to_issued_document_last_page()
     {
         $type = 'invoice';
 
