@@ -2,12 +2,22 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Fake;
 
+use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\Product\SingleProduct;
+
 class ProductFakeResponse extends FakeResponse
 {
-    public function getIssuedDocumentsFakeList()
+    public function getProductsFakeList(
+        array $params = []
+    )
     {
-        return json_encode((object) [
-            //
-        ]);
+        return json_encode(array_merge(
+            [
+                'data' => [
+                    (new SingleProduct())->getProductFakeDetail($params),
+                    (new SingleProduct())->getProductFakeDetail($params)
+                ]
+            ],
+            (new PaginationFakeResponse())->getPaginationFake($params)
+        ));
     }
 }
