@@ -8,13 +8,49 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Pagination;
 
 class IssuedDocumentPagination extends Pagination
 {
-    public function goToFirstPage(): ?IssuedDocumentList
+    public function goToFirstPage()
     {
         if (is_null($this->first_page_url)) {
             return null;
         }
 
-        $query_params = $this->getParsedQueryParams($this->first_page_url);
+        return $this->changePage($this->first_page_url);
+    }
+
+    public function goToLastPage()
+    {
+        if (is_null($this->last_page_url)) {
+            return null;
+        }
+
+        return $this->changePage($this->last_page_url);
+    }
+
+    public function goToPrevPage()
+    {
+        if (!$this->hasPrevPage()) {
+            return null;
+        }
+
+        return $this->changePage($this->prev_page_url);
+    }
+
+    public function goToNextPage()
+    {
+        if (!$this->hasNextPage()) {
+            return null;
+        }
+
+        return $this->changePage($this->next_page_url);
+    }
+
+    // helpers
+
+    private function changePage(
+        string $url
+    )
+    {
+        $query_params = $this->getParsedQueryParams($url);
 
         $issued_document = new IssuedDocument;
 
@@ -23,8 +59,6 @@ class IssuedDocumentPagination extends Pagination
             $query_params->additional_data
         );
     }
-
-    // helpers
 
     public function getParsedQueryParams($url): object
     {

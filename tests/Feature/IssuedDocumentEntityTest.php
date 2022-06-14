@@ -4,6 +4,7 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 
 use Illuminate\Support\Facades\Http;
 use OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument;
+use OfflineAgency\LaravelFattureInCloudV2\Api\Product;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentList;
@@ -35,6 +36,25 @@ class IssuedDocumentEntityTest extends TestCase
         $this->assertInstanceOf(IssuedDocumentEntity::class, $response->getItems()[0]);
     }
 
+    public function test_error_on_list_issued_documents()
+    {
+        $type = 'invoice';
+
+        Http::fake([
+            'issued_documents?type='.$type => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeError(),
+                401
+            ),
+        ]);
+
+        $issued_documents = new IssuedDocument();
+        $response = $issued_documents->list($type);
+
+        $this->assertInstanceOf(Error::class, $response);
+    }
+
+    // pagination
+
     public function test_query_parameters_parsing()
     {
         $issued_document_pagination = new IssuedDocumentPagination((object) []);
@@ -51,21 +71,84 @@ class IssuedDocumentEntityTest extends TestCase
         $this->assertCount(2, $query_params->additional_data);
     }
 
-    public function test_error_on_list_issued_documents()
+    public function test_go_to_next_page()
     {
         $type = 'invoice';
 
         Http::fake([
             'issued_documents?type='.$type => Http::response(
-                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeError(),
-                401
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList([
+                    'next_page_url' => 'https://fake_url/entity?per_page=10&page=2&type=' . $type
+                ])
             ),
         ]);
 
         $issued_documents = new IssuedDocument();
         $response = $issued_documents->list($type);
 
-        $this->assertInstanceOf(Error::class, $response);
+        $next_page_response = $response->getPagination()->goToNextPage();
+
+        $this->assertInstanceOf(IssuedDocumentList::class, $next_page_response);
+    }
+
+    public function test_go_to_prev_page()
+    {
+        $type = 'invoice';
+
+        Http::fake([
+            'issued_documents?type='.$type => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList([
+                    'prev_page_url' => 'https://fake_url/entity?per_page=10&page=1&type=' . $type
+                ])
+            ),
+        ]);
+
+        $issued_documents = new IssuedDocument();
+        $response = $issued_documents->list($type);
+
+        $next_page_response = $response->getPagination()->goToPrevPage();
+
+        $this->assertInstanceOf(IssuedDocumentList::class, $next_page_response);
+    }
+
+    public function test_go_to_first_page()
+    {
+        $type = 'invoice';
+
+        Http::fake([
+            'issued_documents?type='.$type => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList([
+                    'first_page_url' => 'https://fake_url/entity?per_page=10&page=1&type=' . $type
+                ])
+            ),
+        ]);
+
+        $issued_documents = new IssuedDocument();
+        $response = $issued_documents->list($type);
+
+        $next_page_response = $response->getPagination()->goToFirstPage();
+
+        $this->assertInstanceOf(IssuedDocumentList::class, $next_page_response);
+    }
+
+    public function test_go_to_last_page()
+    {
+        $type = 'invoice';
+
+        Http::fake([
+            'issued_documents?type='.$type => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList([
+                    'last_page_url' => 'https://fake_url/entity?per_page=10&page=2&type=' . $type
+                ])
+            ),
+        ]);
+
+        $issued_documents = new IssuedDocument();
+        $response = $issued_documents->list($type);
+
+        $next_page_response = $response->getPagination()->goToLastPage();
+
+        $this->assertInstanceOf(IssuedDocumentList::class, $next_page_response);
     }
 
     // single
