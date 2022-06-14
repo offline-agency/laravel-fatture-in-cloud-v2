@@ -4,7 +4,6 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 
 use Illuminate\Support\Facades\Http;
 use OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument;
-use OfflineAgency\LaravelFattureInCloudV2\Api\Product;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentList;
@@ -21,7 +20,7 @@ class IssuedDocumentEntityTest extends TestCase
         $type = 'invoice';
 
         Http::fake([
-            'issued_documents?type='.$type => Http::response(
+            'issued_documents?type=' . $type => Http::response(
                 (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList()
             ),
         ]);
@@ -41,7 +40,7 @@ class IssuedDocumentEntityTest extends TestCase
         $type = 'invoice';
 
         Http::fake([
-            'issued_documents?type='.$type => Http::response(
+            'issued_documents?type=' . $type => Http::response(
                 (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeError(),
                 401
             ),
@@ -57,7 +56,7 @@ class IssuedDocumentEntityTest extends TestCase
 
     public function test_query_parameters_parsing()
     {
-        $issued_document_pagination = new IssuedDocumentPagination((object) []);
+        $issued_document_pagination = new IssuedDocumentPagination((object)[]);
 
         $query_params = $issued_document_pagination->getParsedQueryParams('https://fake_url.com/entity?first=Lorem&type=document_type&second=Ipsum');
 
@@ -71,84 +70,88 @@ class IssuedDocumentEntityTest extends TestCase
         $this->assertCount(2, $query_params->additional_data);
     }
 
-    public function test_go_to_next_page()
+    public function test_go_to_issued_document_next_page()
     {
         $type = 'invoice';
 
+        $issued_document_list = new IssuedDocumentList(json_decode(
+            (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList([
+                'next_page_url' => 'https://fake_url/issued_documents?type=' . $type . '&per_page=10&page=2'
+            ])
+        ));
+
         Http::fake([
-            'issued_documents?type='.$type => Http::response(
-                (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList([
-                    'next_page_url' => 'https://fake_url/entity?per_page=10&page=2&type=' . $type
-                ])
+            'issued_documents?per_page=10&page=2&type=' . $type => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList()
             ),
         ]);
 
-        $issued_documents = new IssuedDocument();
-        $response = $issued_documents->list($type);
-
-        $next_page_response = $response->getPagination()->goToNextPage();
+        $next_page_response = $issued_document_list->getPagination()->goToNextPage();
 
         $this->assertInstanceOf(IssuedDocumentList::class, $next_page_response);
     }
 
-    public function test_go_to_prev_page()
+    public function test_go_to_issued_document_prev_page()
     {
         $type = 'invoice';
 
+        $issued_document_list = new IssuedDocumentList(json_decode(
+            (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList([
+                'prev_page_url' => 'https://fake_url/issued_documents?type=' . $type . '&per_page=10&page=1'
+            ])
+        ));
+
         Http::fake([
-            'issued_documents?type='.$type => Http::response(
-                (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList([
-                    'prev_page_url' => 'https://fake_url/entity?per_page=10&page=1&type=' . $type
-                ])
+            'issued_documents?per_page=10&page=1&type=' . $type => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList()
             ),
         ]);
 
-        $issued_documents = new IssuedDocument();
-        $response = $issued_documents->list($type);
+        $prev_page_response = $issued_document_list->getPagination()->goToPrevPage();
 
-        $next_page_response = $response->getPagination()->goToPrevPage();
-
-        $this->assertInstanceOf(IssuedDocumentList::class, $next_page_response);
+        $this->assertInstanceOf(IssuedDocumentList::class, $prev_page_response);
     }
 
-    public function test_go_to_first_page()
+    public function test_go_to_issued_document_first_page()
     {
         $type = 'invoice';
 
+        $issued_document_list = new IssuedDocumentList(json_decode(
+            (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList([
+                'first_page_url' => 'https://fake_url/issued_documents?type=' . $type . '&per_page=10&page=1'
+            ])
+        ));
+
         Http::fake([
-            'issued_documents?type='.$type => Http::response(
-                (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList([
-                    'first_page_url' => 'https://fake_url/entity?per_page=10&page=1&type=' . $type
-                ])
+            'issued_documents?per_page=10&page=1&type=' . $type => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList()
             ),
         ]);
 
-        $issued_documents = new IssuedDocument();
-        $response = $issued_documents->list($type);
+        $first_page_response = $issued_document_list->getPagination()->goToFirstPage();
 
-        $next_page_response = $response->getPagination()->goToFirstPage();
-
-        $this->assertInstanceOf(IssuedDocumentList::class, $next_page_response);
+        $this->assertInstanceOf(IssuedDocumentList::class, $first_page_response);
     }
 
-    public function test_go_to_last_page()
+    public function test_go_to_issued_document_last_page()
     {
         $type = 'invoice';
 
+        $issued_document_list = new IssuedDocumentList(json_decode(
+            (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList([
+                'last_page_url' => 'https://fake_url/issued_documents?type=' . $type . '&per_page=10&page=2'
+            ])
+        ));
+
         Http::fake([
-            'issued_documents?type='.$type => Http::response(
-                (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList([
-                    'last_page_url' => 'https://fake_url/entity?per_page=10&page=2&type=' . $type
-                ])
+            'issued_documents?per_page=10&page=2&type=' . $type => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList()
             ),
         ]);
 
-        $issued_documents = new IssuedDocument();
-        $response = $issued_documents->list($type);
+        $last_page_response = $issued_document_list->getPagination()->goToLastPage();
 
-        $next_page_response = $response->getPagination()->goToLastPage();
-
-        $this->assertInstanceOf(IssuedDocumentList::class, $next_page_response);
+        $this->assertInstanceOf(IssuedDocumentList::class, $last_page_response);
     }
 
     // single
@@ -158,7 +161,7 @@ class IssuedDocumentEntityTest extends TestCase
         $document_id = 1;
 
         Http::fake([
-            'issued_documents/'.$document_id => Http::response(
+            'issued_documents/' . $document_id => Http::response(
                 (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeDetail()
             ),
         ]);
@@ -175,7 +178,7 @@ class IssuedDocumentEntityTest extends TestCase
         $document_id = 1;
 
         Http::fake([
-            'bin/issued_documents/'.$document_id => Http::response(
+            'bin/issued_documents/' . $document_id => Http::response(
                 (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeDetail()
             ),
         ]);
@@ -192,7 +195,7 @@ class IssuedDocumentEntityTest extends TestCase
         $document_id = 1;
 
         Http::fake([
-            'issued_documents/'.$document_id => Http::response(),
+            'issued_documents/' . $document_id => Http::response(),
         ]);
 
         $issued_documents = new IssuedDocument();
