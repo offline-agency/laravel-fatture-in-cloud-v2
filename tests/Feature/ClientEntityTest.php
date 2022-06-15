@@ -4,6 +4,7 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 
 use Illuminate\Support\Facades\Http;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Client;
+use OfflineAgency\LaravelFattureInCloudV2\Api\Product;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\ClientList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\Client as ClientEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\ClientPagination;
@@ -143,5 +144,19 @@ class ClientEntityTest extends TestCase
 
         $this->assertNotNull($response);
         $this->assertInstanceOf(ClientEntity::class, $response);
+    }
+
+    public function test_delete_client()
+    {
+        $client_id = 1;
+
+        Http::fake([
+            'entities/clients/'.$client_id => Http::response(),
+        ]);
+
+        $client = new Client();
+        $response = $client->delete($client_id);
+
+        $this->assertEquals('Client deleted', $response);
     }
 }

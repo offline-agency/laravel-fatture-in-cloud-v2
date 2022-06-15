@@ -51,4 +51,19 @@ class Client extends Api
 
         return new ClientEntity($client);
     }
+
+    public function delete(
+        int $client_id
+    )
+    {
+        $response = $this->destroy(
+            $this->company_id . '/entities/clients/' . $client_id
+        );
+
+        if (!$response->success) {
+            return new Error($response->data);
+        }
+
+        return 'Client deleted';
+    }
 }
