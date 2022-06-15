@@ -2,6 +2,9 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentList;
@@ -84,5 +87,39 @@ class IssuedDocument extends Api
         }
 
         return 'Document deleted';
+    }
+
+    public function create(
+        array $body = []
+    )
+    {
+        $validator = Validator::make($body, [
+            'data' => 'required',
+            'data.entity.name' => 'required',
+            'data.entity.default_vat.value' => 'required', //TODO: add float/int
+            'data.entity.default_payment_method.name' => 'required',
+            'data.entity.default_payment_method.default_payment_account.name' => 'required',
+            'data.language.code' => 'required',
+            'data.language.name' => 'required',
+            'data.payment_method.name' => 'required',
+            'data.payment_method.default_payment_account.name' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        $response = $this->post(
+            $this->company_id.'/issued_documents',
+            $body
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $issued_document = $response->data->data;
+
+        return new IssuedDocumentEntity($issued_document);
     }
 }

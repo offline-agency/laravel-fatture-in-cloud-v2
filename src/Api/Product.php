@@ -3,8 +3,8 @@
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\ProductList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\Product as ProductEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\ProductList;
 
 class Product extends Api
 {
@@ -31,7 +31,7 @@ class Product extends Api
     }
 
     public function detail(
-        int $product_id,
+        int    $product_id,
         ?array $additional_data = []
     )
     {
@@ -55,12 +55,13 @@ class Product extends Api
 
     public function delete(
         int $product_id
-    ) {
+    )
+    {
         $response = $this->destroy(
-            $this->company_id.'/products/'.$product_id
+            $this->company_id . '/products/' . $product_id
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 

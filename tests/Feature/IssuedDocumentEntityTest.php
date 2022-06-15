@@ -203,4 +203,20 @@ class IssuedDocumentEntityTest extends TestCase
 
         $this->assertEquals('Document deleted', $response);
     }
+
+    // create
+
+    /*public function test_create_issued_document()
+    {
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->create([
+            'data' => [
+                'entity' => [
+                    'name' => 'Test'
+                ]
+            ]
+        ]);
+
+        dd($response);
+    }*/
 }

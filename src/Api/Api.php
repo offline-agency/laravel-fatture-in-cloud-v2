@@ -25,6 +25,17 @@ class Api extends LaravelFattureInCloudV2
         return $this->parseResponse($response);
     }
 
+    protected function post(
+        string $url,
+        array $body
+    ): object {
+        $complete_url = $this->baseUrl.$url;
+
+        $response = $this->header->post($complete_url, $body);
+
+        return $this->parseResponse($response);
+    }
+
     protected function destroy(
         string $url,
         array $query_parameters = []
