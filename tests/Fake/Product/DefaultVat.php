@@ -13,7 +13,7 @@ class DefaultVat extends FakeResponse
             'id' => $this->value($params, 'default_vat.id', 0),
             'value' => $this->value($params, 'default_vat.value', 22),
             'description' => $this->value($params, 'default_vat.description', ''),
-            'is_disabled' => $this->value($params, 'default_vat.is_disabled', false)
+            'is_disabled' => $this->value($params, 'default_vat.is_disabled', false),
         ];
     }
 }

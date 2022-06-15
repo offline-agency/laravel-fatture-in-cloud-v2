@@ -10,18 +10,17 @@ class Product extends Api
 {
     public function list(
         ?array $additional_data = []
-    )
-    {
+    ) {
         $additional_data = $this->data($additional_data, [
-            'fields', 'fieldset', 'sort', 'page', 'per_page', 'q'
+            'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
         ]);
 
         $response = $this->get(
-            $this->company_id . '/products',
+            $this->company_id.'/products',
             $additional_data
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -33,18 +32,17 @@ class Product extends Api
     public function detail(
         int    $product_id,
         ?array $additional_data = []
-    )
-    {
+    ) {
         $additional_data = $this->data($additional_data, [
-            'fields', 'fieldset'
+            'fields', 'fieldset',
         ]);
 
         $response = $this->get(
-            $this->company_id . '/products/' . $product_id,
+            $this->company_id.'/products/'.$product_id,
             $additional_data
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 

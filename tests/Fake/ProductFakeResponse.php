@@ -8,14 +8,13 @@ class ProductFakeResponse extends FakeResponse
 {
     public function getProductsFakeList(
         array $params = []
-    )
-    {
+    ) {
         return json_encode(array_merge(
             [
                 'data' => [
                     (new SingleProduct())->getProductFakeDetail($params),
-                    (new SingleProduct())->getProductFakeDetail($params)
-                ]
+                    (new SingleProduct())->getProductFakeDetail($params),
+                ],
             ],
             (new PaginationFakeResponse())->getPaginationFake($params)
         ));
@@ -23,13 +22,12 @@ class ProductFakeResponse extends FakeResponse
 
     public function getProductsFakeDetail(
         array $params = []
-    )
-    {
+    ) {
         return json_encode([
-                'data' => (object)[
-                    (new SingleProduct())->getProductFakeDetail($params)
-                ]
-            ]
+            'data' => (object) [
+                (new SingleProduct())->getProductFakeDetail($params),
+            ],
+        ]
         );
     }
 }

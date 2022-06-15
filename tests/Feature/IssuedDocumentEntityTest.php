@@ -20,7 +20,7 @@ class IssuedDocumentEntityTest extends TestCase
         $type = 'invoice';
 
         Http::fake([
-            'issued_documents?type=' . $type => Http::response(
+            'issued_documents?type='.$type => Http::response(
                 (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList()
             ),
         ]);
@@ -40,7 +40,7 @@ class IssuedDocumentEntityTest extends TestCase
         $type = 'invoice';
 
         Http::fake([
-            'issued_documents?type=' . $type => Http::response(
+            'issued_documents?type='.$type => Http::response(
                 (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeError(),
                 401
             ),
@@ -56,7 +56,7 @@ class IssuedDocumentEntityTest extends TestCase
 
     public function test_query_parameters_parsing()
     {
-        $issued_document_pagination = new IssuedDocumentPagination((object)[]);
+        $issued_document_pagination = new IssuedDocumentPagination((object) []);
 
         $query_params = $issued_document_pagination->getParsedQueryParams('https://fake_url.com/entity?first=Lorem&type=document_type&second=Ipsum');
 
@@ -76,12 +76,12 @@ class IssuedDocumentEntityTest extends TestCase
 
         $issued_document_list = new IssuedDocumentList(json_decode(
             (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList([
-                'next_page_url' => 'https://fake_url/issued_documents?type=' . $type . '&per_page=10&page=2'
+                'next_page_url' => 'https://fake_url/issued_documents?type='.$type.'&per_page=10&page=2',
             ])
         ));
 
         Http::fake([
-            'issued_documents?per_page=10&page=2&type=' . $type => Http::response(
+            'issued_documents?per_page=10&page=2&type='.$type => Http::response(
                 (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList()
             ),
         ]);
@@ -97,12 +97,12 @@ class IssuedDocumentEntityTest extends TestCase
 
         $issued_document_list = new IssuedDocumentList(json_decode(
             (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList([
-                'prev_page_url' => 'https://fake_url/issued_documents?type=' . $type . '&per_page=10&page=1'
+                'prev_page_url' => 'https://fake_url/issued_documents?type='.$type.'&per_page=10&page=1',
             ])
         ));
 
         Http::fake([
-            'issued_documents?per_page=10&page=1&type=' . $type => Http::response(
+            'issued_documents?per_page=10&page=1&type='.$type => Http::response(
                 (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList()
             ),
         ]);
@@ -118,12 +118,12 @@ class IssuedDocumentEntityTest extends TestCase
 
         $issued_document_list = new IssuedDocumentList(json_decode(
             (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList([
-                'first_page_url' => 'https://fake_url/issued_documents?type=' . $type . '&per_page=10&page=1'
+                'first_page_url' => 'https://fake_url/issued_documents?type='.$type.'&per_page=10&page=1',
             ])
         ));
 
         Http::fake([
-            'issued_documents?per_page=10&page=1&type=' . $type => Http::response(
+            'issued_documents?per_page=10&page=1&type='.$type => Http::response(
                 (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList()
             ),
         ]);
@@ -139,12 +139,12 @@ class IssuedDocumentEntityTest extends TestCase
 
         $issued_document_list = new IssuedDocumentList(json_decode(
             (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList([
-                'last_page_url' => 'https://fake_url/issued_documents?type=' . $type . '&per_page=10&page=2'
+                'last_page_url' => 'https://fake_url/issued_documents?type='.$type.'&per_page=10&page=2',
             ])
         ));
 
         Http::fake([
-            'issued_documents?per_page=10&page=2&type=' . $type => Http::response(
+            'issued_documents?per_page=10&page=2&type='.$type => Http::response(
                 (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList()
             ),
         ]);
@@ -161,7 +161,7 @@ class IssuedDocumentEntityTest extends TestCase
         $document_id = 1;
 
         Http::fake([
-            'issued_documents/' . $document_id => Http::response(
+            'issued_documents/'.$document_id => Http::response(
                 (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeDetail()
             ),
         ]);
@@ -178,7 +178,7 @@ class IssuedDocumentEntityTest extends TestCase
         $document_id = 1;
 
         Http::fake([
-            'bin/issued_documents/' . $document_id => Http::response(
+            'bin/issued_documents/'.$document_id => Http::response(
                 (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeDetail()
             ),
         ]);
@@ -195,7 +195,7 @@ class IssuedDocumentEntityTest extends TestCase
         $document_id = 1;
 
         Http::fake([
-            'issued_documents/' . $document_id => Http::response(),
+            'issued_documents/'.$document_id => Http::response(),
         ]);
 
         $issued_documents = new IssuedDocument();

@@ -39,7 +39,7 @@ class Product extends AbstractEntity
     /**
      * @var object
      */
-    public $default_vat;//TODO: relate another class
+    public $default_vat; //TODO: relate another class
 
     /**
      * @var float
