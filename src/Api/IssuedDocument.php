@@ -2,15 +2,27 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentList;
 
 class IssuedDocument extends Api
 {
+    const DOCUMENT_TYPES = [
+        'invoice',
+        'quote',
+        'proforma',
+        'receipt',
+        'delivery_note',
+        'credit_note',
+        'order',
+        'work_report',
+        'supplier_order',
+        'self_own_invoice',
+        'self_supplier_invoice'
+    ];
+
     public function list(
         string $type,
         ?array $additional_data = []
@@ -95,14 +107,10 @@ class IssuedDocument extends Api
     {
         $validator = Validator::make($body, [
             'data' => 'required',
-            'data.entity.name' => 'required',
-            'data.entity.default_vat.value' => 'required', //TODO: add float/int
-            'data.entity.default_payment_method.name' => 'required',
-            'data.entity.default_payment_method.default_payment_account.name' => 'required',
-            'data.language.code' => 'required',
-            'data.language.name' => 'required',
-            'data.payment_method.name' => 'required',
-            'data.payment_method.default_payment_account.name' => 'required',
+            'data.type' => 'required|in:' . implode(',', IssuedDocument::DOCUMENT_TYPES),
+            'data.entity.name' => 'required'
+        ], [
+            'data.type.in' => 'The selected data.type is invalid. Select one between ' . implode(', ', IssuedDocument::DOCUMENT_TYPES)
         ]);
 
         if ($validator->fails()) {
