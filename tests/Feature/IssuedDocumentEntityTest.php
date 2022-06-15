@@ -281,4 +281,67 @@ class IssuedDocumentEntityTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $response);
         $this->assertArrayHasKey('data.entity.name', $response->messages());
     }
+
+    // edit
+
+    public function test_edit_issued_document()
+    {
+        $document_id = 1;
+        $entity_name = 'Test S.R.L Updated';
+
+        Http::fake([
+            'issued_documents/' . $document_id => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeDetail([
+                    'entity' => [
+                        'name' => $entity_name
+                    ]
+                ])
+            ),
+        ]);
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->edit($document_id, [
+            'data' => [
+                'entity' => [
+                    'name' => $entity_name
+                ]
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(IssuedDocumentEntity::class, $response);
+    }
+
+    public function test_validation_error_on_edit_issued_document()
+    {
+        $document_id = 1;
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->edit($document_id, []);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data', $response->messages());
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->edit($document_id, [
+            'data' => []
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data', $response->messages());
+        $this->assertArrayHasKey('data.entity.name', $response->messages());
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->edit($document_id, [
+            'data' => [
+                'entity' => []
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data.entity.name', $response->messages());
+    }
 }

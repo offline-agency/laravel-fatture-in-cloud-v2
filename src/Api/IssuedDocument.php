@@ -130,4 +130,32 @@ class IssuedDocument extends Api
 
         return new IssuedDocumentEntity($issued_document);
     }
+
+    public function edit(
+        int $document_id,
+        array $body = []
+    )
+    {
+        $validator = Validator::make($body, [
+            'data' => 'required',
+            'data.entity.name' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        $response = $this->put(
+            $this->company_id.'/issued_documents/'.$document_id,
+            $body
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $issued_document = $response->data->data;
+
+        return new IssuedDocumentEntity($issued_document);
+    }
 }
