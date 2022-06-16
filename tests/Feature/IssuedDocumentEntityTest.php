@@ -346,19 +346,13 @@ class IssuedDocumentEntityTest extends TestCase
         $this->assertArrayHasKey('data.entity.name', $response->messages());
     }
 
-    // totals
+    // new totals
 
     public function test_get_new_totals_issued_document()
     {
-        $entity_name = 'Test S.P.A';
-
         Http::fake([
             'issued_documents/totals' => Http::response(
-                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeDetail([
-                    'entity' => [
-                        'name' => $entity_name
-                    ]
-                ])
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeTotals()
             ),
         ]);
 
@@ -367,7 +361,7 @@ class IssuedDocumentEntityTest extends TestCase
             'data' => [
                 'type' => 'invoice',
                 'entity' => [
-                    'name' => $entity_name
+                    'name' => 'Test S.P.A'
                 ]
             ]
         ]);
@@ -414,6 +408,64 @@ class IssuedDocumentEntityTest extends TestCase
         $response = $issued_document->getNewTotals([
             'data' => [
                 'type' => 'invoice',
+                'entity' => []
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data.entity.name', $response->messages());
+    }
+
+    // existing totals
+
+    public function test_get_existing_totals_issued_document()
+    {
+        $document_id = 1;
+
+        Http::fake([
+            'issued_documents/' . $document_id . '/totals' => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeTotals()
+            ),
+        ]);
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->getExistingTotals($document_id, [
+            'data' => [
+                'entity' => [
+                    'name' => 'Test S.R.L'
+                ]
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(IssuedDocumentTotals::class, $response);
+    }
+
+    public function test_validation_error_on_get_existing_totals_issued_document()
+    {
+        $document_id = 1;
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->getExistingTotals($document_id, []);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data', $response->messages());
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->getExistingTotals($document_id, [
+            'data' => []
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data', $response->messages());
+        $this->assertArrayHasKey('data.entity.name', $response->messages());
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->getExistingTotals($document_id, [
+            'data' => [
                 'entity' => []
             ]
         ]);
