@@ -9,6 +9,7 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPagination;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentTotals;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocumentFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
 
@@ -336,6 +337,83 @@ class IssuedDocumentEntityTest extends TestCase
         $issued_document = new IssuedDocument();
         $response = $issued_document->edit($document_id, [
             'data' => [
+                'entity' => []
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data.entity.name', $response->messages());
+    }
+
+    // totals
+
+    public function test_get_new_totals_issued_document()
+    {
+        $entity_name = 'Test S.P.A';
+
+        Http::fake([
+            'issued_documents/totals' => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeDetail([
+                    'entity' => [
+                        'name' => $entity_name
+                    ]
+                ])
+            ),
+        ]);
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->getNewTotals([
+            'data' => [
+                'type' => 'invoice',
+                'entity' => [
+                    'name' => $entity_name
+                ]
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(IssuedDocumentTotals::class, $response);
+    }
+
+    public function test_validation_error_on_get_new_totals_issued_document()
+    {
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->getNewTotals([]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data', $response->messages());
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->getNewTotals([
+            'data' => []
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data', $response->messages());
+        $this->assertArrayHasKey('data.type', $response->messages());
+        $this->assertArrayHasKey('data.entity.name', $response->messages());
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->getNewTotals([
+            'data' => [
+                'type' => 'fake_type',
+                'entity' => [
+                    'name' => 'Test S.P.A.'
+                ]
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data.type', $response->messages());
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->getNewTotals([
+            'data' => [
+                'type' => 'invoice',
                 'entity' => []
             ]
         ]);

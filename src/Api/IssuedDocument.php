@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Validator;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentList;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentTotals;
 
 class IssuedDocument extends Api
 {
@@ -157,5 +158,35 @@ class IssuedDocument extends Api
         $issued_document = $response->data->data;
 
         return new IssuedDocumentEntity($issued_document);
+    }
+
+    public function getNewTotals(
+        array $body
+    )
+    {
+        $validator = Validator::make($body, [
+            'data' => 'required',
+            'data.type' => 'required|in:' . implode(',', IssuedDocument::DOCUMENT_TYPES),
+            'data.entity.name' => 'required'
+        ], [
+            'data.type.in' => 'The selected data.type is invalid. Select one between ' . implode(', ', IssuedDocument::DOCUMENT_TYPES)
+        ]);
+
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        $response = $this->post(
+            $this->company_id.'/issued_documents/totals',
+            $body
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $issued_document = $response->data->data;
+
+        return new IssuedDocumentTotals($issued_document);
     }
 }
