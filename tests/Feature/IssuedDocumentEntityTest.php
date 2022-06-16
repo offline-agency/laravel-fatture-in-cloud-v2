@@ -9,6 +9,7 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPagination;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPreCreateInfo;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentTotals;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocumentFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
@@ -473,5 +474,24 @@ class IssuedDocumentEntityTest extends TestCase
         $this->assertNotNull($response);
         $this->assertInstanceOf(MessageBag::class, $response);
         $this->assertArrayHasKey('data.entity.name', $response->messages());
+    }
+
+    // info
+
+    public function test_pre_create_info_issued_document()
+    {
+        $type = 'invoice';
+
+        Http::fake([
+            'issued_documents/info?type='.$type => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakePreCreateInfo()
+            ),
+        ]);
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->preCreateInfo($type);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(IssuedDocumentPreCreateInfo::class, $response);
     }
 }

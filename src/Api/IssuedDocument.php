@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Validator;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentList;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPreCreateInfo;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentTotals;
 
 class IssuedDocument extends Api
@@ -216,5 +217,25 @@ class IssuedDocument extends Api
         $issued_document = $response->data->data;
 
         return new IssuedDocumentTotals($issued_document);
+    }
+
+    public function preCreateInfo(
+        string $type
+    )
+    {
+        $response = $this->get(
+            $this->company_id.'/issued_documents/info',
+            [
+                'type' => $type
+            ]
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $info = $response->data->data;
+
+        return new IssuedDocumentPreCreateInfo($info);
     }
 }
