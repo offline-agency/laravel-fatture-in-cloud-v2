@@ -5,6 +5,7 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 use Illuminate\Support\Facades\Validator;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentEmail;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPreCreateInfo;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentTotals;
@@ -237,5 +238,21 @@ class IssuedDocument extends Api
         $info = $response->data->data;
 
         return new IssuedDocumentPreCreateInfo($info);
+    }
+
+    public function email(
+        int $document_id
+    ) {
+        $response = $this->get(
+            $this->company_id.'/issued_documents/'.$document_id.'/email'
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $email = $response->data->data;
+
+        return new IssuedDocumentEmail($email);
     }
 }

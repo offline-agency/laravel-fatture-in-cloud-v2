@@ -7,6 +7,7 @@ use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentEmail;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPagination;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPreCreateInfo;
@@ -493,5 +494,24 @@ class IssuedDocumentEntityTest extends TestCase
 
         $this->assertNotNull($response);
         $this->assertInstanceOf(IssuedDocumentPreCreateInfo::class, $response);
+    }
+
+    // emails
+
+    public function test_email_issued_document()
+    {
+        $document_id = 212504002;
+
+        Http::fake([
+            'issued_documents/'.$document_id.'/email' => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakEmail()
+            ),
+        ]);
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->email($document_id);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(IssuedDocumentEmail::class, $response);
     }
 }
