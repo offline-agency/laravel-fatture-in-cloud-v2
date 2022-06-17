@@ -33,6 +33,33 @@ class Api extends LaravelFattureInCloudV2
 
         $response = $this->header->post($complete_url, $body);
 
+        $response_status = $response->status();
+
+        if ($response_status === 403 || $response_status === 429) {
+            $this->waitThrottle($response_status);
+
+            $this->post($url, $body);
+        }
+
+        return $this->parseResponse($response);
+    }
+
+    protected function put(
+        string $url,
+        array $body
+    ): object {
+        $complete_url = $this->baseUrl.$url;
+
+        $response = $this->header->put($complete_url, $body);
+
+        $response_status = $response->status();
+
+        if ($response_status === 403 || $response_status === 429) {
+            $this->waitThrottle($response_status);
+
+            $this->put($url, $body);
+        }
+
         return $this->parseResponse($response);
     }
 

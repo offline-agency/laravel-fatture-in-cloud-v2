@@ -3,11 +3,16 @@
 namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentEmail;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPagination;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPreCreateInfo;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentScheduleEmail;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentTotals;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocumentFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
 
@@ -206,17 +211,418 @@ class IssuedDocumentEntityTest extends TestCase
 
     // create
 
-    /*public function test_create_issued_document()
+    public function test_create_issued_document()
     {
+        $entity_name = 'Test S.R.L';
+
+        Http::fake([
+            'issued_documents' => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeDetail([
+                    'entity' => [
+                        'name' => $entity_name
+                    ]
+                ])
+            ),
+        ]);
+
         $issued_document = new IssuedDocument();
         $response = $issued_document->create([
             'data' => [
+                'type' => 'invoice',
                 'entity' => [
-                    'name' => 'Test'
+                    'name' => $entity_name
                 ]
             ]
         ]);
 
-        dd($response);
-    }*/
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(IssuedDocumentEntity::class, $response);
+    }
+
+    public function test_validation_error_on_create_issued_document()
+    {
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->create([]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data', $response->messages());
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->create([
+            'data' => []
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data', $response->messages());
+        $this->assertArrayHasKey('data.type', $response->messages());
+        $this->assertArrayHasKey('data.entity.name', $response->messages());
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->create([
+            'data' => [
+                'type' => 'fake_type',
+                'entity' => [
+                    'name' => 'Test S.R.L.'
+                ]
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data.type', $response->messages());
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->create([
+            'data' => [
+                'type' => 'invoice',
+                'entity' => []
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data.entity.name', $response->messages());
+    }
+
+    // edit
+
+    public function test_edit_issued_document()
+    {
+        $document_id = 1;
+        $entity_name = 'Test S.R.L Updated';
+
+        Http::fake([
+            'issued_documents/' . $document_id => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeDetail([
+                    'entity' => [
+                        'name' => $entity_name
+                    ]
+                ])
+            ),
+        ]);
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->edit($document_id, [
+            'data' => [
+                'entity' => [
+                    'name' => $entity_name
+                ]
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(IssuedDocumentEntity::class, $response);
+    }
+
+    public function test_validation_error_on_edit_issued_document()
+    {
+        $document_id = 1;
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->edit($document_id, []);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data', $response->messages());
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->edit($document_id, [
+            'data' => []
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data', $response->messages());
+        $this->assertArrayHasKey('data.entity.name', $response->messages());
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->edit($document_id, [
+            'data' => [
+                'entity' => []
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data.entity.name', $response->messages());
+    }
+
+    // new totals
+
+    public function test_get_new_totals_issued_document()
+    {
+        Http::fake([
+            'issued_documents/totals' => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeTotals()
+            ),
+        ]);
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->getNewTotals([
+            'data' => [
+                'type' => 'invoice',
+                'entity' => [
+                    'name' => 'Test S.P.A'
+                ]
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(IssuedDocumentTotals::class, $response);
+    }
+
+    public function test_validation_error_on_get_new_totals_issued_document()
+    {
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->getNewTotals([]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data', $response->messages());
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->getNewTotals([
+            'data' => []
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data', $response->messages());
+        $this->assertArrayHasKey('data.type', $response->messages());
+        $this->assertArrayHasKey('data.entity.name', $response->messages());
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->getNewTotals([
+            'data' => [
+                'type' => 'fake_type',
+                'entity' => [
+                    'name' => 'Test S.P.A.'
+                ]
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data.type', $response->messages());
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->getNewTotals([
+            'data' => [
+                'type' => 'invoice',
+                'entity' => []
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data.entity.name', $response->messages());
+    }
+
+    // existing totals
+
+    public function test_get_existing_totals_issued_document()
+    {
+        $document_id = 1;
+
+        Http::fake([
+            'issued_documents/' . $document_id . '/totals' => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeTotals()
+            ),
+        ]);
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->getExistingTotals($document_id, [
+            'data' => [
+                'entity' => [
+                    'name' => 'Test S.R.L'
+                ]
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(IssuedDocumentTotals::class, $response);
+    }
+
+    public function test_validation_error_on_get_existing_totals_issued_document()
+    {
+        $document_id = 1;
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->getExistingTotals($document_id, []);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data', $response->messages());
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->getExistingTotals($document_id, [
+            'data' => []
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data', $response->messages());
+        $this->assertArrayHasKey('data.entity.name', $response->messages());
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->getExistingTotals($document_id, [
+            'data' => [
+                'entity' => []
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data.entity.name', $response->messages());
+    }
+
+    // info
+
+    public function test_pre_create_info_issued_document()
+    {
+        $type = 'invoice';
+
+        Http::fake([
+            'issued_documents/info?type='.$type => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakePreCreateInfo()
+            ),
+        ]);
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->preCreateInfo($type);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(IssuedDocumentPreCreateInfo::class, $response);
+    }
+
+    // emails
+
+    public function test_email_data_issued_document()
+    {
+        $document_id = 1;
+
+        Http::fake([
+            'issued_documents/'.$document_id.'/email' => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakEmailData()
+            ),
+        ]);
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->emailData($document_id);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(IssuedDocumentEmail::class, $response);
+    }
+
+    public function test_schedule_email_issued_document()
+    {
+        $document_id = 1;
+
+        Http::fake([
+            'issued_documents/'.$document_id.'/email' => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakScheduleEmail()
+            ),
+        ]);
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->scheduleEmail($document_id, [
+            'data' => [
+                'sender_email' => 'fake_sender_email@gmail.com',
+                'recipient_email' => 'fake_recipient_email@gmail.com',
+                'subject' => 'fake_subject',
+                'body' => 'fake_body',
+                'include' => [
+                    'document' => true,
+                    'delivery_note' => false,
+                    'attachment' => false,
+                    'accompanying_invoice' => false
+                ],
+                'attach_pdf' => false,
+                'send_copy' => true
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(IssuedDocumentScheduleEmail::class, $response);
+    }
+
+    public function test_validation_error_on_schedule_email_issued_document()
+    {
+        $document_id = 1;
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->scheduleEmail($document_id, []);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data', $response->messages());
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->scheduleEmail($document_id, [
+            'data' => [
+                'sender_email' => 'fake_email@gmail.com'
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayNotHasKey('data.sender_id', $response->messages());
+        $this->assertArrayNotHasKey('data.sender_email', $response->messages());
+        $this->assertArrayHasKey('data.recipient_email', $response->messages());
+        $this->assertArrayHasKey('data.subject', $response->messages());
+        $this->assertArrayHasKey('data.body', $response->messages());
+        $this->assertArrayHasKey('data.include', $response->messages());
+        $this->assertArrayHasKey('data.attach_pdf', $response->messages());
+        $this->assertArrayHasKey('data.send_copy', $response->messages());
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->scheduleEmail($document_id, [
+            'data' => [
+                'sender_email' => 'fake_email@gmail.com',
+                'recipient_email' => 'fake_email@gmail.com',
+                'subject' => 'fake_subject',
+                'body' => 'fake_body',
+                'attach_pdf' => 'fake_attach_pdf',
+                'send_copy' => 'fake_send_copy',
+                'include' => [
+                    'document' => 'fake_document'
+                ]
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data.include.delivery_note', $response->messages());
+        $this->assertArrayHasKey('data.include.attachment', $response->messages());
+        $this->assertArrayHasKey('data.include.accompanying_invoice', $response->messages());
+        $this->assertArrayNotHasKey('data.include.document', $response->messages());
+    }
+
+    // attachment
+
+    public function test_attachment_issued_document()
+    {
+        $file_name = 'test-file.pdf';
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->attachment([
+            'filename' => $file_name,
+            'attachment' => 'fake_attachment'
+        ]);
+
+        $this->assertNull($response);
+    }
+
+    public function test_validation_error_on_attachment_issued_document()
+    {
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->attachment([]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('filename', $response->messages());
+        $this->assertArrayHasKey('attachment', $response->messages());
+    }
 }
