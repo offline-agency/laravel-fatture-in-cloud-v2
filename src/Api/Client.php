@@ -94,4 +94,31 @@ class Client extends Api
 
         return new ClientEntity($client);
     }
+
+    public function edit(
+        int   $client_id,
+        array $body = []
+    ) {
+        $validator = Validator::make($body, [
+            'data' => 'required',
+            'data.name' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        $response = $this->put(
+            $this->company_id.'/entities/clients/'.$client_id,
+            $body
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $client_id = $response->data->data;
+
+        return new ClientEntity($client_id);
+    }
 }

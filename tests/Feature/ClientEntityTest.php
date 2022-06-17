@@ -201,4 +201,53 @@ class ClientEntityTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $response);
         $this->assertArrayHasKey('data.name', $response->messages());
     }
+
+    // client
+
+    public function test_edit_client()
+    {
+        $client_id = 1;
+        $client_name = 'Test Updated';
+
+        Http::fake([
+            'entities/clients/'.$client_id => Http::response(
+                (new ClientFakeResponse())->getClientFakeDetail([
+                    'name' => $client_name
+                ])
+            ),
+        ]);
+
+        $client = new Client();
+        $response = $client->edit($client_id, [
+            'data' => [
+                'name' => $client_name
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(ClientEntity::class, $response);
+    }
+
+    public function test_validation_error_on_edit_issued_document()
+    {
+        $client_id = 1;
+
+        $client = new Client();
+        $response = $client->edit($client_id, []);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data', $response->messages());
+
+        $client = new Client();
+        $response = $client->edit($client_id, [
+            'data' => [
+                'code' => 'test'
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data.name', $response->messages());
+    }
 }
