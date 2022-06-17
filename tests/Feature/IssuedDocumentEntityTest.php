@@ -11,6 +11,7 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPagination;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPreCreateInfo;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentScheduleEmail;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentTotals;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocumentFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
@@ -498,21 +499,105 @@ class IssuedDocumentEntityTest extends TestCase
 
     // emails
 
-    public function test_email_issued_document()
+    public function test_email_data_issued_document()
     {
-        $document_id = 212504002;
+        $document_id = 1;
 
         Http::fake([
             'issued_documents/'.$document_id.'/email' => Http::response(
-                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakEmail()
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakEmailData()
             ),
         ]);
 
         $issued_document = new IssuedDocument();
-        $response = $issued_document->email($document_id);
+        $response = $issued_document->emailData($document_id);
 
         $this->assertNotNull($response);
         $this->assertInstanceOf(IssuedDocumentEmail::class, $response);
+    }
+
+    public function test_schedule_email_issued_document()
+    {
+        $document_id = 1;
+
+        Http::fake([
+            'issued_documents/'.$document_id.'/email' => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakScheduleEmail()
+            ),
+        ]);
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->scheduleEmail($document_id, [
+            'data' => [
+                'sender_email' => 'fake_sender_email@gmail.com',
+                'recipient_email' => 'fake_recipient_email@gmail.com',
+                'subject' => 'fake_subject',
+                'body' => 'fake_body',
+                'include' => [
+                    'document' => true,
+                    'delivery_note' => false,
+                    'attachment' => false,
+                    'accompanying_invoice' => false
+                ],
+                'attach_pdf' => false,
+                'send_copy' => true
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(IssuedDocumentScheduleEmail::class, $response);
+    }
+
+    public function test_validation_error_on_schedule_email_issued_document()
+    {
+        $document_id = 1;
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->scheduleEmail($document_id, []);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data', $response->messages());
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->scheduleEmail($document_id, [
+            'data' => [
+                'sender_email' => 'fake_email@gmail.com'
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayNotHasKey('data.sender_id', $response->messages());
+        $this->assertArrayNotHasKey('data.sender_email', $response->messages());
+        $this->assertArrayHasKey('data.recipient_email', $response->messages());
+        $this->assertArrayHasKey('data.subject', $response->messages());
+        $this->assertArrayHasKey('data.body', $response->messages());
+        $this->assertArrayHasKey('data.include', $response->messages());
+        $this->assertArrayHasKey('data.attach_pdf', $response->messages());
+        $this->assertArrayHasKey('data.send_copy', $response->messages());
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->scheduleEmail($document_id, [
+            'data' => [
+                'sender_email' => 'fake_email@gmail.com',
+                'recipient_email' => 'fake_email@gmail.com',
+                'subject' => 'fake_subject',
+                'body' => 'fake_body',
+                'attach_pdf' => 'fake_attach_pdf',
+                'send_copy' => 'fake_send_copy',
+                'include' => [
+                    'document' => 'fake_document'
+                ]
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data.include.delivery_note', $response->messages());
+        $this->assertArrayHasKey('data.include.attachment', $response->messages());
+        $this->assertArrayHasKey('data.include.accompanying_invoice', $response->messages());
+        $this->assertArrayNotHasKey('data.include.document', $response->messages());
     }
 
     // attachment

@@ -6,6 +6,7 @@ use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument\Document;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument\DocumentList;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument\Email;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument\PreCreateInfo;
+use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument\ScheduleEmail;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument\Total;
 
 class IssuedDocumentFakeResponse extends FakeResponse
@@ -48,11 +49,19 @@ class IssuedDocumentFakeResponse extends FakeResponse
         ]);
     }
 
-    public function getIssuedDocumentFakEmail(
+    public function getIssuedDocumentFakEmailData(
         array $params = []
     ) {
         return json_encode([
             'data' => (new Email())->getEmailFake($params),
+        ]);
+    }
+
+    public function getIssuedDocumentFakScheduleEmail(
+        array $params = []
+    ) {
+        return json_encode([
+            'data' => (new ScheduleEmail())->getEmailFake($params),
         ]);
     }
 

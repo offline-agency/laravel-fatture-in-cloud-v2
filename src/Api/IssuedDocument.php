@@ -8,6 +8,7 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentEmail;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPreCreateInfo;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentScheduleEmail;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentTotals;
 
 class IssuedDocument extends Api
@@ -240,7 +241,7 @@ class IssuedDocument extends Api
         return new IssuedDocumentPreCreateInfo($info);
     }
 
-    public function email(
+    public function emailData(
         int $document_id
     ) {
         $response = $this->get(
@@ -270,5 +271,44 @@ class IssuedDocument extends Api
         }
 
         return null;
+    }
+
+    public function scheduleEmail(
+        int   $document_id,
+        array $body = []
+    )
+    {
+        $validator = Validator::make($body, [
+            'data' => 'required',
+            'data.sender_id' => 'required_without:data.sender_email',
+            'data.sender_email' => 'required_without:data.sender_id',
+            'data.recipient_email' => 'required',
+            'data.subject' => 'required',
+            'data.body' => 'required',
+            'data.include' => 'required',
+            'data.include.document' => 'required',
+            'data.include.delivery_note' => 'required',
+            'data.include.attachment' => 'required',
+            'data.include.accompanying_invoice' => 'required',
+            'data.attach_pdf' => 'required',
+            'data.send_copy' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        $response = $this->post(
+            $this->company_id.'/issued_documents/'.$document_id.'/email',
+            $body
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $schedule_email = $response->data->data;
+
+        return new IssuedDocumentScheduleEmail($schedule_email);
     }
 }
