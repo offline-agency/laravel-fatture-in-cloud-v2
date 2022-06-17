@@ -92,7 +92,7 @@ Package provide a method to intercept throttle errors (403, 429) and automatical
 - [X] Get Email Data [![GET method](https://img.shields.io/static/v1.svg?label=&message=GET&color=green)]()
 - [ ] Schedule Email [![POST method](https://img.shields.io/static/v1.svg?label=&message=POST&color=blue)]()
 
-#### Products
+#### Products ✅
 
 - [X] List products [![GET method](https://img.shields.io/static/v1.svg?label=&message=GET&color=green)]()
 - [X] Create product [![POST method](https://img.shields.io/static/v1.svg?label=&message=POST&color=blue)]()
