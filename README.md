@@ -95,7 +95,7 @@ Package provide a method to intercept throttle errors (403, 429) and automatical
 #### Products
 
 - [X] List products [![GET method](https://img.shields.io/static/v1.svg?label=&message=GET&color=green)]()
-- [ ] Create product [![POST method](https://img.shields.io/static/v1.svg?label=&message=POST&color=blue)]()
+- [X] Create product [![POST method](https://img.shields.io/static/v1.svg?label=&message=POST&color=blue)]()
 - [X] Get product [![GET method](https://img.shields.io/static/v1.svg?label=&message=GET&color=green)]()
 - [ ] Modify product [![PUT method](https://img.shields.io/static/v1.svg?label=&message=PUT&color=violet)]()
 - [X] Delete product [![DELETE method](https://img.shields.io/static/v1.svg?label=&message=DELETE&color=red)]()

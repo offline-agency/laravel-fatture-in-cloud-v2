@@ -3,6 +3,8 @@
 namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\MessageBag;
+use OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Product;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\Product as ProductEntity;
@@ -157,5 +159,53 @@ class ProductEntityTest extends TestCase
         $response = $product->delete($product_id);
 
         $this->assertEquals('Product deleted', $response);
+    }
+
+    // create
+
+    public function test_create_product()
+    {
+        $product_name = 'Test';
+
+        Http::fake([
+            'products' => Http::response(
+                (new ProductFakeResponse())->getProductsFakeDetail([
+                    'name' => $product_name
+                ])
+            ),
+        ]);
+
+        $product = new Product();
+        $response = $product->create([
+            'data' => [
+                'name' => $product_name
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(ProductEntity::class, $response);
+    }
+
+    public function test_validation_error_on_create_issued_document()
+    {
+        $product = new Product();
+        $response = $product->create([]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data', $response->messages());
+
+        $product = new Product();
+        $response = $product->create([
+            'data' => [
+                'net_price' => 100
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data.name', $response->messages());
+        $this->assertArrayHasKey('data.code', $response->messages());
+        $this->assertArrayHasKey('data.description', $response->messages());
     }
 }

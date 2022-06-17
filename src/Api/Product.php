@@ -2,6 +2,7 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
+use Illuminate\Support\Facades\Validator;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\Product as ProductEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\ProductList;
@@ -64,5 +65,34 @@ class Product extends Api
         }
 
         return 'Product deleted';
+    }
+
+    public function create(
+        array $body = []
+    )
+    {
+        $validator = Validator::make($body, [
+            'data' => 'required',
+            'data.name' => 'required_without_all:data.code,data.description',
+            'data.code' => 'required_without_all:data.name,data.description',
+            'data.description' => 'required_without_all:data.name,data.code'
+        ]);
+
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        $response = $this->post(
+            $this->company_id.'/products',
+            $body
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $product = $response->data->data;
+
+        return new ProductEntity($product);
     }
 }
