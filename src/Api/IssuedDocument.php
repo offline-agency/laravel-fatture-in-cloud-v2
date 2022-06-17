@@ -255,4 +255,20 @@ class IssuedDocument extends Api
 
         return new IssuedDocumentEmail($email);
     }
+
+    public function attachment(
+        array $body = []
+    )
+    {
+        $validator = Validator::make($body, [
+            'filename' => 'required',
+            'attachment' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        return null;
+    }
 }

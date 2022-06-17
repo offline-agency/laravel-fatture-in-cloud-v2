@@ -514,4 +514,30 @@ class IssuedDocumentEntityTest extends TestCase
         $this->assertNotNull($response);
         $this->assertInstanceOf(IssuedDocumentEmail::class, $response);
     }
+
+    // attachment
+
+    public function test_attachment_issued_document()
+    {
+        $file_name = 'test-file.pdf';
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->attachment([
+            'filename' => $file_name,
+            'attachment' => 'fake_attachment'
+        ]);
+
+        $this->assertNull($response);
+    }
+
+    public function test_validation_error_on_attachment_issued_document()
+    {
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->attachment([]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('filename', $response->messages());
+        $this->assertArrayHasKey('attachment', $response->messages());
+    }
 }
