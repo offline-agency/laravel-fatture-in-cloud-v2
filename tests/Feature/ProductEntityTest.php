@@ -4,7 +4,6 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\MessageBag;
-use OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Product;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\Product as ProductEntity;
@@ -170,7 +169,7 @@ class ProductEntityTest extends TestCase
         Http::fake([
             'products' => Http::response(
                 (new ProductFakeResponse())->getProductsFakeDetail([
-                    'name' => $product_name
+                    'name' => $product_name,
                 ])
             ),
         ]);
@@ -178,8 +177,8 @@ class ProductEntityTest extends TestCase
         $product = new Product();
         $response = $product->create([
             'data' => [
-                'name' => $product_name
-            ]
+                'name' => $product_name,
+            ],
         ]);
 
         $this->assertNotNull($response);
@@ -198,8 +197,8 @@ class ProductEntityTest extends TestCase
         $product = new Product();
         $response = $product->create([
             'data' => [
-                'net_price' => 100
-            ]
+                'net_price' => 100,
+            ],
         ]);
 
         $this->assertNotNull($response);
@@ -220,7 +219,7 @@ class ProductEntityTest extends TestCase
             'products/'.$document_id => Http::response(
                 (new ProductFakeResponse())->getProductsFakeDetail([
                     'id' => $document_id,
-                    'name' => $product_name
+                    'name' => $product_name,
                 ])
             ),
         ]);
@@ -228,8 +227,8 @@ class ProductEntityTest extends TestCase
         $product = new Product();
         $response = $product->edit($document_id, [
             'data' => [
-                'name' => $product_name
-            ]
+                'name' => $product_name,
+            ],
         ]);
 
         $this->assertNotNull($response);
@@ -250,8 +249,8 @@ class ProductEntityTest extends TestCase
         $product = new Product();
         $response = $product->edit($product_id, [
             'data' => [
-                'net_price' => 100
-            ]
+                'net_price' => 100,
+            ],
         ]);
 
         $this->assertNotNull($response);

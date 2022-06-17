@@ -219,8 +219,8 @@ class IssuedDocumentEntityTest extends TestCase
             'issued_documents' => Http::response(
                 (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeDetail([
                     'entity' => [
-                        'name' => $entity_name
-                    ]
+                        'name' => $entity_name,
+                    ],
                 ])
             ),
         ]);
@@ -230,9 +230,9 @@ class IssuedDocumentEntityTest extends TestCase
             'data' => [
                 'type' => 'invoice',
                 'entity' => [
-                    'name' => $entity_name
-                ]
-            ]
+                    'name' => $entity_name,
+                ],
+            ],
         ]);
 
         $this->assertNotNull($response);
@@ -250,7 +250,7 @@ class IssuedDocumentEntityTest extends TestCase
 
         $issued_document = new IssuedDocument();
         $response = $issued_document->create([
-            'data' => []
+            'data' => [],
         ]);
 
         $this->assertNotNull($response);
@@ -264,9 +264,9 @@ class IssuedDocumentEntityTest extends TestCase
             'data' => [
                 'type' => 'fake_type',
                 'entity' => [
-                    'name' => 'Test S.R.L.'
-                ]
-            ]
+                    'name' => 'Test S.R.L.',
+                ],
+            ],
         ]);
 
         $this->assertNotNull($response);
@@ -277,8 +277,8 @@ class IssuedDocumentEntityTest extends TestCase
         $response = $issued_document->create([
             'data' => [
                 'type' => 'invoice',
-                'entity' => []
-            ]
+                'entity' => [],
+            ],
         ]);
 
         $this->assertNotNull($response);
@@ -294,11 +294,11 @@ class IssuedDocumentEntityTest extends TestCase
         $entity_name = 'Test S.R.L Updated';
 
         Http::fake([
-            'issued_documents/' . $document_id => Http::response(
+            'issued_documents/'.$document_id => Http::response(
                 (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeDetail([
                     'entity' => [
-                        'name' => $entity_name
-                    ]
+                        'name' => $entity_name,
+                    ],
                 ])
             ),
         ]);
@@ -307,9 +307,9 @@ class IssuedDocumentEntityTest extends TestCase
         $response = $issued_document->edit($document_id, [
             'data' => [
                 'entity' => [
-                    'name' => $entity_name
-                ]
-            ]
+                    'name' => $entity_name,
+                ],
+            ],
         ]);
 
         $this->assertNotNull($response);
@@ -329,7 +329,7 @@ class IssuedDocumentEntityTest extends TestCase
 
         $issued_document = new IssuedDocument();
         $response = $issued_document->edit($document_id, [
-            'data' => []
+            'data' => [],
         ]);
 
         $this->assertNotNull($response);
@@ -340,8 +340,8 @@ class IssuedDocumentEntityTest extends TestCase
         $issued_document = new IssuedDocument();
         $response = $issued_document->edit($document_id, [
             'data' => [
-                'entity' => []
-            ]
+                'entity' => [],
+            ],
         ]);
 
         $this->assertNotNull($response);
@@ -364,9 +364,9 @@ class IssuedDocumentEntityTest extends TestCase
             'data' => [
                 'type' => 'invoice',
                 'entity' => [
-                    'name' => 'Test S.P.A'
-                ]
-            ]
+                    'name' => 'Test S.P.A',
+                ],
+            ],
         ]);
 
         $this->assertNotNull($response);
@@ -384,7 +384,7 @@ class IssuedDocumentEntityTest extends TestCase
 
         $issued_document = new IssuedDocument();
         $response = $issued_document->getNewTotals([
-            'data' => []
+            'data' => [],
         ]);
 
         $this->assertNotNull($response);
@@ -398,9 +398,9 @@ class IssuedDocumentEntityTest extends TestCase
             'data' => [
                 'type' => 'fake_type',
                 'entity' => [
-                    'name' => 'Test S.P.A.'
-                ]
-            ]
+                    'name' => 'Test S.P.A.',
+                ],
+            ],
         ]);
 
         $this->assertNotNull($response);
@@ -411,8 +411,8 @@ class IssuedDocumentEntityTest extends TestCase
         $response = $issued_document->getNewTotals([
             'data' => [
                 'type' => 'invoice',
-                'entity' => []
-            ]
+                'entity' => [],
+            ],
         ]);
 
         $this->assertNotNull($response);
@@ -427,7 +427,7 @@ class IssuedDocumentEntityTest extends TestCase
         $document_id = 1;
 
         Http::fake([
-            'issued_documents/' . $document_id . '/totals' => Http::response(
+            'issued_documents/'.$document_id.'/totals' => Http::response(
                 (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeTotals()
             ),
         ]);
@@ -436,9 +436,9 @@ class IssuedDocumentEntityTest extends TestCase
         $response = $issued_document->getExistingTotals($document_id, [
             'data' => [
                 'entity' => [
-                    'name' => 'Test S.R.L'
-                ]
-            ]
+                    'name' => 'Test S.R.L',
+                ],
+            ],
         ]);
 
         $this->assertNotNull($response);
@@ -458,7 +458,7 @@ class IssuedDocumentEntityTest extends TestCase
 
         $issued_document = new IssuedDocument();
         $response = $issued_document->getExistingTotals($document_id, [
-            'data' => []
+            'data' => [],
         ]);
 
         $this->assertNotNull($response);
@@ -469,8 +469,8 @@ class IssuedDocumentEntityTest extends TestCase
         $issued_document = new IssuedDocument();
         $response = $issued_document->getExistingTotals($document_id, [
             'data' => [
-                'entity' => []
-            ]
+                'entity' => [],
+            ],
         ]);
 
         $this->assertNotNull($response);
@@ -537,11 +537,11 @@ class IssuedDocumentEntityTest extends TestCase
                     'document' => true,
                     'delivery_note' => false,
                     'attachment' => false,
-                    'accompanying_invoice' => false
+                    'accompanying_invoice' => false,
                 ],
                 'attach_pdf' => false,
-                'send_copy' => true
-            ]
+                'send_copy' => true,
+            ],
         ]);
 
         $this->assertNotNull($response);
@@ -562,8 +562,8 @@ class IssuedDocumentEntityTest extends TestCase
         $issued_document = new IssuedDocument();
         $response = $issued_document->scheduleEmail($document_id, [
             'data' => [
-                'sender_email' => 'fake_email@gmail.com'
-            ]
+                'sender_email' => 'fake_email@gmail.com',
+            ],
         ]);
 
         $this->assertNotNull($response);
@@ -587,9 +587,9 @@ class IssuedDocumentEntityTest extends TestCase
                 'attach_pdf' => 'fake_attach_pdf',
                 'send_copy' => 'fake_send_copy',
                 'include' => [
-                    'document' => 'fake_document'
-                ]
-            ]
+                    'document' => 'fake_document',
+                ],
+            ],
         ]);
 
         $this->assertNotNull($response);
@@ -609,7 +609,7 @@ class IssuedDocumentEntityTest extends TestCase
         $issued_document = new IssuedDocument();
         $response = $issued_document->attachment([
             'filename' => $file_name,
-            'attachment' => 'fake_attachment'
+            'attachment' => 'fake_attachment',
         ]);
 
         $this->assertNull($response);

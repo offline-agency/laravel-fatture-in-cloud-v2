@@ -32,8 +32,8 @@ class Total extends FakeResponse
             'vat_list' => $this->value($params, 'vat_list', [
                 '22' => [
                     'amount_net' => 100,
-                    'amount_vat' => 22
-                ]
+                    'amount_vat' => 22,
+                ],
             ]),
         ];
     }

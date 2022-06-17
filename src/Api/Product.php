@@ -31,7 +31,7 @@ class Product extends Api
     }
 
     public function detail(
-        int    $product_id,
+        int $product_id,
         ?array $additional_data = []
     ) {
         $additional_data = $this->data($additional_data, [
@@ -54,13 +54,12 @@ class Product extends Api
 
     public function delete(
         int $product_id
-    )
-    {
+    ) {
         $response = $this->destroy(
-            $this->company_id . '/products/' . $product_id
+            $this->company_id.'/products/'.$product_id
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -69,13 +68,12 @@ class Product extends Api
 
     public function create(
         array $body = []
-    )
-    {
+    ) {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.name' => 'required_without_all:data.code,data.description',
             'data.code' => 'required_without_all:data.name,data.description',
-            'data.description' => 'required_without_all:data.name,data.code'
+            'data.description' => 'required_without_all:data.name,data.code',
         ]);
 
         if ($validator->fails()) {
@@ -97,15 +95,14 @@ class Product extends Api
     }
 
     public function edit(
-        int   $product_id,
+        int $product_id,
         array $body = []
-    )
-    {
+    ) {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.name' => 'required_without_all:data.code,data.description',
             'data.code' => 'required_without_all:data.name,data.description',
-            'data.description' => 'required_without_all:data.name,data.code'
+            'data.description' => 'required_without_all:data.name,data.code',
         ]);
 
         if ($validator->fails()) {

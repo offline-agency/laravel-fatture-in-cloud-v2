@@ -24,7 +24,7 @@ class ProductFakeResponse extends FakeResponse
         array $params = []
     ) {
         return json_encode([
-            'data' => (new SingleProduct())->getProductFakeDetail($params)
+            'data' => (new SingleProduct())->getProductFakeDetail($params),
         ]);
     }
 }
