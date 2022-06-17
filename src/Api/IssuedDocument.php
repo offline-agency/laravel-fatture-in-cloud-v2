@@ -24,7 +24,7 @@ class IssuedDocument extends Api
         'work_report',
         'supplier_order',
         'self_own_invoice',
-        'self_supplier_invoice'
+        'self_supplier_invoice',
     ];
 
     public function list(
@@ -107,14 +107,13 @@ class IssuedDocument extends Api
 
     public function create(
         array $body = []
-    )
-    {
+    ) {
         $validator = Validator::make($body, [
             'data' => 'required',
-            'data.type' => 'required|in:' . implode(',', IssuedDocument::DOCUMENT_TYPES),
-            'data.entity.name' => 'required'
+            'data.type' => 'required|in:'.implode(',', IssuedDocument::DOCUMENT_TYPES),
+            'data.entity.name' => 'required',
         ], [
-            'data.type.in' => 'The selected data.type is invalid. Select one between ' . implode(', ', IssuedDocument::DOCUMENT_TYPES)
+            'data.type.in' => 'The selected data.type is invalid. Select one between '.implode(', ', IssuedDocument::DOCUMENT_TYPES),
         ]);
 
         if ($validator->fails()) {
@@ -138,8 +137,7 @@ class IssuedDocument extends Api
     public function edit(
         int $document_id,
         array $body = []
-    )
-    {
+    ) {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.entity.name' => 'required',
@@ -165,14 +163,13 @@ class IssuedDocument extends Api
 
     public function getNewTotals(
         array $body
-    )
-    {
+    ) {
         $validator = Validator::make($body, [
             'data' => 'required',
-            'data.type' => 'required|in:' . implode(',', IssuedDocument::DOCUMENT_TYPES),
-            'data.entity.name' => 'required'
+            'data.type' => 'required|in:'.implode(',', IssuedDocument::DOCUMENT_TYPES),
+            'data.entity.name' => 'required',
         ], [
-            'data.type.in' => 'The selected data.type is invalid. Select one between ' . implode(', ', IssuedDocument::DOCUMENT_TYPES)
+            'data.type.in' => 'The selected data.type is invalid. Select one between '.implode(', ', IssuedDocument::DOCUMENT_TYPES),
         ]);
 
         if ($validator->fails()) {
@@ -196,8 +193,7 @@ class IssuedDocument extends Api
     public function getExistingTotals(
         int $document_id,
         array $body = []
-    )
-    {
+    ) {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.entity.name' => 'required',
@@ -223,12 +219,11 @@ class IssuedDocument extends Api
 
     public function preCreateInfo(
         string $type
-    )
-    {
+    ) {
         $response = $this->get(
             $this->company_id.'/issued_documents/info',
             [
-                'type' => $type
+                'type' => $type,
             ]
         );
 
@@ -259,8 +254,7 @@ class IssuedDocument extends Api
 
     public function attachment(
         array $body = []
-    )
-    {
+    ) {
         $validator = Validator::make($body, [
             'filename' => 'required',
             'attachment' => 'required',
@@ -274,10 +268,9 @@ class IssuedDocument extends Api
     }
 
     public function scheduleEmail(
-        int   $document_id,
+        int $document_id,
         array $body = []
-    )
-    {
+    ) {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.sender_id' => 'required_without:data.sender_email',

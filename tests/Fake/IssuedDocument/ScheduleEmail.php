@@ -8,10 +8,9 @@ class ScheduleEmail extends FakeResponse
 {
     public function getEmailFake(
         array $params = []
-    ): array
-    {
+    ): array {
         return [
-            'scheduled' => $this->value($params, 'scheduled', true)
+            'scheduled' => $this->value($params, 'scheduled', true),
         ];
     }
 }
