@@ -2,6 +2,7 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
+use Illuminate\Support\Facades\Validator;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\ClientList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\Client as ClientEntity;
@@ -65,5 +66,32 @@ class Client extends Api
         }
 
         return 'Client deleted';
+    }
+
+    public function create(
+        array $body = []
+    )
+    {
+        $validator = Validator::make($body, [
+            'data' => 'required',
+            'data.name' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        $response = $this->post(
+            $this->company_id.'/entities/clients',
+            $body
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $client = $response->data->data;
+
+        return new ClientEntity($client);
     }
 }

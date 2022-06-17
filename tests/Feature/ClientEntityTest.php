@@ -3,8 +3,8 @@
 namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Client;
-use OfflineAgency\LaravelFattureInCloudV2\Api\Product;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\ClientList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\Client as ClientEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\ClientPagination;
@@ -158,5 +158,47 @@ class ClientEntityTest extends TestCase
         $response = $client->delete($client_id);
 
         $this->assertEquals('Client deleted', $response);
+    }
+
+    // create
+
+    public function test_create_client()
+    {
+        Http::fake([
+            'entities/clients' => Http::response(
+                (new ClientFakeResponse())->getClientFakeDetail()
+            ),
+        ]);
+
+        $client = new Client();
+        $response = $client->create([
+            'data' => [
+                'name' => 'Test'
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(ClientEntity::class, $response);
+    }
+
+    public function test_validation_error_on_create_issued_document()
+    {
+        $client = new Client();
+        $response = $client->create([]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data', $response->messages());
+
+        $client = new Client();
+        $response = $client->create([
+            'data' => [
+                'code' => 'test'
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data.name', $response->messages());
     }
 }
