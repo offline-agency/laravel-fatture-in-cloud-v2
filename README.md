@@ -100,6 +100,14 @@ Package provide a method to intercept throttle errors (403, 429) and automatical
 - [X] Modify product [![PUT method](https://img.shields.io/static/v1.svg?label=&message=PUT&color=violet)]()
 - [X] Delete product [![DELETE method](https://img.shields.io/static/v1.svg?label=&message=DELETE&color=red)]()
 
+#### Clients
+
+- [X] List clients [![GET method](https://img.shields.io/static/v1.svg?label=&message=GET&color=green)]()
+- [X] Create client [![POST method](https://img.shields.io/static/v1.svg?label=&message=POST&color=blue)]()
+- [X] Get client [![GET method](https://img.shields.io/static/v1.svg?label=&message=GET&color=green)]()
+- [ ] Modify client [![PUT method](https://img.shields.io/static/v1.svg?label=&message=PUT&color=violet)]()
+- [X] Delete client [![DELETE method](https://img.shields.io/static/v1.svg?label=&message=DELETE&color=red)]()
+
 ## Usage
 
 Each callback accept a number of parameters equals to the sum of the required parameters +1 that is $additional_data
