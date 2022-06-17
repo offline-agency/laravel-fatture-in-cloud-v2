@@ -75,6 +75,18 @@ Package provide a method to intercept throttle errors (403, 429) and automatical
 ],
 ```
 
+### Issued document bin
+
+Package provide bin() method for deleted issued documents that allow you to get its detail. This is very useful, for example, when you convert a 
+proforma into an invoice (deleting the proforma) and you need old document's detail. Let's see an example:
+
+```php
+$issued_documents = new IssuedDocument();
+$response = $issued_documents->bin($document_id);
+```
+
+It returns the same class of detail method  with all its fields.
+
 ## Api coverage
 
 #### Issued Documents
@@ -82,6 +94,7 @@ Package provide a method to intercept throttle errors (403, 429) and automatical
 - [X] List Issued Documents [![GET method](https://img.shields.io/static/v1.svg?label=&message=GET&color=green)]()
 - [X] Create Issued Documents [![POST method](https://img.shields.io/static/v1.svg?label=&message=POST&color=blue)]()
 - [X] Get Issued Document [![GET method](https://img.shields.io/static/v1.svg?label=&message=GET&color=green)]()
+- [X] Get Deleted Document [![GET method](https://img.shields.io/static/v1.svg?label=&message=GET&color=green)]()
 - [X] Modify Issued Document [![PUT method](https://img.shields.io/static/v1.svg?label=&message=PUT&color=violet)]()
 - [X] Delete Issued Document [![DELETE method](https://img.shields.io/static/v1.svg?label=&message=DELETE&color=red)]()
 - [X] Get New Issued Document Totals [![POST method](https://img.shields.io/static/v1.svg?label=&message=POST&color=blue)]()
