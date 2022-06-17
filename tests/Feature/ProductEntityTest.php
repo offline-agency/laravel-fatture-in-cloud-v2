@@ -208,4 +208,56 @@ class ProductEntityTest extends TestCase
         $this->assertArrayHasKey('data.code', $response->messages());
         $this->assertArrayHasKey('data.description', $response->messages());
     }
+
+    // edit
+
+    public function test_edit_product()
+    {
+        $document_id = 1;
+        $product_name = 'Test Updated';
+
+        Http::fake([
+            'products/'.$document_id => Http::response(
+                (new ProductFakeResponse())->getProductsFakeDetail([
+                    'id' => $document_id,
+                    'name' => $product_name
+                ])
+            ),
+        ]);
+
+        $product = new Product();
+        $response = $product->edit($document_id, [
+            'data' => [
+                'name' => $product_name
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(ProductEntity::class, $response);
+    }
+
+    public function test_validation_error_on_update_issued_document()
+    {
+        $product_id = 1;
+
+        $product = new Product();
+        $response = $product->edit($product_id, []);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data', $response->messages());
+
+        $product = new Product();
+        $response = $product->edit($product_id, [
+            'data' => [
+                'net_price' => 100
+            ]
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('data.name', $response->messages());
+        $this->assertArrayHasKey('data.code', $response->messages());
+        $this->assertArrayHasKey('data.description', $response->messages());
+    }
 }

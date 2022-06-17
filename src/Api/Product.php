@@ -95,4 +95,34 @@ class Product extends Api
 
         return new ProductEntity($product);
     }
+
+    public function edit(
+        int   $product_id,
+        array $body = []
+    )
+    {
+        $validator = Validator::make($body, [
+            'data' => 'required',
+            'data.name' => 'required_without_all:data.code,data.description',
+            'data.code' => 'required_without_all:data.name,data.description',
+            'data.description' => 'required_without_all:data.name,data.code'
+        ]);
+
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        $response = $this->put(
+            $this->company_id.'/products/'.$product_id,
+            $body
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $product = $response->data->data;
+
+        return new ProductEntity($product);
+    }
 }
