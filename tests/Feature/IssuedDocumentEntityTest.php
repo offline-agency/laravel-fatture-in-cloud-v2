@@ -2,11 +2,13 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentAttachment;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentEmail;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPagination;
@@ -604,15 +606,20 @@ class IssuedDocumentEntityTest extends TestCase
 
     public function test_attachment_issued_document()
     {
-        $file_name = 'test-file.pdf';
+        Http::fake([
+            'issued_documents/attachment' => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakScheduleAttachment()
+            ),
+        ]);
 
         $issued_document = new IssuedDocument();
         $response = $issued_document->attachment([
-            'filename' => $file_name,
+            'filename' => 'test-file.pdf',
             'attachment' => 'fake_attachment',
         ]);
 
-        $this->assertNull($response);
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(IssuedDocumentAttachment::class, $response);
     }
 
     public function test_validation_error_on_attachment_issued_document()
@@ -624,5 +631,19 @@ class IssuedDocumentEntityTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $response);
         $this->assertArrayHasKey('filename', $response->messages());
         $this->assertArrayHasKey('attachment', $response->messages());
+    }
+
+    public function test_delete_attachment_issued_document()
+    {
+        $document_id = 1;
+
+        Http::fake([
+            'issued_documents/'.$document_id.'/attachment' => Http::response(),
+        ]);
+
+        $issued_document = new IssuedDocument();
+        $response = $issued_document->deleteAttachment($document_id);
+
+        $this->assertEquals('Attachment deleted', $response);
     }
 }

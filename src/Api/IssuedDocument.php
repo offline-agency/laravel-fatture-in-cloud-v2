@@ -2,9 +2,12 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentAttachment;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentEmail;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPreCreateInfo;
@@ -264,7 +267,34 @@ class IssuedDocument extends Api
             return $validator->errors();
         }
 
-        return null;
+        $response = $this->post(
+            $this->company_id.'/issued_documents/attachment',
+            $body,
+            true
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $attachment_token = $response->data->data;
+
+        return new IssuedDocumentAttachment($attachment_token);
+    }
+
+    public function deleteAttachment(
+        int $document_id
+    )
+    {
+        $response = $this->destroy(
+            $this->company_id.'/issued_documents/'.$document_id.'/attachment'
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        return 'Attachment deleted';
     }
 
     public function scheduleEmail(

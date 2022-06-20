@@ -2,6 +2,7 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
+use Illuminate\Support\Arr;
 use OfflineAgency\LaravelFattureInCloudV2\LaravelFattureInCloudV2;
 
 class Api extends LaravelFattureInCloudV2
@@ -27,11 +28,18 @@ class Api extends LaravelFattureInCloudV2
 
     protected function post(
         string $url,
-        array $body
+        array $body,
+        bool $has_file = false
     ): object {
         $complete_url = $this->baseUrl.$url;
 
-        $response = $this->header->post($complete_url, $body);
+        if ($has_file) {
+            $response = $this->header
+                ->attach('attachment', Arr::get($body, 'attachment'), Arr::get($body, 'filename'))
+                ->post($complete_url, $body);
+        } else {
+            $response = $this->header->post($complete_url, $body);
+        }
 
         $response_status = $response->status();
 
