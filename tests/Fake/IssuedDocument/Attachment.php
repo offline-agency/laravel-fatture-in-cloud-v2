@@ -4,13 +4,13 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument;
 
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\FakeResponse;
 
-class ScheduleEmail extends FakeResponse
+class Attachment extends FakeResponse
 {
-    public function getEmailFake(
+    public function getAttachmentFake(
         array $params = []
     ): array {
         return [
-            'scheduled' => $this->value($params, 'scheduled', true),
+            'attachment_token' => $this->value($params, 'attachment_token', 'fake_attachment_token'),
         ];
     }
 }

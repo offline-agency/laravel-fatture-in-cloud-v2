@@ -2,6 +2,7 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Fake;
 
+use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument\Attachment;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument\Document;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument\DocumentList;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument\Email;
@@ -62,6 +63,14 @@ class IssuedDocumentFakeResponse extends FakeResponse
     ) {
         return json_encode([
             'data' => (new ScheduleEmail())->getEmailFake($params),
+        ]);
+    }
+
+    public function getIssuedDocumentFakScheduleAttachment(
+        array $params = []
+    ) {
+        return json_encode([
+            'data' => (new Attachment())->getAttachmentFake($params),
         ]);
     }
 
