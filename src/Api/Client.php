@@ -3,16 +3,15 @@
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
 use Illuminate\Support\Facades\Validator;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\Client as ClientEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\ClientList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\Client as ClientEntity;
 
 class Client extends Api
 {
     public function list(
         ?array $additional_data = []
-    )
-    {
+    ) {
         $additional_data = $this->data($additional_data, [
             'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
         ]);
@@ -32,7 +31,7 @@ class Client extends Api
     }
 
     public function detail(
-        int    $client_id,
+        int $client_id,
         ?array $additional_data = []
     ) {
         $additional_data = $this->data($additional_data, [
@@ -55,13 +54,12 @@ class Client extends Api
 
     public function delete(
         int $client_id
-    )
-    {
+    ) {
         $response = $this->destroy(
-            $this->company_id . '/entities/clients/' . $client_id
+            $this->company_id.'/entities/clients/'.$client_id
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -70,11 +68,10 @@ class Client extends Api
 
     public function create(
         array $body = []
-    )
-    {
+    ) {
         $validator = Validator::make($body, [
             'data' => 'required',
-            'data.name' => 'required'
+            'data.name' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -96,12 +93,12 @@ class Client extends Api
     }
 
     public function edit(
-        int   $client_id,
+        int $client_id,
         array $body = []
     ) {
         $validator = Validator::make($body, [
             'data' => 'required',
-            'data.name' => 'required'
+            'data.name' => 'required',
         ]);
 
         if ($validator->fails()) {

@@ -24,10 +24,10 @@ class ClientFakeResponse extends FakeResponse
         array $params = []
     ) {
         return json_encode([
-                'data' => (object) [
-                    (new SingleClient())->getClientFakeDetail($params),
-                ],
-            ]
+            'data' => (object) [
+                (new SingleClient())->getClientFakeDetail($params),
+            ],
+        ]
         );
     }
 

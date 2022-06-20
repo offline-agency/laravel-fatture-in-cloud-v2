@@ -18,7 +18,7 @@ class DefaultVat extends FakeResponse
             'ei_type' => $this->value($params, 'ei_type', 'fake_ei_type'),
             'ei_description' => $this->value($params, 'ei_description', 'fake_ei_description'),
             'editable' => $this->value($params, 'editable', true),
-            'is_disabled' => $this->value($params, 'is_disabled', false)
+            'is_disabled' => $this->value($params, 'is_disabled', false),
         ];
     }
 }

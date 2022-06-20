@@ -19,7 +19,7 @@ class DefaultPaymentMethod extends FakeResponse
             'bank_iban' => $this->value($params, 'id', 1),
             'bank_name' => $this->value($params, 'id', 1),
             'bank_beneficiary' => $this->value($params, 'id', 1),
-            'ei_payment_method' => $this->value($params, 'id', 1)
+            'ei_payment_method' => $this->value($params, 'id', 1),
         ];
     }
 }
