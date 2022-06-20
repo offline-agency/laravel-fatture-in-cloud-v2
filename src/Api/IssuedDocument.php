@@ -2,8 +2,6 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
@@ -284,8 +282,7 @@ class IssuedDocument extends Api
 
     public function deleteAttachment(
         int $document_id
-    )
-    {
+    ) {
         $response = $this->destroy(
             $this->company_id.'/issued_documents/'.$document_id.'/attachment'
         );
