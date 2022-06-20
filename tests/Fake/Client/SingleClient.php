@@ -46,7 +46,7 @@ class SingleClient extends FakeResponse
             'intent_declaration_protocol_number' => $this->value($params, 'intent_declaration_protocol_number', 'fake_intent_declaration_protocol_number'),
             'intent_declaration_protocol_date' => $this->value($params, 'intent_declaration_protocol_date', 'fake_intent_declaration_protocol_date'),
             'created_at' => $this->value($params, 'created_at', 'fake_created_at'),
-            'updated_at' => $this->value($params, 'updated_at', 'fake_updated_at')
+            'updated_at' => $this->value($params, 'updated_at', 'fake_updated_at'),
         ];
     }
 }

@@ -5,8 +5,8 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Client;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\ClientList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\Client as ClientEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\ClientList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\ClientPagination;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ClientFakeResponse;
@@ -173,8 +173,8 @@ class ClientEntityTest extends TestCase
         $client = new Client();
         $response = $client->create([
             'data' => [
-                'name' => 'Test'
-            ]
+                'name' => 'Test',
+            ],
         ]);
 
         $this->assertNotNull($response);
@@ -193,8 +193,8 @@ class ClientEntityTest extends TestCase
         $client = new Client();
         $response = $client->create([
             'data' => [
-                'code' => 'test'
-            ]
+                'code' => 'test',
+            ],
         ]);
 
         $this->assertNotNull($response);
@@ -212,7 +212,7 @@ class ClientEntityTest extends TestCase
         Http::fake([
             'entities/clients/'.$client_id => Http::response(
                 (new ClientFakeResponse())->getClientFakeDetail([
-                    'name' => $client_name
+                    'name' => $client_name,
                 ])
             ),
         ]);
@@ -220,8 +220,8 @@ class ClientEntityTest extends TestCase
         $client = new Client();
         $response = $client->edit($client_id, [
             'data' => [
-                'name' => $client_name
-            ]
+                'name' => $client_name,
+            ],
         ]);
 
         $this->assertNotNull($response);
@@ -242,8 +242,8 @@ class ClientEntityTest extends TestCase
         $client = new Client();
         $response = $client->edit($client_id, [
             'data' => [
-                'code' => 'test'
-            ]
+                'code' => 'test',
+            ],
         ]);
 
         $this->assertNotNull($response);
