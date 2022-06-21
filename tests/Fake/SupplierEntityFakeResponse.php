@@ -7,7 +7,7 @@ use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument\DocumentList
 
 class SupplierEntityFakeResponse extends FakeResponse
 {
-    public function getSupplierEntityFakeList(
+    public function getListSupplierFake(
         array $params = []
     ) {
         return json_encode(array_merge(
