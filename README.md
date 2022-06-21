@@ -118,12 +118,37 @@ It returns the same class of detail method  with all its fields.
 Each callback accept a number of parameters equals to the sum of the required parameters +1 that is $additional_data
 that accept all optional parameters.
 
+### Pagination 
+Package provide some pagination methods for list endpoints. Let's see a few examples:
+
+``` php
+$issued_documents = new IssuedDocument();
+$issued_document_list = $issued_documents->list($document_type);
+
+// return pagination fields like page, per_page...
+$issued_document_list->getPagination() 
+
+// return documents of the next page or null if there aren't next pages
+$issued_document_list->getPagination()->goToNextPage()
+
+// some logic of next page fort other methods
+$issued_document_list->getPagination()->goToPrevPage()
+$issued_document_list->getPagination()->goToFirstPage()
+$issued_document_list->getPagination()->goToLastPage()
+```
+
 ## Examples
 
 ### Issued documents
 ```php
 $issued_documents = new IssuedDocument();
 $response = $issued_documents->list($document_type);
+```
+
+### Products
+```php
+$products = new Product();
+$response = $products->list();
 ```
 
 ## Testing
