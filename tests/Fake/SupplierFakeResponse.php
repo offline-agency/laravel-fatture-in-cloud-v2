@@ -5,7 +5,7 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Fake;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument\Document;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument\DocumentList;
 
-class SupplierEntityFakeResponse extends FakeResponse
+class SupplierFakeResponse extends FakeResponse
 {
     public function getListSupplierFake(
         array $params = []
@@ -13,23 +13,23 @@ class SupplierEntityFakeResponse extends FakeResponse
         return json_encode(array_merge(
             [
                 'data' => [
-                    (new DocumentList())->getSupplierEntityFake($params),
-                    (new DocumentList())->getSupplierEntityFake($params),
+                    (new DocumentList())->getSupplierFake($params),
+                    (new DocumentList())->getSupplierFake($params),
                 ],
             ],
             (new PaginationFakeResponse())->getPaginationFake($params)
         ));
     }
 
-    public function getSupplierEntityFakeDetail(
+    public function getSupplierFakeDetail(
         array $params = []
     ) {
         return json_encode([
-            'data' => (new Document())->getSupplierEntityFakeDetail($params),
+            'data' => (new Document())->getSupplierFakeDetail($params),
         ]);
     }
 
-    public function getSupplierEntityFakeError(
+    public function getSupplierFakeError(
         array $params = []
     ) {
         return json_encode((new ErrorFakeResponse())->getErrorFake($params));
