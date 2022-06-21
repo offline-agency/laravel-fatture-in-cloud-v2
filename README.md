@@ -113,6 +113,14 @@ It returns the same class of detail method  with all its fields.
 - [X] Modify product [![PUT method](https://img.shields.io/static/v1.svg?label=&message=PUT&color=violet)]()
 - [X] Delete product [![DELETE method](https://img.shields.io/static/v1.svg?label=&message=DELETE&color=red)]()
 
+#### Clients ✅
+
+- [X] List clients [![GET method](https://img.shields.io/static/v1.svg?label=&message=GET&color=green)]()
+- [X] Create client [![POST method](https://img.shields.io/static/v1.svg?label=&message=POST&color=blue)]()
+- [X] Get client [![GET method](https://img.shields.io/static/v1.svg?label=&message=GET&color=green)]()
+- [X] Modify client [![PUT method](https://img.shields.io/static/v1.svg?label=&message=PUT&color=violet)]()
+- [X] Delete client [![DELETE method](https://img.shields.io/static/v1.svg?label=&message=DELETE&color=red)]()
+
 ## Usage
 
 Each callback accept a number of parameters equals to the sum of the required parameters +1 that is $additional_data
@@ -149,6 +157,12 @@ $response = $issued_documents->list($document_type);
 ```php
 $products = new \OfflineAgency\LaravelFattureInCloudV2\Api\Product();
 $response = $products->list();
+```
+
+### Clients
+```php
+$clients = new \OfflineAgency\LaravelFattureInCloudV2\Api\Client();
+$response = $clients->list();
 ```
 
 ## Testing
