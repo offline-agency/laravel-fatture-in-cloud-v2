@@ -55,10 +55,10 @@ Package provide multiple-companies handling. In your config you can provide more
 Then you can specify (or not) a company on class initialization:
 ```php
 // take the default
-$issued_documents = new IssuedDocument();
+$issued_documents = new \OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument();
 
 // specify company
-$issued_documents = new IssuedDocument('first_company');
+$issued_documents = new \OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument('first_company');
 ```
 
 ## Features
@@ -81,7 +81,7 @@ Package provide bin() method for deleted issued documents that allow you to get 
 proforma into an invoice (deleting the proforma) and you need old document's detail. Let's see an example:
 
 ```php
-$issued_documents = new IssuedDocument();
+$issued_documents = new \OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument();
 $response = $issued_documents->bin($document_id);
 ```
 
@@ -130,7 +130,7 @@ that accept all optional parameters.
 Package provide some pagination methods for list endpoints. Let's see a few examples:
 
 ``` php
-$issued_documents = new IssuedDocument();
+$issued_documents = new \OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument();
 $issued_document_list = $issued_documents->list($document_type);
 
 // return pagination fields like page, per_page...
@@ -149,19 +149,19 @@ $issued_document_list->getPagination()->goToLastPage()
 
 ### Issued documents
 ```php
-$issued_documents = new IssuedDocument();
+$issued_documents = new \OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument();
 $response = $issued_documents->list($document_type);
 ```
 
 ### Products
 ```php
-$products = new Product();
+$products = new \OfflineAgency\LaravelFattureInCloudV2\Api\Product();
 $response = $products->list();
 ```
 
 ### Clients
 ```php
-$clients = new Client();
+$clients = new \OfflineAgency\LaravelFattureInCloudV2\Api\Client();
 $response = $clients->list();
 ```
 
