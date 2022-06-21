@@ -159,6 +159,12 @@ $products = new Product();
 $response = $products->list();
 ```
 
+### Clients
+```php
+$clients = new Client();
+$response = $clients->list();
+```
+
 ## Testing
 
 ```bash
