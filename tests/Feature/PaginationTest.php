@@ -25,6 +25,36 @@ class PaginationTest extends TestCase
         $this->assertFalse($pagination->isSinglePage());
     }
 
+    public function test_has_next_page()
+    {
+        $pagination = new Pagination((object) [
+            'next_page_url' => 'https://fake_url/entity?per_page=10&page=2',
+        ]);
+
+        $this->assertTrue($pagination->hasNextPage());
+
+        $pagination = new Pagination((object) [
+            'next_page_url' => null,
+        ]);
+
+        $this->assertFalse($pagination->hasNextPage());
+    }
+
+    public function test_has_prev_page()
+    {
+        $pagination = new Pagination((object) [
+            'prev_page_url' => 'https://fake_url/entity?per_page=10&page=2',
+        ]);
+
+        $this->assertTrue($pagination->hasPrevPage());
+
+        $pagination = new Pagination((object) [
+            'prev_page_url' => null,
+        ]);
+
+        $this->assertFalse($pagination->hasPrevPage());
+    }
+
     public function test_params_retrieving()
     {
         $pagination = new Pagination((object) []);

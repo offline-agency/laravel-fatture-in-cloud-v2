@@ -68,6 +68,18 @@ class Pagination extends AbstractEntity
         return $this->total <= $this->per_page;
     }
 
+    public function hasNextPage(): bool
+    {
+        return ! is_null($this->next_page_url);
+    }
+
+    public function hasPrevPage(): bool
+    {
+        return ! is_null($this->prev_page_url);
+    }
+
+    // helper
+
     public function getQueryParams(
         string $url
     ): array {
