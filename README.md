@@ -32,7 +32,7 @@ php artisan vendor:publish --provider="Offlineagency\LaravelWebex\Providers\Lara
 
 ## Configuration
 
-Package provide multiple-companies handling. In your config you can provide more companies like that 
+Package provide multiple-companies handling. In your config you can provide more companies like that
 ```php
 ... 
 
@@ -77,7 +77,7 @@ Package provide a method to intercept throttle errors (403, 429) and automatical
 
 ### Issued document bin
 
-Package provide bin() method for deleted issued documents that allow you to get its detail. This is very useful, for example, when you convert a 
+Package provide bin() method for deleted issued documents that allow you to get its detail. This is very useful, for example, when you convert a
 proforma into an invoice (deleting the proforma) and you need old document's detail. Let's see an example:
 
 ```php
@@ -126,7 +126,7 @@ It returns the same class of detail method  with all its fields.
 Each callback accept a number of parameters equals to the sum of the required parameters +1 that is $additional_data
 that accept all optional parameters.
 
-### Pagination 
+### Pagination
 Package provide some pagination methods for list endpoints. Let's see a few examples:
 
 ``` php
