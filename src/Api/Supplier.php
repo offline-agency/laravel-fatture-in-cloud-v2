@@ -4,6 +4,9 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
 
 
+use Illuminate\Support\Facades\Validator;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
+
 class Supplier extends Api
 {
     public function list(
