@@ -1,12 +1,11 @@
 <?php
 
-namespace OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument;
+namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Client;
 
-use Illuminate\Support\Arr;
-use OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument;
+use OfflineAgency\LaravelFattureInCloudV2\Api\Client;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Pagination;
 
-class IssuedDocumentPagination extends Pagination
+class ClientPagination extends Pagination
 {
     public function goToFirstPage()
     {
@@ -49,27 +48,12 @@ class IssuedDocumentPagination extends Pagination
     private function changePage(
         string $url
     ) {
-        $query_params = $this->getParsedQueryParams($url);
-
-        $issued_document = new IssuedDocument;
-
-        return $issued_document->list(
-            $query_params->type,
-            $query_params->additional_data
-        );
-    }
-
-    public function getParsedQueryParams($url): object
-    {
         $query_params = $this->getQueryParams($url);
 
-        $type = Arr::get($query_params, 'type');
+        $client = new Client();
 
-        unset($query_params['type']);
-
-        return (object) [
-            'type' => $type,
-            'additional_data' => $query_params,
-        ];
+        return $client->list(
+            $query_params
+        );
     }
 }

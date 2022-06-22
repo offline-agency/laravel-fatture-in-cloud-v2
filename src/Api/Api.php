@@ -2,6 +2,7 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
+use Illuminate\Support\Arr;
 use OfflineAgency\LaravelFattureInCloudV2\LaravelFattureInCloudV2;
 
 class Api extends LaravelFattureInCloudV2
@@ -20,6 +21,51 @@ class Api extends LaravelFattureInCloudV2
             $this->waitThrottle($response_status);
 
             $this->get($url, $query_parameters);
+        }
+
+        return $this->parseResponse($response);
+    }
+
+    protected function post(
+        string $url,
+        array $body,
+        bool $has_file = false
+    ): object {
+        $complete_url = $this->baseUrl.$url;
+
+        if ($has_file) {
+            $response = $this->header
+                ->attach('attachment', Arr::get($body, 'attachment'), Arr::get($body, 'filename'))
+                ->post($complete_url, $body);
+        } else {
+            $response = $this->header->post($complete_url, $body);
+        }
+
+        $response_status = $response->status();
+
+        if ($response_status === 403 || $response_status === 429) {
+            $this->waitThrottle($response_status);
+
+            $this->post($url, $body);
+        }
+
+        return $this->parseResponse($response);
+    }
+
+    protected function put(
+        string $url,
+        array $body
+    ): object {
+        $complete_url = $this->baseUrl.$url;
+
+        $response = $this->header->put($complete_url, $body);
+
+        $response_status = $response->status();
+
+        if ($response_status === 403 || $response_status === 429) {
+            $this->waitThrottle($response_status);
+
+            $this->put($url, $body);
         }
 
         return $this->parseResponse($response);
