@@ -331,4 +331,32 @@ class IssuedDocument extends Api
 
         return new IssuedDocumentScheduleEmail($schedule_email);
     }
+
+    public function binDetail(
+        int $document_id,
+        ?array $additional_data = []
+    )
+    {
+        $document = $this->detail(
+            $document_id,
+            $additional_data
+        );
+
+        if ($document instanceof Error) {
+            $document = $this->bin($document_id);
+
+            if (
+                !$document instanceof Error
+                && $document->type === 'proforma'
+                && !is_null($document->merged_in)
+            ) {
+                $document = $this->detail(
+                    $document->merged_in->id,
+                    $additional_data
+                );
+            }
+        }
+
+        return $document;
+    }
 }
