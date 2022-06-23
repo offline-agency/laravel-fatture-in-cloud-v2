@@ -32,7 +32,6 @@ class SupplierEntityTest extends TestCase
         $this->assertIsArray($response->getItems());
         $this->assertCount(2, $response->getItems());
         $this->assertInstanceOf(SupplierEntity::class, $response->getItems()[0]);
-
     }
 
     public function test_error_on_list_suppliers()
@@ -127,9 +126,6 @@ class SupplierEntityTest extends TestCase
 
         $this->assertInstanceOf(SupplierList::class, $last_page_response);
     }
-
-    // fino a qui funzionano tutti
-
 
     // single
 

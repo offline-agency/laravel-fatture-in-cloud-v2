@@ -16,10 +16,8 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        //Config::set('fatture-in-cloud-v2.companies.default.id', 'fake_id');
-        //Config::set('fatture-in-cloud-v2.companies.default.bearer', 'fake_bearer');
-        Config::set('fatture-in-cloud-v2.companies.default.id', '664549');
-        Config::set('fatture-in-cloud-v2.companies.default.bearer', 'a/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyZWYiOiI4Sjk3UnpxZ3hSNzFzWnU3UWFWRHBKVlJzQTdiNE9UcyJ9.RsWTDEsYJ9AsylA7OPXknyHIO2fADtn1l0wSr7IOE_I');
+        Config::set('fatture-in-cloud-v2.companies.default.id', 'fake_id');
+        Config::set('fatture-in-cloud-v2.companies.default.bearer', 'fake_bearer');
     }
 
     public function getPackageProviders(
