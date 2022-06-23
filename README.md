@@ -21,11 +21,14 @@ This package provides a simple Laravel integration with [Fatture in Cloud APIs v
 $issued_documents = new \OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument();
 $issued_document_list = $issued_document->list('invoice', [
     'per_page' => 50
-]);
+]);  
+
 // return an array of invoices 
 $issued_document_list->getItems();
+
 // return pagination fields like page, per_page...
 $issued_document_list->getPagination();
+
 // return single product's fields
 $product = new \OfflineAgency\LaravelFattureInCloudV2\Api\Product();
 $product_detail = $product->detail($product_id);
@@ -39,18 +42,25 @@ This package provides a pagination system that allow you to move between pages u
 ```php
 $issued_documents = new \OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument();
 $issued_document_list = $issued_documents->list('invoice');
+
 // check if the response has more than one page
 $issued_document_list->getPagination()->isSinglePage();
+
 // check if the document has a next page
 $issued_document_list->getPagination()->hasNextPage();
+
 // check if the document has a previous page
 $issued_document_list->getPagination()->hasPrevPage();
+
 // return documents of the next page
 $issued_document_list->getPagination()->goToNextPage();
+
 // return documents of the previous page
 $issued_document_list->getPagination()->goToPrevPage();
+
 // return documents of the first page
 $issued_document_list->getPagination()->goToFirstPage();
+
 // return documents of the last page
 $issued_document_list->getPagination()->goToLastPage();
 ```

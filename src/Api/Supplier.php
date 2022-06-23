@@ -2,8 +2,6 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
-
-
 use Illuminate\Support\Facades\Validator;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\SupplierList;
