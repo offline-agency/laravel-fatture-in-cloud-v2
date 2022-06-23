@@ -20,6 +20,17 @@ class ClientFakeResponse extends FakeResponse
         ));
     }
 
+    public function getEmptyClientsFakeList(
+        array $params = []
+    ) {
+        return json_encode(array_merge(
+            [
+                'data' => [],
+            ],
+            (new PaginationFakeResponse())->getPaginationFake($params)
+        ));
+    }
+
     public function getClientFakeDetail(
         array $params = []
     ) {

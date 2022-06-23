@@ -3,9 +3,12 @@
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class IssuedDocumentList
 {
+    use ListTrait;
+
     private $items;
     private $pagination;
 

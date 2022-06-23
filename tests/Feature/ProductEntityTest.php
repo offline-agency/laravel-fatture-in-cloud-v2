@@ -34,6 +34,34 @@ class ProductEntityTest extends TestCase
         $this->assertInstanceOf(ProductEntity::class, $response->getItems()[0]);
     }
 
+    public function test_list_product_has_products_method()
+    {
+        Http::fake([
+            'products' => Http::response(
+                (new ProductFakeResponse())->getProductsFakeList()
+            ),
+        ]);
+
+        $products = new Product();
+        $response = $products->list();
+
+        $this->assertTrue($response->hasItems());
+    }
+
+    public function test_empty_list_product_has_products_method()
+    {
+        Http::fake([
+            'products' => Http::response(
+                (new ProductFakeResponse())->getEmptyProductFakeList()
+            ),
+        ]);
+
+        $products = new Product();
+        $response = $products->list();
+
+        $this->assertFalse($response->hasItems());
+    }
+
     public function test_error_on_list_products()
     {
         Http::fake([

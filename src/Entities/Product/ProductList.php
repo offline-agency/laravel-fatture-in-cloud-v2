@@ -3,9 +3,12 @@
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Product;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\Product as ProductEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class ProductList
 {
+    use ListTrait;
+
     private $items;
     private $pagination;
 
