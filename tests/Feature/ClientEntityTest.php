@@ -60,7 +60,6 @@ class ClientEntityTest extends TestCase
         $response = $clients->list();
 
         $this->assertFalse($response->hasItems());
-
     }
 
     public function test_error_on_list_clients()
