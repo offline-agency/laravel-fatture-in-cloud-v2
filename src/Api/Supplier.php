@@ -6,6 +6,8 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
 use Illuminate\Support\Facades\Validator;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\SupplierList;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\Supplier as SupplierEntity;
 
 class Supplier extends Api
 {
@@ -27,7 +29,7 @@ class Supplier extends Api
 
         $suppliers = $response->data;
 
-        return new Supplier($suppliers);
+        return new SupplierList($suppliers);
     }
 
     public function detail(
@@ -39,7 +41,7 @@ class Supplier extends Api
         ]);
 
         $response = $this->get(
-            $this->company_id.'/entities/suppliers'.$supplier_id,
+            $this->company_id.'/entities/suppliers/'.$supplier_id,
             $additional_data
         );
 
@@ -49,14 +51,14 @@ class Supplier extends Api
 
         $supplier = $response->data->data;
 
-        return new Supplier($supplier);
+        return new SupplierEntity($supplier);
     }
 
     public function delete(
         int $supplier_id
     ) {
         $response = $this->destroy(
-            $this->company_id.'/entities/suppliers'.$supplier_id
+            $this->company_id.'/entities/suppliers/'.$supplier_id
         );
 
         if (! $response->success) {
@@ -89,7 +91,7 @@ class Supplier extends Api
 
         $supplier = $response->data->data;
 
-        return new Supplier($supplier);
+        return new SupplierEntity($supplier);
     }
 
     public function edit(
@@ -106,7 +108,7 @@ class Supplier extends Api
         }
 
         $response = $this->put(
-            $this->company_id.'/entities/suppliers'.$supplier_id,
+            $this->company_id.'/entities/suppliers/'.$supplier_id,
             $body
         );
 
@@ -116,6 +118,6 @@ class Supplier extends Api
 
         $supplier_id = $response->data->data;
 
-        return new Supplier($supplier_id);
+        return new SupplierEntity($supplier_id);
     }
 }

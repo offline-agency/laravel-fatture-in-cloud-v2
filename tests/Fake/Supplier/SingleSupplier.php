@@ -1,10 +1,10 @@
 <?php
 
-namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument;
+namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\Supplier;
 
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\FakeResponse;
 
-class Supplier extends FakeResponse
+class SingleSupplier extends FakeResponse
 {
     public function getSupplierFakeDetail(
         array $params = []

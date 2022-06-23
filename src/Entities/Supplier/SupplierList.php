@@ -2,7 +2,7 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\SupplierList as SupplierEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\Supplier as SupplierEntity;
 
 class SupplierList
 {
