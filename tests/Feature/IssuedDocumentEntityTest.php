@@ -5,7 +5,6 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument;
-use OfflineAgency\LaravelFattureInCloudV2\Api\Product;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentAttachment;
@@ -16,7 +15,6 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentScheduleEmail;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentTotals;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocumentFakeResponse;
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ProductFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
 
 class IssuedDocumentEntityTest extends TestCase
@@ -73,7 +71,6 @@ class IssuedDocumentEntityTest extends TestCase
         $response = $issued_documents->list($type);
 
         $this->assertFalse($response->hasItems());
-
     }
 
     public function test_error_on_list_issued_documents()
