@@ -5,10 +5,10 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Supplier;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\Supplier as SupplierEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\SupplierList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\SupplierPagination;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\SupplierFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
 
