@@ -79,4 +79,12 @@ class IssuedDocumentFakeResponse extends FakeResponse
     ) {
         return json_encode((new ErrorFakeResponse())->getErrorFake($params));
     }
+
+    public function getIssuedDocumentFakeErrorDetail(
+        array $params = []
+    ) {
+        return json_encode([
+            'data' => (new ErrorFakeResponse())->getErrorFake($params),
+        ]);
+    }
 }
