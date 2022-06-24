@@ -246,7 +246,7 @@ class IssuedDocumentEntityTest extends TestCase
 
         $issued_documents = new IssuedDocument();
         $response = $issued_documents->binDetail($document_id, [
-            'fields' => 'id'
+            'fields' => 'id',
         ]);
 
         $this->assertNotNull($response);

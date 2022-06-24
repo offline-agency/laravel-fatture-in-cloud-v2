@@ -335,8 +335,7 @@ class IssuedDocument extends Api
     public function binDetail(
         int $document_id,
         ?array $additional_data = []
-    )
-    {
+    ) {
         $document = $this->detail(
             $document_id,
             $additional_data
@@ -346,9 +345,9 @@ class IssuedDocument extends Api
             $document = $this->bin($document_id);
 
             if (
-                !$document instanceof Error
+                ! $document instanceof Error
                 && $document->type === 'proforma'
-                && !is_null($document->merged_in)
+                && ! is_null($document->merged_in)
             ) {
                 $document = $this->detail(
                     $document->merged_in->id,
