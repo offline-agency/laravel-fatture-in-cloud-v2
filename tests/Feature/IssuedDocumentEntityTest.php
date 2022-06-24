@@ -242,6 +242,49 @@ class IssuedDocumentEntityTest extends TestCase
         $this->assertEquals('Document deleted', $response);
     }
 
+    public function test_issued_document_bin_detail_from_detail()
+    {
+        $document_id = 1;
+
+        Http::fake([
+            'issued_documents/'.$document_id => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeDetail()
+            ),
+        ]);
+
+        $issued_documents = new IssuedDocument();
+        $response = $issued_documents->binDetail($document_id);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(IssuedDocumentEntity::class, $response);
+    }
+
+    public function test_issued_document_bin_detail_from_bin()
+    {
+        $document_id = 1;
+
+        Http::fake([
+            'issued_documents/'.$document_id => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeDetail()
+            ),
+        ]);
+
+        Http::fake([
+            'issued_documents/'.$document_id.'?fields=id' => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeErrorDetail(),
+                401
+            ),
+        ]);
+
+        $issued_documents = new IssuedDocument();
+        $response = $issued_documents->binDetail($document_id, [
+            'fields' => 'id',
+        ]);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(IssuedDocumentEntity::class, $response);
+    }
+
     // create
 
     public function test_create_issued_document()
