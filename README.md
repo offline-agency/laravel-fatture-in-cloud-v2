@@ -21,7 +21,7 @@ This package provides a simple Laravel integration with [Fatture in Cloud APIs v
 $issued_documents = new \OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument();
 $issued_document_list = $issued_document->list('invoice', [
     'per_page' => 50
-]);
+]);  
 
 // return an array of invoices 
 $issued_document_list->getItems();
@@ -90,13 +90,13 @@ You can specify limits on your config, remember to use milliseconds to indicate 
 
 We are currently work on this package to implement all endpoints. Enable notifications to be notified when new API are released.
 
-❌ User
+🔜 User
 
 ❌ Companies
 
 ✅ Clients
 
-🔜 Suppliers
+✅ Suppliers
 
 ✅ Products
 
@@ -148,4 +148,3 @@ projects [on our website](https://offlineagency.it/).
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
