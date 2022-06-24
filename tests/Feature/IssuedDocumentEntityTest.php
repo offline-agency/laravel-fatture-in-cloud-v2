@@ -216,7 +216,7 @@ class IssuedDocumentEntityTest extends TestCase
 
         Http::fake([
             'issued_documents/'.$document_id => Http::response(
-                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeError()
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentFakeDetail()
             ),
         ]);
 
