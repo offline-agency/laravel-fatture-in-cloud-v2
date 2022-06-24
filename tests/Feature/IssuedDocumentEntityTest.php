@@ -41,6 +41,38 @@ class IssuedDocumentEntityTest extends TestCase
         $this->assertInstanceOf(IssuedDocumentEntity::class, $response->getItems()[0]);
     }
 
+    public function test_list_issued_documents_has_issued_documents_method()
+    {
+        $type = 'invoice';
+
+        Http::fake([
+            'issued_documents?type='.$type => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList()
+            ),
+        ]);
+
+        $issued_documents = new IssuedDocument();
+        $response = $issued_documents->list($type);
+
+        $this->assertTrue($response->hasItems());
+    }
+
+    public function test_empty_list_issued_documents_has_issued_documents_method()
+    {
+        $type = 'invoice';
+
+        Http::fake([
+            'issued_documents?type='.$type => Http::response(
+                (new IssuedDocumentFakeResponse())->getEmptyIssuedDocumentsFakeList()
+            ),
+        ]);
+
+        $issued_documents = new IssuedDocument();
+        $response = $issued_documents->list($type);
+
+        $this->assertFalse($response->hasItems());
+    }
+
     public function test_error_on_list_issued_documents()
     {
         $type = 'invoice';

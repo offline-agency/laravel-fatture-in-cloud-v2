@@ -3,9 +3,12 @@
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Client;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\Client as ClientEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class ClientList
 {
+    use ListTrait;
+
     private $items;
     private $pagination;
 

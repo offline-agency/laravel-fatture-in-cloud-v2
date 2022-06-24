@@ -26,6 +26,17 @@ class IssuedDocumentFakeResponse extends FakeResponse
         ));
     }
 
+    public function getEmptyIssuedDocumentsFakeList(
+        array $params = []
+    ) {
+        return json_encode(array_merge(
+            [
+                'data' => [],
+            ],
+            (new PaginationFakeResponse())->getPaginationFake($params)
+        ));
+    }
+
     public function getIssuedDocumentFakeDetail(
         array $params = []
     ) {

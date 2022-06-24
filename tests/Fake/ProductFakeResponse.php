@@ -20,6 +20,17 @@ class ProductFakeResponse extends FakeResponse
         ));
     }
 
+    public function getEmptyProductFakeList(
+        array $params = []
+    ) {
+        return json_encode(array_merge(
+            [
+                'data' => [],
+            ],
+            (new PaginationFakeResponse())->getPaginationFake($params)
+        ));
+    }
+
     public function getProductsFakeDetail(
         array $params = []
     ) {
