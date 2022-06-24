@@ -181,7 +181,7 @@ class ClientEntityTest extends TestCase
         $this->assertInstanceOf(ClientEntity::class, $response);
     }
 
-    public function test_validation_error_on_create_issued_document()
+    public function test_validation_error_on_create_client()
     {
         $client = new Client();
         $response = $client->create([]);
@@ -228,7 +228,7 @@ class ClientEntityTest extends TestCase
         $this->assertInstanceOf(ClientEntity::class, $response);
     }
 
-    public function test_validation_error_on_edit_issued_document()
+    public function test_validation_error_on_edit_client()
     {
         $client_id = 1;
 
