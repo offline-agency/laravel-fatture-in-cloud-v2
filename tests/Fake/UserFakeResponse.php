@@ -2,36 +2,32 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Fake;
 
+use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\User\SingleCompany;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\User\SingleUser;
 
 class UserFakeResponse extends FakeResponse
 {
-    public function getUserFakeList(
+    public function getCompaniesFakeList(
         array $params = []
     ) {
-        return json_encode(array_merge(
-            [
-                'data' => [
-                    (new SingleUser())->getUserFakeDetail($params),
-                    (new SingleUser())->getUserFakeDetail($params),
-                ],
-            ],
-            (new PaginationFakeResponse())->getPaginationFake($params)
-        ));
+        return json_encode([
+            'data' => [
+                'companies' => [
+                    (new SingleCompany())->getCompanyFakeDetail($params)
+                ]
+            ]
+        ]);
     }
 
     public function getUserFakeDetail(
         array $params = []
     ) {
         return json_encode([
-                'data' => (object) [
-                    (new SingleUser())->getUserFakeDetail($params),
-                ],
-            ]
-        );
+            'data' => (new SingleUser())->getUserFakeDetail($params)
+        ]);
     }
 
-    public function getClientFakeError(
+    public function getUserFakeError(
         array $params = []
     ) {
         return json_encode((new ErrorFakeResponse())->getErrorFake($params));
