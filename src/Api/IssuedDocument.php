@@ -41,7 +41,7 @@ class IssuedDocument extends Api
         ]);
 
         $response = $this->get(
-            $this->company_id.'/issued_documents',
+            'c/'.$this->company_id.'/issued_documents',
             $additional_data
         );
 
@@ -63,7 +63,7 @@ class IssuedDocument extends Api
         ]);
 
         $response = $this->get(
-            $this->company_id.'/issued_documents/'.$document_id,
+            'c/'.$this->company_id.'/issued_documents/'.$document_id,
             $additional_data
         );
 
@@ -80,7 +80,7 @@ class IssuedDocument extends Api
         int $document_id
     ) {
         $response = $this->get(
-            $this->company_id.'/bin/issued_documents/'.$document_id
+            'c/'.$this->company_id.'/bin/issued_documents/'.$document_id
         );
 
         if (! $response->success) {
@@ -96,7 +96,7 @@ class IssuedDocument extends Api
         int $document_id
     ) {
         $response = $this->destroy(
-            $this->company_id.'/issued_documents/'.$document_id
+            'c/'.$this->company_id.'/issued_documents/'.$document_id
         );
 
         if (! $response->success) {
@@ -122,7 +122,7 @@ class IssuedDocument extends Api
         }
 
         $response = $this->post(
-            $this->company_id.'/issued_documents',
+            'c/'.$this->company_id.'/issued_documents',
             $body
         );
 
@@ -149,7 +149,7 @@ class IssuedDocument extends Api
         }
 
         $response = $this->put(
-            $this->company_id.'/issued_documents/'.$document_id,
+            'c/'.$this->company_id.'/issued_documents/'.$document_id,
             $body
         );
 
@@ -178,7 +178,7 @@ class IssuedDocument extends Api
         }
 
         $response = $this->post(
-            $this->company_id.'/issued_documents/totals',
+            'c/'.$this->company_id.'/issued_documents/totals',
             $body
         );
 
@@ -205,7 +205,7 @@ class IssuedDocument extends Api
         }
 
         $response = $this->put(
-            $this->company_id.'/issued_documents/'.$document_id.'/totals',
+            'c/'.$this->company_id.'/issued_documents/'.$document_id.'/totals',
             $body
         );
 
@@ -222,7 +222,7 @@ class IssuedDocument extends Api
         string $type
     ) {
         $response = $this->get(
-            $this->company_id.'/issued_documents/info',
+            'c/'.$this->company_id.'/issued_documents/info',
             [
                 'type' => $type,
             ]
@@ -241,7 +241,7 @@ class IssuedDocument extends Api
         int $document_id
     ) {
         $response = $this->get(
-            $this->company_id.'/issued_documents/'.$document_id.'/email'
+            'c/'.$this->company_id.'/issued_documents/'.$document_id.'/email'
         );
 
         if (! $response->success) {
@@ -266,7 +266,7 @@ class IssuedDocument extends Api
         }
 
         $response = $this->post(
-            $this->company_id.'/issued_documents/attachment',
+            'c/'.$this->company_id.'/issued_documents/attachment',
             $body,
             true
         );
@@ -284,7 +284,7 @@ class IssuedDocument extends Api
         int $document_id
     ) {
         $response = $this->destroy(
-            $this->company_id.'/issued_documents/'.$document_id.'/attachment'
+            'c/'.$this->company_id.'/issued_documents/'.$document_id.'/attachment'
         );
 
         if (! $response->success) {
@@ -319,7 +319,7 @@ class IssuedDocument extends Api
         }
 
         $response = $this->post(
-            $this->company_id.'/issued_documents/'.$document_id.'/email',
+            'c/'.$this->company_id.'/issued_documents/'.$document_id.'/email',
             $body
         );
 
