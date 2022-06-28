@@ -16,7 +16,7 @@ class Company extends Api
         ]);
 
         $response = $this->get(
-            '/c/'.$company_id.'company/info/',
+            'c/'.$company_id.'/company/info',
             $additional_data
         );
 

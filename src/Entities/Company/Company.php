@@ -11,7 +11,6 @@ class Company extends AbstractEntity
      */
     public $id;
 
-
     /**
      * @var string
      */
@@ -28,7 +27,7 @@ class Company extends AbstractEntity
     public $type;
 
     /**
-     * @var string
+     * @var bool
      */
     public $fic;
 
@@ -48,12 +47,12 @@ class Company extends AbstractEntity
     public $fic_license_expire;
 
     /**
-     * @var string
+     * @var bool
      */
     public $use_fic;
 
     /**
-     * @var string
+     * @var bool
      */
     public $fic_need_setup;
 
@@ -63,7 +62,7 @@ class Company extends AbstractEntity
     public $fic_license_type;
 
     /**
-     * @var string
+     * @var bool
      */
     public $dic;
 
@@ -77,14 +76,13 @@ class Company extends AbstractEntity
      */
     public $dic_signup_date;
 
-
     /**
      * @var string
      */
     public $dic_license_expire;
 
     /**
-     * @var string
+     * @var bool
      */
     public $use_dic;
 
@@ -104,22 +102,22 @@ class Company extends AbstractEntity
     public $can_use_coupon;
 
     /**
-     * @var string
+     * @var object
      */
     public $access_info;
 
     /**
-     * @var string
+     * @var object
      */
     public $plan_info;
 
     /**
-     * @var string
+     * @var bool
      */
     public $is_accountant;
 
     /**
-     * @var string
+     * @var int
      */
     public $accountant_id;
 
