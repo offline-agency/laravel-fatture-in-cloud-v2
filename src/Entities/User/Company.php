@@ -4,7 +4,7 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Entities\User;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
 
-class User extends AbstractEntity
+class Company extends AbstractEntity
 {
     /**
      * @var int
@@ -19,45 +19,60 @@ class User extends AbstractEntity
     /**
      * @var string
      */
-    public $first_name;
+    public $tax_code;
 
     /**
      * @var string
      */
-    public $last_name;
+    public $type;
 
     /**
      * @var string
      */
-    public $email;
+    public $access_token;
+
+    /**
+     * @var int
+     */
+    public $connection_id;
+
+    /**
+     * @var array
+     */
+    public $controlled_companies;
 
     /**
      * @var string
      */
-    public $hash;
+    public $alias;
 
     /**
      * @var string
      */
-    public $picture;
+    public $vat_number;
 
     /**
      * @var bool
      */
-    public $need_password_change;
+    public $fic;
 
     /**
      * @var bool
      */
-    public $need_marketing_consents_confirmation;
+    public $dic;
 
     /**
-     * @var bool
+     * @var string
      */
-    public $need_confirmation;
+    public $fic_plan;
+
+    /**
+     * @var string
+     */
+    public $fic_license_expire;
 
     /**
      * @var object
      */
-    public $details;
+    public $permissions;
 }

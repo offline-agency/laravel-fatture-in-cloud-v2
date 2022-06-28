@@ -2,7 +2,6 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
-use Illuminate\Support\Facades\Validator;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\User\User as UserEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\User\CompanyList;
@@ -12,16 +11,22 @@ class User extends Api
     public function userInfo()
     {
         $response = $this->get(
-            '/user/info',
+            'user/info',
         );
 
         if (!$response->success) {
             return new Error($response->data);
         }
 
-        $user = $response->data->data;
+        $user = $response->data;
 
-        return new UserEntity($user);
+        $complete_user = (object)array_merge(
+            (array)$user->data,
+            (array)$user->info,
+            (array)$user->email_confirmation_state
+        );
+
+        return new UserEntity($complete_user);
     }
 
     public function listCompanies(
@@ -33,7 +38,7 @@ class User extends Api
         ]);
 
         $response = $this->get(
-            '/user/companies',
+            'user/companies',
             $additional_data
         );
 
@@ -41,7 +46,8 @@ class User extends Api
             return new Error($response->data);
         }
 
-        $companies = $response->data->data->companies[0];
-        return new CompanyList($companies);
+        $user_company_response = $response->data->data;
+
+        return new CompanyList($user_company_response);
     }
 }

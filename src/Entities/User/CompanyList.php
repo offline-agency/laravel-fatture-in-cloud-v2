@@ -2,72 +2,33 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\User;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\User\Company as CompanyEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
-class CompanyList extends AbstractEntity
+class CompanyList
 {
-    /**
-     * @var int
-     */
-    public $id;
+    use ListTrait;
+
+    private $items;
+
+    public function __construct($user_company_response)
+    {
+        $this->setItems($user_company_response);
+    }
 
     /**
-     * @var string
+     * @return array<CompanyEntity>
      */
-    public $name;
+    public function getItems(): array
+    {
+        return $this->items;
+    }
 
-    /**
-     * @var string
-     */
-    public $alias;
-
-    /**
-     * @var string
-     */
-    public $vat_number;
-
-    /**
-     * @var string
-     */
-    public $tax_code;
-
-    /**
-     * @var string
-     */
-    public $type;
-
-    /**
-     * @var string
-     */
-    public $connection_id;
-
-    /**
-     * @var string
-     */
-    public $controlled_companies;
-
-    /**
-     * @var string
-     */
-    public $fic;
-
-    /**
-     * @var string
-     */
-    public $dic;
-
-    /**
-     * @var string
-     */
-    public $fic_plan;
-
-    /**
-     * @var string
-     */
-    public $fic_license_expire;
-
-    /**
-     * @var object
-     */
-    public $permissions;
+    private function setItems(
+        $user_company_response
+    ): void {
+        $this->items = array_map(function ($company) {
+            return new CompanyEntity($company);
+        }, $user_company_response->companies);
+    }
 }
