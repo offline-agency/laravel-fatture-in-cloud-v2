@@ -17,7 +17,7 @@ class Client extends Api
         ]);
 
         $response = $this->get(
-            $this->company_id.'/entities/clients',
+            'c/'.$this->company_id.'/entities/clients',
             $additional_data
         );
 
@@ -39,7 +39,7 @@ class Client extends Api
         ]);
 
         $response = $this->get(
-            $this->company_id.'/entities/clients/'.$client_id,
+            'c/'.$this->company_id.'/entities/clients/'.$client_id,
             $additional_data
         );
 
@@ -56,7 +56,7 @@ class Client extends Api
         int $client_id
     ) {
         $response = $this->destroy(
-            $this->company_id.'/entities/clients/'.$client_id
+            'c/'.$this->company_id.'/entities/clients/'.$client_id
         );
 
         if (! $response->success) {
@@ -79,7 +79,7 @@ class Client extends Api
         }
 
         $response = $this->post(
-            $this->company_id.'/entities/clients',
+            'c/'.$this->company_id.'/entities/clients',
             $body
         );
 
@@ -106,7 +106,7 @@ class Client extends Api
         }
 
         $response = $this->put(
-            $this->company_id.'/entities/clients/'.$client_id,
+            'c/'.$this->company_id.'/entities/clients/'.$client_id,
             $body
         );
 
