@@ -17,8 +17,8 @@ class UserFakeResponse extends FakeResponse
                 'companies' => [
                     (new SingleCompany())->getCompanyFakeDetail($params),
                     (new SingleCompany())->getCompanyFakeDetail($params),
-                ]
-            ]
+                ],
+            ],
         ]);
     }
 
@@ -27,8 +27,8 @@ class UserFakeResponse extends FakeResponse
     ) {
         return json_encode([
             'data' => [
-                'companies' => []
-            ]
+                'companies' => [],
+            ],
         ]);
     }
 
@@ -38,7 +38,7 @@ class UserFakeResponse extends FakeResponse
         return json_encode([
             'data' => (new SingleUser())->getUserFakeDetail($params),
             'info' => (new UserInfo())->getUserInfoFakeDetail($params),
-            'email_confirmation_state' => (new EmailConfirmationState())->getEmailConfirmationStateFakeDetail($params)
+            'email_confirmation_state' => (new EmailConfirmationState())->getEmailConfirmationStateFakeDetail($params),
         ]);
     }
 
