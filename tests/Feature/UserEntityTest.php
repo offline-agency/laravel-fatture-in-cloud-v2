@@ -4,10 +4,10 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 
 use Illuminate\Support\Facades\Http;
 use OfflineAgency\LaravelFattureInCloudV2\Api\User;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\User\Company as CompanyEntity;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\User\User as UserEntity;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\User\CompanyList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\User\Company as CompanyEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\User\CompanyList;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\User\User as UserEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\UserFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
 

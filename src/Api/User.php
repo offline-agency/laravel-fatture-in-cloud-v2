@@ -2,9 +2,9 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\User\User as UserEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\User\CompanyList;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\User\User as UserEntity;
 
 class User extends Api
 {
@@ -14,16 +14,16 @@ class User extends Api
             'user/info',
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
         $user = $response->data;
 
-        $complete_user = (object)array_merge(
-            (array)$user->data,
-            (array)$user->info,
-            (array)$user->email_confirmation_state
+        $complete_user = (object) array_merge(
+            (array) $user->data,
+            (array) $user->info,
+            (array) $user->email_confirmation_state
         );
 
         return new UserEntity($complete_user);
@@ -31,8 +31,7 @@ class User extends Api
 
     public function listCompanies(
         ?array $additional_data = []
-    )
-    {
+    ) {
         $additional_data = $this->data($additional_data, [
             'fields', 'fieldset',
         ]);
@@ -42,7 +41,7 @@ class User extends Api
             $additional_data
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
