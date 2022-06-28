@@ -7,11 +7,11 @@ return [
     |--------------------------------------------------------------------------
     |
     */
-    'baseUrl' => 'https://api-v2.fattureincloud.it/c/',
+    'baseUrl' => 'https://api-v2.fattureincloud.it/',
 
     /*
     |--------------------------------------------------------------------------
-    | Companies
+    | Company
     |--------------------------------------------------------------------------
     |
     | By default package take the first item of this array. This means that you can change company name as you prefer.
