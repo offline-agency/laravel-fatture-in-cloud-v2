@@ -90,9 +90,9 @@ You can specify limits on your config, remember to use milliseconds to indicate 
 
 We are currently work on this package to implement all endpoints. Enable notifications to be notified when new API are released.
 
-🔜 User
+✅ User
 
-❌ Companies
+🔜 Companies
 
 ✅ Clients
 
