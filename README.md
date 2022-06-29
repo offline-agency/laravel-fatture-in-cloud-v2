@@ -106,7 +106,7 @@ We are currently work on this package to implement all endpoints. Enable notific
 
 ❌ Received Documents
 
-❌ Receipts
+✅ Receipts
 
 ❌ Taxes
 
