@@ -17,7 +17,7 @@ class Receipt extends Api
         ]);
 
         $response = $this->get(
-            $this->company_id.'/products',
+            $this->company_id.'/receipts',
             $additional_data
         );
 
@@ -25,13 +25,13 @@ class Receipt extends Api
             return new Error($response->data);
         }
 
-        $products = $response->data;
+        $receipts = $response->data;
 
-        return new ReceiptList($products);
+        return new ReceiptList($receipts);
     }
 
     public function detail(
-        int $product_id,
+        int $receipt_id,
         ?array $additional_data = []
     ) {
         $additional_data = $this->data($additional_data, [
@@ -39,7 +39,7 @@ class Receipt extends Api
         ]);
 
         $response = $this->get(
-            '/c/'.$company_id.'/receipts',
+            $this->company_id.'/receipts',
             $additional_data
         );
 
@@ -47,23 +47,23 @@ class Receipt extends Api
             return new Error($response->data);
         }
 
-        $products = $response->data->data;
+        $receipts = $response->data->data;
 
-        return new ReceiptEntity($products);
+        return new ReceiptEntity($receipts);
     }
 
     public function delete(
-        int $product_id
+        int $receipt_id
     ) {
         $response = $this->destroy(
-            '/c/'.$company_id.'/receipts'
+            $this->company_id.'/receipts'
         );
 
         if (! $response->success) {
             return new Error($response->data);
         }
 
-        return 'Product deleted';
+        return 'Receipt deleted';
     }
 
     public function create(
@@ -71,9 +71,10 @@ class Receipt extends Api
     ) {
         $validator = Validator::make($body, [
             'data' => 'required',
-            'data.name' => 'required_without_all:data.code,data.description',
-            'data.code' => 'required_without_all:data.name,data.description',
-            'data.description' => 'required_without_all:data.name,data.code',
+            'data.date' => 'required_without_all:data.code,data.description',
+            'data.type' => 'required_without_all:data.name,data.description',
+            'data.payment_account' => 'required_without_all:data.name,data.code',
+            'data.payment_account.name' => 'required_without_all:data.name,data.code',
         ]);
 
         if ($validator->fails()) {
@@ -81,7 +82,7 @@ class Receipt extends Api
         }
 
         $response = $this->post(
-            '/c/'.$company_id.'/receipts',
+            $this->company_id.'/receipts',
             $body
         );
 
@@ -89,20 +90,21 @@ class Receipt extends Api
             return new Error($response->data);
         }
 
-        $product = $response->data->data;
+        $receipt = $response->data->data;
 
-        return new ReceiptEntity($product);
+        return new ReceiptEntity($receipt);
     }
 
     public function edit(
-        int $product_id,
+        int $receipt_id,
         array $body = []
     ) {
         $validator = Validator::make($body, [
             'data' => 'required',
-            'data.name' => 'required_without_all:data.code,data.description',
-            'data.code' => 'required_without_all:data.name,data.description',
-            'data.description' => 'required_without_all:data.name,data.code',
+            'data.date' => 'required_without_all:data.code,data.description',
+            'data.type' => 'required_without_all:data.name,data.description',
+            'data.payment_account' => 'required_without_all:data.name,data.code',
+            'data.payment_account.name' => 'required_without_all:data.name,data.code',
         ]);
 
         if ($validator->fails()) {
@@ -110,7 +112,7 @@ class Receipt extends Api
         }
 
         $response = $this->put(
-            '/c/'.$company_id.'/receipts',
+            $this->company_id.'/receipts',
             $body
         );
 
@@ -118,8 +120,30 @@ class Receipt extends Api
             return new Error($response->data);
         }
 
-        $product = $response->data->data;
+        $receipt = $response->data->data;
 
-        return new ReceiptEntity($product);
+        return new ReceiptEntity($receipt);
+    }
+
+    public function detail(
+        int $receipt_id,
+        ?array $additional_data = []
+    ) {
+        $additional_data = $this->data($additional_data, [
+            'fields', 'fieldset',
+        ]);
+
+        $response = $this->get(
+            $this->company_id.'/receipts',
+            $additional_data
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $receipts = $response->data->data;
+
+        return new ReceiptPreCreateInfo($receipts);
     }
 }

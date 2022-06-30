@@ -59,25 +59,25 @@ class Receipt extends AbstractEntity
     /**
      * @var string
      */
-    public $description;
-
-    /**
-     * @var string
-     */
-    public $description;
-
-    /**
-     * @var string
-     */
     public $rc_center;
 
     /**
-     * @var float
+     * @var string
      */
     public $created_at;
 
     /**
-     * @var float
+     * @var string
      */
     public $updated_at;
+
+    /**
+     * @var object
+     */
+    public $payment_account;
+
+    /**
+     * @var array
+     */
+    public $items_list;
 }
