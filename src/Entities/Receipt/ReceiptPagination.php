@@ -50,8 +50,8 @@ class ReceiptPagination extends Pagination
     ) {
         $query_params = $this->getQueryParams($url);
 
-        $product = new ReceiptApi();
+        $receipt = new ReceiptApi();
 
-        return $product->list($query_params);
+        return $receipt->list($query_params);
     }
 }

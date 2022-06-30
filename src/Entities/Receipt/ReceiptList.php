@@ -12,10 +12,10 @@ class ReceiptList
     private $items;
     private $pagination;
 
-    public function __construct($product_response)
+    public function __construct($receipt_response)
     {
-        $this->setItems($product_response);
-        $this->setPagination($product_response);
+        $this->setItems($receipt_response);
+        $this->setPagination($receipt_response);
     }
 
     /**
@@ -35,16 +35,16 @@ class ReceiptList
     }
 
     private function setItems(
-        $product_response
+        $receipt_response
     ): void {
-        $this->items = array_map(function ($product) {
-            return new ReceiptEntity($product);
-        }, $product_response->data);
+        $this->items = array_map(function ($receipt) {
+            return new ReceiptEntity($receipt);
+        }, $receipt_response->data);
     }
 
     private function setPagination(
-        $product_response
+        $receipt_response
     ): void {
-        $this->pagination = new ReceiptPagination($product_response);
+        $this->pagination = new ReceiptPagination($receipt_response);
     }
 }
