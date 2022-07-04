@@ -17,7 +17,7 @@ class Product extends Api
         ]);
 
         $response = $this->get(
-            $this->company_id.'/products',
+            'c/'.$this->company_id.'/products',
             $additional_data
         );
 
@@ -39,7 +39,7 @@ class Product extends Api
         ]);
 
         $response = $this->get(
-            $this->company_id.'/products/'.$product_id,
+            'c/'.$this->company_id.'/products/'.$product_id,
             $additional_data
         );
 
@@ -56,7 +56,7 @@ class Product extends Api
         int $product_id
     ) {
         $response = $this->destroy(
-            $this->company_id.'/products/'.$product_id
+            'c/'.$this->company_id.'/products/'.$product_id
         );
 
         if (! $response->success) {
@@ -81,7 +81,7 @@ class Product extends Api
         }
 
         $response = $this->post(
-            $this->company_id.'/products',
+            'c/'.$this->company_id.'/products',
             $body
         );
 
@@ -110,7 +110,7 @@ class Product extends Api
         }
 
         $response = $this->put(
-            $this->company_id.'/products/'.$product_id,
+            'c/'.$this->company_id.'/products/'.$product_id,
             $body
         );
 
