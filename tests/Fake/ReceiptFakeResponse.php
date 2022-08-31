@@ -38,4 +38,10 @@ class ReceiptFakeResponse extends FakeResponse
             'data' => (new SingleReceipt())->getReceiptFakeDetail($params),
         ]);
     }
+
+    public function getReceiptFakeError(
+        array $params = []
+    ) {
+        return json_encode((new ErrorFakeResponse())->getErrorFake($params));
+    }
 }

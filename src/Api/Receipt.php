@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Validator;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\Receipt as ReceiptEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\ReceiptList;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\ReceiptMonthlyTotals;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\ReceiptPreCreateInfo;
 
 class Receipt extends Api
 {
@@ -17,7 +19,7 @@ class Receipt extends Api
         ]);
 
         $response = $this->get(
-            $this->company_id.'/receipts',
+            'c/'.$this->company_id.'/receipts',
             $additional_data
         );
 
@@ -39,7 +41,7 @@ class Receipt extends Api
         ]);
 
         $response = $this->get(
-            $this->company_id.'/receipts',
+            'c/'.$this->company_id.'/receipts/'.$receipt_id,
             $additional_data
         );
 
@@ -56,7 +58,7 @@ class Receipt extends Api
         int $receipt_id
     ) {
         $response = $this->destroy(
-            $this->company_id.'/receipts'
+            'c/'.$this->company_id.'/receipts/'.$receipt_id
         );
 
         if (! $response->success) {
@@ -82,7 +84,7 @@ class Receipt extends Api
         }
 
         $response = $this->post(
-            $this->company_id.'/receipts',
+            'c/'.$this->company_id.'/receipts',
             $body
         );
 
@@ -112,7 +114,7 @@ class Receipt extends Api
         }
 
         $response = $this->put(
-            $this->company_id.'/receipts',
+            'c/'.$this->company_id.'/receipts/'.$receipt_id,
             $body
         );
 
@@ -125,18 +127,12 @@ class Receipt extends Api
         return new ReceiptEntity($receipt);
     }
 
-    public function detail(
-        int $receipt_id,
-        ?array $additional_data = []
-    ) {
-        $additional_data = $this->data($additional_data, [
-            'fields', 'fieldset',
-        ]);
-
+    public function preCreateInfo() {
         $response = $this->get(
-            $this->company_id.'/receipts',
-            $additional_data
+            'c/'.$this->company_id.'/receipts/info'
         );
+
+        dd($response);
 
         if (! $response->success) {
             return new Error($response->data);
@@ -145,5 +141,27 @@ class Receipt extends Api
         $receipts = $response->data->data;
 
         return new ReceiptPreCreateInfo($receipts);
+    }
+
+    public function monthlyTotals(
+        string $type,
+        string $year
+    ) {
+        //TODO validate type
+        $response = $this->get(
+            'c/'.$this->company_id.'/receipts/monthly_totals',
+            [
+                'type' => $type,
+                'year' => $year
+            ]
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $receipts = $response->data->data;
+
+        return new ReceiptMonthlyTotals($receipts);
     }
 }

@@ -37,12 +37,12 @@ class Receipt extends AbstractEntity
     public $amount_vat;
 
     /**
-     * @var int
+     * @var float
      */
     public $amount_gross;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $use_gross_prices;
 

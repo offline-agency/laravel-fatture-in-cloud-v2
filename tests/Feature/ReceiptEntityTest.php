@@ -2,6 +2,7 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Receipt;
@@ -19,7 +20,7 @@ class ReceiptEntityTest extends TestCase
     public function test_list_receipts()
     {
         Http::fake([
-            '/c/'.$company_id.'/receipts' => Http::response(
+            'receipts' => Http::response(
                 (new ReceiptFakeResponse())->getReceiptsFakeList()
             ),
         ]);
@@ -34,7 +35,7 @@ class ReceiptEntityTest extends TestCase
         $this->assertInstanceOf(ReceiptEntity::class, $response->getItems()[0]);
     }
 
-    public function test_list_receipt_has_receipts_method()
+    public function test_list_receipts_has_receipts_method()
     {
         Http::fake([
             'receipts' => Http::response(
@@ -52,7 +53,7 @@ class ReceiptEntityTest extends TestCase
     {
         Http::fake([
             'receipts' => Http::response(
-                (new ReceiptFakeResponse())->getReceiptsFakeList()
+                (new ReceiptFakeResponse())->getEmptyReceiptFakeList()
             ),
         ]);
 
@@ -65,8 +66,8 @@ class ReceiptEntityTest extends TestCase
     public function test_error_on_list_receipts()
     {
         Http::fake([
-            '/c/'.company_id.'/receipts' => Http::response(
-                (new ReceiptFakeResponse())->getReceiptsFakeList(),
+            'receipts' => Http::response(
+                (new ReceiptFakeResponse())->getReceiptFakeError(),
                 401
             ),
         ]);
@@ -83,7 +84,7 @@ class ReceiptEntityTest extends TestCase
     {
         $receipt_list = new ReceiptList(json_decode(
             (new ReceiptFakeResponse())->getReceiptsFakeList([
-                'next_page_url' => 'https://fake_url/entity?per_page=10&page=2',
+                'next_page_url' => 'https://fake_url/receipts?per_page=10&page=2',
             ])
         ));
 
@@ -102,7 +103,7 @@ class ReceiptEntityTest extends TestCase
     {
         $receipt_list = new ReceiptList(json_decode(
             (new ReceiptFakeResponse())->getReceiptsFakeList([
-                'prev_page_url' => 'https://fake_url/entity?per_page=10&page=1',
+                'prev_page_url' => 'https://fake_url/receipts?per_page=10&page=1',
             ])
         ));
 
@@ -121,7 +122,7 @@ class ReceiptEntityTest extends TestCase
     {
         $receipt_list = new ReceiptList(json_decode(
             (new ReceiptFakeResponse())->getReceiptsFakeList([
-                'first_page_url' => 'https://fake_url/entity?per_page=10&page=1',
+                'first_page_url' => 'https://fake_url/receipts?per_page=10&page=1',
             ])
         ));
 
@@ -140,7 +141,7 @@ class ReceiptEntityTest extends TestCase
     {
         $receipt_list = new ReceiptList(json_decode(
             (new ReceiptFakeResponse())->getReceiptsFakeList([
-                'last_page_url' => 'https://fake_url/entity?per_page=10&page=2',
+                'last_page_url' => 'https://fake_url/receipts?per_page=10&page=2',
             ])
         ));
 
@@ -192,20 +193,20 @@ class ReceiptEntityTest extends TestCase
 
     public function test_create_receipt()
     {
-        $receipt_name = 'Test';
-
         Http::fake([
             'receipts' => Http::response(
-                (new ReceiptFakeResponse())->getReceiptsFakeDetail([
-                    'name' => $receipt_name,
-                ])
+                (new ReceiptFakeResponse())->getReceiptsFakeDetail()
             ),
         ]);
 
         $receipt = new Receipt();
         $response = $receipt->create([
             'data' => [
-                'name' => $receipt_name,
+                'date' => Carbon::now()->format('Y-m-d'),
+                'type' => 'sales_receipt',
+                'payment_account' => [
+                    'name' => 'fake'
+                ]
             ],
         ]);
 
@@ -213,7 +214,7 @@ class ReceiptEntityTest extends TestCase
         $this->assertInstanceOf(ReceiptEntity::class, $response);
     }
 
-    public function test_validation_error_on_create_issued_document()
+    public function test_validation_error_on_create_receipt()
     {
         $receipt = new Receipt();
         $response = $receipt->create([]);
@@ -225,37 +226,38 @@ class ReceiptEntityTest extends TestCase
         $receipt = new Receipt();
         $response = $receipt->create([
             'data' => [
-                'net_price' => 100,
+                'number' => 1,
             ],
         ]);
 
         $this->assertNotNull($response);
         $this->assertInstanceOf(MessageBag::class, $response);
-        $this->assertArrayHasKey('data.name', $response->messages());
-        $this->assertArrayHasKey('data.code', $response->messages());
-        $this->assertArrayHasKey('data.description', $response->messages());
+        $this->assertArrayHasKey('data.date', $response->messages());
+        $this->assertArrayHasKey('data.type', $response->messages());
+        $this->assertArrayHasKey('data.payment_account', $response->messages());
+        $this->assertArrayHasKey('data.payment_account.name', $response->messages());
     }
 
     // edit
 
     public function test_edit_receipt()
     {
-        $document_id = 1;
-        $receipt_name = 'Test Updated';
+        $receipt_id = 1;
 
         Http::fake([
-            'receipts/'.$document_id => Http::response(
-                (new ReceiptFakeResponse())->getReceiptsFakeDetail([
-                    'id' => $document_id,
-                    'name' => $receipt_name,
-                ])
+            'receipts/'.$receipt_id => Http::response(
+                (new ReceiptFakeResponse())->getReceiptsFakeDetail(),
             ),
         ]);
 
         $receipt = new Receipt();
-        $response = $receipt->edit($document_id, [
+        $response = $receipt->edit($receipt_id, [
             'data' => [
-                'name' => $receipt_name,
+                'date' => Carbon::now()->format('Y-m-d'),
+                'type' => 'sales_receipt',
+                'payment_account' => [
+                    'name' => 'fake'
+                ]
             ],
         ]);
 
@@ -263,7 +265,7 @@ class ReceiptEntityTest extends TestCase
         $this->assertInstanceOf(ReceiptEntity::class, $response);
     }
 
-    public function test_validation_error_on_update_issued_document()
+    public function test_validation_error_on_edit_receipt()
     {
         $receipt_id = 1;
 
@@ -277,14 +279,25 @@ class ReceiptEntityTest extends TestCase
         $receipt = new Receipt();
         $response = $receipt->edit($receipt_id, [
             'data' => [
-                'net_price' => 100,
+                'number' => 1,
             ],
         ]);
 
         $this->assertNotNull($response);
         $this->assertInstanceOf(MessageBag::class, $response);
-        $this->assertArrayHasKey('data.name', $response->messages());
-        $this->assertArrayHasKey('data.code', $response->messages());
-        $this->assertArrayHasKey('data.description', $response->messages());
+        $this->assertArrayHasKey('data.date', $response->messages());
+        $this->assertArrayHasKey('data.type', $response->messages());
+        $this->assertArrayHasKey('data.payment_account', $response->messages());
+        $this->assertArrayHasKey('data.payment_account.name', $response->messages());
+    }
+
+    // pre create info
+
+    public function test_pre_create_info_receipt()
+    {
+        $receipt = new Receipt();
+        $response = $receipt->preCreateInfo();
+
+        dd($response);
     }
 }
