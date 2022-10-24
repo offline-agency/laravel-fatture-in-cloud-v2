@@ -8,21 +8,19 @@ class InfoFakeResponse extends FakeResponse
 {
     public function getVatTypesFakeList(
         array $params = []
-    )
-    {
+    ) {
         return json_encode([
-                'data' => [
-                    (new SingleVat())->getVatTypeFakeDetail($params),
-                    (new SingleVat())->getVatTypeFakeDetail($params)
-                ]
-            ]
+            'data' => [
+                (new SingleVat())->getVatTypeFakeDetail($params),
+                (new SingleVat())->getVatTypeFakeDetail($params),
+            ],
+        ]
         );
     }
 
     public function getEmptyVatTypesFakeList(
         array $params = []
-    )
-    {
+    ) {
         return json_encode(array_merge(
             [
                 'data' => [],
