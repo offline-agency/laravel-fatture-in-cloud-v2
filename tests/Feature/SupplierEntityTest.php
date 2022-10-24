@@ -50,6 +50,21 @@ class SupplierEntityTest extends TestCase
         $this->assertInstanceOf(SupplierEntity::class, $response[0]);
     }
 
+    public function test_error_on_all_suppliers()
+    {
+        Http::fake([
+            'entities/suppliers' => Http::response(
+                (new SupplierFakeResponse())->getSupplierFakeError(),
+                401
+            ),
+        ]);
+
+        $suppliers = new Supplier();
+        $response = $suppliers->all();
+
+        $this->assertInstanceOf(Error::class, $response);
+    }
+
     public function test_error_on_list_suppliers()
     {
         Http::fake([
