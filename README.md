@@ -92,7 +92,7 @@ We are currently work on this package to implement all endpoints. Enable notific
 
 ✅ User
 
-🔜 Companies
+✅ Companies
 
 ✅ Clients
 
