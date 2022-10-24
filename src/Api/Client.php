@@ -6,9 +6,14 @@ use Illuminate\Support\Facades\Validator;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\Client as ClientEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\ClientList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
+use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class Client extends Api
 {
+    use ListTrait;
+
+    private $all;
+
     public function list(
         ?array $additional_data = []
     ) {
@@ -28,6 +33,21 @@ class Client extends Api
         $clients = $response->data;
 
         return new ClientList($clients);
+    }
+
+    public function all(
+        ?array $additional_data = []
+    )
+    {
+        $all_clients = $this->getAll([
+            'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
+        ], $this->company_id . '/entities/clients', $additional_data);
+
+        return gettype($all_clients) !== 'array'
+            ? $all_clients
+            : array_map(function ($client) {
+                return new ClientEntity($client);
+            }, $all_clients);
     }
 
     public function detail(

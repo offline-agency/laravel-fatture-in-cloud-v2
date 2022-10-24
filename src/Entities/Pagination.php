@@ -2,10 +2,12 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities;
 
-use Illuminate\Support\Arr;
+use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class Pagination extends AbstractEntity
 {
+    use ListTrait;
+
     /**
      * @var int
      */
@@ -76,20 +78,5 @@ class Pagination extends AbstractEntity
     public function hasPrevPage(): bool
     {
         return ! is_null($this->prev_page_url);
-    }
-
-    // helper
-
-    public function getQueryParams(
-        string $url
-    ): array {
-        $url = parse_url($url);
-
-        parse_str(
-            Arr::get($url, 'query'),
-            $query_params
-        );
-
-        return $query_params;
     }
 }

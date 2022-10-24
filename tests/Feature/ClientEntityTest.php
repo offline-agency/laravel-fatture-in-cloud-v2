@@ -155,6 +155,22 @@ class ClientEntityTest extends TestCase
         $this->assertInstanceOf(ClientList::class, $last_page_response);
     }
 
+    public function test_all_results_method()
+    {
+        Http::fake([
+            'entities/clients' => Http::response(
+                (new ClientFakeResponse())->getClientFakeAll()
+            ),
+        ]);
+
+        $client = new Client();
+        $client_list = $client->all();
+
+        $this->assertIsArray($client_list);
+        $this->assertCount(2, $client_list);
+        $this->assertInstanceOf(ClientEntity::class, $client_list[0]);
+    }
+
     // single
 
     public function test_detail_client()
