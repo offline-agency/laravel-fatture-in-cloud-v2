@@ -11,7 +11,7 @@ class Info extends Api
         ?array $additional_data = []
     ) {
         $additional_data = $this->data($additional_data, [
-            'fieldset'
+            'fieldset',
         ]);
 
         $response = $this->get(

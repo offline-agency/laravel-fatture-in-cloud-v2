@@ -19,7 +19,7 @@ class InfoEntityTest extends TestCase
         Http::fake([
             'info/vat_types' => Http::response(
                 (new InfoFakeResponse())->getVatTypesFakeList()
-            )
+            ),
         ]);
 
         $info = new Info();
