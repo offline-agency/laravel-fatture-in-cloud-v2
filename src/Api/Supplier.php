@@ -20,7 +20,7 @@ class Supplier extends Api
         ]);
 
         $response = $this->get(
-            $this->company_id.'/entities/suppliers',
+            'c/'.$this->company_id.'/entities/suppliers',
             $additional_data
         );
 
@@ -56,7 +56,7 @@ class Supplier extends Api
         ]);
 
         $response = $this->get(
-            $this->company_id.'/entities/suppliers/'.$supplier_id,
+            'c/'.$this->company_id.'/entities/suppliers/'.$supplier_id,
             $additional_data
         );
 
@@ -73,7 +73,7 @@ class Supplier extends Api
         int $supplier_id
     ) {
         $response = $this->destroy(
-            $this->company_id.'/entities/suppliers/'.$supplier_id
+            'c/'.$this->company_id.'/entities/suppliers/'.$supplier_id
         );
 
         if (! $response->success) {
@@ -96,7 +96,7 @@ class Supplier extends Api
         }
 
         $response = $this->post(
-            $this->company_id.'/entities/suppliers',
+            'c/'.$this->company_id.'/entities/suppliers',
             $body
         );
 
@@ -123,7 +123,7 @@ class Supplier extends Api
         }
 
         $response = $this->put(
-            $this->company_id.'/entities/suppliers/'.$supplier_id,
+            'c/'.$this->company_id.'/entities/suppliers/'.$supplier_id,
             $body
         );
 
