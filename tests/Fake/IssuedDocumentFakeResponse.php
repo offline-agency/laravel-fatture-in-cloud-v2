@@ -26,6 +26,19 @@ class IssuedDocumentFakeResponse extends FakeResponse
         ));
     }
 
+    public function getIssuedDocumentsFakeAll(
+        array $params = []
+    ) {
+        return json_encode(array_merge(
+            [
+                'data' => [
+                    (new DocumentList())->getListDocumentFake($params),
+                    (new DocumentList())->getListDocumentFake($params),
+                ],
+            ]
+        ));
+    }
+
     public function getEmptyIssuedDocumentsFakeList(
         array $params = []
     ) {

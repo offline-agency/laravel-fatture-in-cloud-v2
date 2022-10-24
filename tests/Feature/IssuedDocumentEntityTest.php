@@ -4,7 +4,9 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\MessageBag;
+use OfflineAgency\LaravelFattureInCloudV2\Api\Client;
 use OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\Client as ClientEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentAttachment;
@@ -14,6 +16,7 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPreCreateInfo;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentScheduleEmail;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentTotals;
+use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ClientFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocumentFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
 
@@ -39,6 +42,24 @@ class IssuedDocumentEntityTest extends TestCase
         $this->assertIsArray($response->getItems());
         $this->assertCount(2, $response->getItems());
         $this->assertInstanceOf(IssuedDocumentEntity::class, $response->getItems()[0]);
+    }
+
+    public function test_all_documents()
+    {
+        $type = 'invoice';
+
+        Http::fake([
+            'issued_documents?type='.$type => Http::response(
+                (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeAll()
+            ),
+        ]);
+
+        $issued_documents = new IssuedDocument();
+        $response = $issued_documents->all($type);
+
+        $this->assertIsArray($response);
+        $this->assertCount(2, $response);
+        $this->assertInstanceOf(IssuedDocumentEntity::class, $response[0]);
     }
 
     public function test_list_issued_documents_has_issued_documents_method()
