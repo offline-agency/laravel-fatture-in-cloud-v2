@@ -12,8 +12,6 @@ class Supplier extends Api
 {
     use ListTrait;
 
-    private $all;
-
     public function list(
         ?array $additional_data = []
     ) {

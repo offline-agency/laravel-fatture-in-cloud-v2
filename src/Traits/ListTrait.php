@@ -7,6 +7,8 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 
 trait ListTrait
 {
+    private $all;
+
     public function hasItems(): bool
     {
         return count($this->getItems()) > 0;

@@ -17,7 +17,6 @@ class IssuedDocument extends Api
 {
     use ListTrait;
 
-    private $all;
     const DOCUMENT_TYPES = [
         'invoice',
         'quote',
