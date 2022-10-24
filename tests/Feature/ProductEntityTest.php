@@ -4,11 +4,14 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\MessageBag;
+use OfflineAgency\LaravelFattureInCloudV2\Api\Client;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Product;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\Client as ClientEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\Product as ProductEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\ProductList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\ProductPagination;
+use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ClientFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ProductFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
 
@@ -32,6 +35,22 @@ class ProductEntityTest extends TestCase
         $this->assertIsArray($response->getItems());
         $this->assertCount(2, $response->getItems());
         $this->assertInstanceOf(ProductEntity::class, $response->getItems()[0]);
+    }
+
+    public function test_all_products()
+    {
+        Http::fake([
+            'products' => Http::response(
+                (new ProductFakeResponse())->getProductsFakeAll()
+            ),
+        ]);
+
+        $products = new Product();
+        $response = $products->all();
+
+        $this->assertIsArray($response);
+        $this->assertCount(2, $response);
+        $this->assertInstanceOf(ProductEntity::class, $response[0]);
     }
 
     public function test_list_product_has_products_method()

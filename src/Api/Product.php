@@ -3,12 +3,18 @@
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
 use Illuminate\Support\Facades\Validator;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\Client as ClientEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\Product as ProductEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\ProductList;
+use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class Product extends Api
 {
+    use ListTrait;
+
+    private $all;
+
     public function list(
         ?array $additional_data = []
     ) {
@@ -28,6 +34,21 @@ class Product extends Api
         $products = $response->data;
 
         return new ProductList($products);
+    }
+
+    public function all(
+        ?array $additional_data = []
+    )
+    {
+        $all_products = $this->getAll([
+            'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
+        ], $this->company_id.'/products', $additional_data);
+
+        return gettype($all_products) !== 'array'
+            ? $all_products
+            : array_map(function ($product) {
+                return new ProductEntity($product);
+            }, $all_products);
     }
 
     public function detail(
