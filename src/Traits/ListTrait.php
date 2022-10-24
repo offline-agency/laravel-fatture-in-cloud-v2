@@ -26,16 +26,15 @@ trait ListTrait
     }
 
     private function getAll(
-        ?array  $validate_additional_data = [],
+        ?array $validate_additional_data = [],
         ?string $url = null,
-        ?array  $additional_data = []
-    )
-    {
+        ?array $additional_data = []
+    ) {
         $additional_data = $this->data($additional_data, $validate_additional_data);
 
         $response = $this->get($url, $additional_data);
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -45,7 +44,7 @@ trait ListTrait
             ? array_merge($this->all, $response->data)
             : $response->data;
 
-        if (!isset($response->next_page_url)) {
+        if (! isset($response->next_page_url)) {
             return $this->all;
         }
 

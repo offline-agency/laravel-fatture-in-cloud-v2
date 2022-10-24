@@ -61,8 +61,7 @@ class IssuedDocument extends Api
     public function all(
         string $type,
         ?array $additional_data = []
-    )
-    {
+    ) {
         $additional_data = array_merge($additional_data, [
             'type' => $type,
         ]);

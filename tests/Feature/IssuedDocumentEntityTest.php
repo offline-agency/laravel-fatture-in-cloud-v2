@@ -4,9 +4,7 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\MessageBag;
-use OfflineAgency\LaravelFattureInCloudV2\Api\Client;
 use OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\Client as ClientEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentAttachment;
@@ -16,7 +14,6 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPreCreateInfo;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentScheduleEmail;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentTotals;
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ClientFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocumentFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
 

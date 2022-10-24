@@ -4,14 +4,11 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\MessageBag;
-use OfflineAgency\LaravelFattureInCloudV2\Api\Client;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Product;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\Client as ClientEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\Product as ProductEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\ProductList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\ProductPagination;
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ClientFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ProductFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
 
