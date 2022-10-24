@@ -11,9 +11,12 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPreCreateInfo;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentScheduleEmail;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentTotals;
+use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class IssuedDocument extends Api
 {
+    use ListTrait;
+
     const DOCUMENT_TYPES = [
         'invoice',
         'quote',
@@ -52,6 +55,25 @@ class IssuedDocument extends Api
         $issued_document_response = $response->data;
 
         return new IssuedDocumentList($issued_document_response);
+    }
+
+    public function all(
+        string $type,
+        ?array $additional_data = []
+    ) {
+        $additional_data = array_merge($additional_data, [
+            'type' => $type,
+        ]);
+
+        $all_documents = $this->getAll([
+            'type', 'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
+        ], 'c/'.$this->company_id.'/issued_documents', $additional_data);
+
+        return gettype($all_documents) !== 'array'
+            ? $all_documents
+            : array_map(function ($document) {
+                return new IssuedDocumentEntity($document);
+            }, $all_documents);
     }
 
     public function detail(
