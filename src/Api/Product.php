@@ -3,7 +3,6 @@
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
 use Illuminate\Support\Facades\Validator;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\Client as ClientEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\Product as ProductEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\ProductList;
@@ -38,8 +37,7 @@ class Product extends Api
 
     public function all(
         ?array $additional_data = []
-    )
-    {
+    ) {
         $all_products = $this->getAll([
             'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
         ], $this->company_id.'/products', $additional_data);

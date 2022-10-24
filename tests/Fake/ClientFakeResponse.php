@@ -22,8 +22,7 @@ class ClientFakeResponse extends FakeResponse
 
     public function getClientFakeAll(
         array $params = []
-    )
-    {
+    ) {
         return json_encode(array_merge(
             [
                 'data' => [
