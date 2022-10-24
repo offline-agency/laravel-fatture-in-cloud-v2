@@ -3,12 +3,18 @@
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
 use Illuminate\Support\Facades\Validator;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\Client as ClientEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\Supplier as SupplierEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\SupplierList;
+use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class Supplier extends Api
 {
+    use ListTrait;
+
+    private $all;
+
     public function list(
         ?array $additional_data = []
     ) {
@@ -28,6 +34,21 @@ class Supplier extends Api
         $suppliers = $response->data;
 
         return new SupplierList($suppliers);
+    }
+
+    public function all(
+        ?array $additional_data = []
+    )
+    {
+        $all_suppliers = $this->getAll([
+            'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
+        ], $this->company_id.'/entities/suppliers', $additional_data);
+
+        return gettype($all_suppliers) !== 'array'
+            ? $all_suppliers
+            : array_map(function ($supplier) {
+                return new SupplierEntity($supplier);
+            }, $all_suppliers);
     }
 
     public function detail(
