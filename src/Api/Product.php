@@ -38,7 +38,7 @@ class Product extends Api
     ) {
         $all_products = $this->getAll([
             'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
-        ], $this->company_id.'/products', $additional_data);
+        ], 'c/'.$this->company_id.'/products', $additional_data);
 
         return gettype($all_products) !== 'array'
             ? $all_products

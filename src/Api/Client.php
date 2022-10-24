@@ -38,7 +38,7 @@ class Client extends Api
     ) {
         $all_clients = $this->getAll([
             'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
-        ], $this->company_id.'/entities/clients', $additional_data);
+        ], 'c/'.$this->company_id.'/entities/clients', $additional_data);
 
         return gettype($all_clients) !== 'array'
             ? $all_clients

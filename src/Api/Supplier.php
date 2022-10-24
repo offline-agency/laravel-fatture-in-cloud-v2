@@ -38,7 +38,7 @@ class Supplier extends Api
     ) {
         $all_suppliers = $this->getAll([
             'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
-        ], $this->company_id.'/entities/suppliers', $additional_data);
+        ], 'c/'.$this->company_id.'/entities/suppliers', $additional_data);
 
         return gettype($all_suppliers) !== 'array'
             ? $all_suppliers

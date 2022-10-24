@@ -67,7 +67,7 @@ class IssuedDocument extends Api
 
         $all_documents = $this->getAll([
             'type', 'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
-        ], $this->company_id.'/issued_documents', $additional_data);
+        ], 'c/'.$this->company_id.'/issued_documents', $additional_data);
 
         return gettype($all_documents) !== 'array'
             ? $all_documents
