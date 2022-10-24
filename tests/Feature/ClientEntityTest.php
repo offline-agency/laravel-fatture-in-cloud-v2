@@ -34,6 +34,22 @@ class ClientEntityTest extends TestCase
         $this->assertInstanceOf(ClientEntity::class, $response->getItems()[0]);
     }
 
+    public function test_all_clients()
+    {
+        Http::fake([
+            'entities/clients' => Http::response(
+                (new ClientFakeResponse())->getClientFakeAll()
+            ),
+        ]);
+
+        $client = new Client();
+        $response = $client->all();
+
+        $this->assertIsArray($response);
+        $this->assertCount(2, $response);
+        $this->assertInstanceOf(ClientEntity::class, $response[0]);
+    }
+
     public function test_list_clients_has_clients_method()
     {
         Http::fake([
@@ -153,22 +169,6 @@ class ClientEntityTest extends TestCase
         $last_page_response = $product_list->getPagination()->goToLastPage();
 
         $this->assertInstanceOf(ClientList::class, $last_page_response);
-    }
-
-    public function test_all_results_method()
-    {
-        Http::fake([
-            'entities/clients' => Http::response(
-                (new ClientFakeResponse())->getClientFakeAll()
-            ),
-        ]);
-
-        $client = new Client();
-        $client_list = $client->all();
-
-        $this->assertIsArray($client_list);
-        $this->assertCount(2, $client_list);
-        $this->assertInstanceOf(ClientEntity::class, $client_list[0]);
     }
 
     // single
