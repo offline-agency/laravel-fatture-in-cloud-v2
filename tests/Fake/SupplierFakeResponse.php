@@ -20,6 +20,19 @@ class SupplierFakeResponse extends FakeResponse
         ));
     }
 
+    public function getSupplierFakeAll(
+        array $params = []
+    ) {
+        return json_encode(array_merge(
+            [
+                'data' => [
+                    (new SingleSupplier())->getSupplierFakeDetail($params),
+                    (new SingleSupplier())->getSupplierFakeDetail($params),
+                ],
+            ]
+        ));
+    }
+
     public function getSupplierFakeDetail(
         array $params = []
     ) {
