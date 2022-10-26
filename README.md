@@ -110,7 +110,7 @@ We are currently work on this package to implement all endpoints. Enable notific
 
 ✅ Issued Documents
 
-❌ Issued e-invoices
+🔜 Issued e-invoices
 
 ❌ Received Documents
 
@@ -122,7 +122,7 @@ We are currently work on this package to implement all endpoints. Enable notific
 
 ❌ Cashbook
 
-❌ Info
+🔜 Info
 
 ❌ Settings
 
