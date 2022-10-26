@@ -118,7 +118,7 @@ class Api extends LaravelFattureInCloudV2
     ): string {
         // used to avoid breaking changes on config base url
         if (Str::contains($url, '/c/c')) {
-            return Str::replace('/c/c', '/c', $url);
+            return str_replace('/c/c', '/c', $url);
         }
 
         return $url;
