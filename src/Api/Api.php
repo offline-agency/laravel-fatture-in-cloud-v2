@@ -10,10 +10,9 @@ class Api extends LaravelFattureInCloudV2
 {
     protected function get(
         string $url,
-        array  $query_parameters = []
-    ): object
-    {
-        $complete_url = $this->baseUrl . $url;
+        array $query_parameters = []
+    ): object {
+        $complete_url = $this->baseUrl.$url;
 
         $complete_url = $this->parseUrl($complete_url);
 
@@ -32,11 +31,10 @@ class Api extends LaravelFattureInCloudV2
 
     protected function post(
         string $url,
-        array  $body,
-        bool   $has_file = false
-    ): object
-    {
-        $complete_url = $this->baseUrl . $url;
+        array $body,
+        bool $has_file = false
+    ): object {
+        $complete_url = $this->baseUrl.$url;
 
         $complete_url = $this->parseUrl($complete_url);
 
@@ -61,10 +59,9 @@ class Api extends LaravelFattureInCloudV2
 
     protected function put(
         string $url,
-        array  $body
-    ): object
-    {
-        $complete_url = $this->baseUrl . $url;
+        array $body
+    ): object {
+        $complete_url = $this->baseUrl.$url;
 
         $complete_url = $this->parseUrl($complete_url);
 
@@ -83,10 +80,9 @@ class Api extends LaravelFattureInCloudV2
 
     protected function destroy(
         string $url,
-        array  $query_parameters = []
-    ): object
-    {
-        $complete_url = $this->baseUrl . $url;
+        array $query_parameters = []
+    ): object {
+        $complete_url = $this->baseUrl.$url;
 
         $complete_url = $this->parseUrl($complete_url);
 
@@ -106,8 +102,7 @@ class Api extends LaravelFattureInCloudV2
     protected function data(
         array $data,
         array $fields
-    ): array
-    {
+    ): array {
         $parsed_data = [];
         foreach ($data as $key => $value) {
             if (in_array($key, $fields)) {
@@ -120,10 +115,9 @@ class Api extends LaravelFattureInCloudV2
 
     private function parseUrl(
         string $url
-    ): string
-    {
+    ): string {
         // used to avoid breaking changes on config base url
-        if (Str::contains($url,'/c/c')) {
+        if (Str::contains($url, '/c/c')) {
             return Str::replace('/c/c', '/c', $url);
         }
 
