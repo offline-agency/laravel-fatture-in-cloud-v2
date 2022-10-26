@@ -16,7 +16,7 @@ class Receipt extends Api
 
     const RECEIPT_TYPES = [
         'sales_receipt',
-        'till_receipt'
+        'till_receipt',
     ];
 
     public function list(
@@ -149,7 +149,8 @@ class Receipt extends Api
         return new ReceiptEntity($receipt);
     }
 
-    public function preCreateInfo() {
+    public function preCreateInfo()
+    {
         $response = $this->get(
             'c/'.$this->company_id.'/receipts/info',
         );
@@ -181,7 +182,7 @@ class Receipt extends Api
             'c/'.$this->company_id.'/receipts/monthly_totals',
             [
                 'type' => $type,
-                'year' => $year
+                'year' => $year,
             ]
         );
 

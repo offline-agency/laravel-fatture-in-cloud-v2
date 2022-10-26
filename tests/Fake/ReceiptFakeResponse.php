@@ -56,8 +56,7 @@ class ReceiptFakeResponse extends FakeResponse
 
     public function getReceiptsFakePreCreateInfo(
         array $params = []
-    )
-    {
+    ) {
         return json_encode([
             'data' => (new PreCreateInfo())->getReceiptFakePreCreateInfo($params),
         ]);
@@ -65,8 +64,7 @@ class ReceiptFakeResponse extends FakeResponse
 
     public function getReceiptsFakeMonthlyTotals(
         array $params = []
-    )
-    {
+    ) {
         return json_encode(array_merge(
             [
                 'data' => [

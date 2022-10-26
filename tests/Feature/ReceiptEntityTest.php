@@ -238,8 +238,8 @@ class ReceiptEntityTest extends TestCase
                 'date' => Carbon::now()->format('Y-m-d'),
                 'type' => 'sales_receipt',
                 'payment_account' => [
-                    'name' => 'fake'
-                ]
+                    'name' => 'fake',
+                ],
             ],
         ]);
 
@@ -289,8 +289,8 @@ class ReceiptEntityTest extends TestCase
                 'date' => Carbon::now()->format('Y-m-d'),
                 'type' => 'sales_receipt',
                 'payment_account' => [
-                    'name' => 'fake'
-                ]
+                    'name' => 'fake',
+                ],
             ],
         ]);
 
