@@ -3,6 +3,7 @@
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use OfflineAgency\LaravelFattureInCloudV2\LaravelFattureInCloudV2;
 
 class Api extends LaravelFattureInCloudV2
@@ -12,6 +13,8 @@ class Api extends LaravelFattureInCloudV2
         array $query_parameters = []
     ): object {
         $complete_url = $this->baseUrl.$url;
+
+        $complete_url = $this->parseUrl($complete_url);
 
         $response = $this->header->get($complete_url, $query_parameters);
 
@@ -32,6 +35,8 @@ class Api extends LaravelFattureInCloudV2
         bool $has_file = false
     ): object {
         $complete_url = $this->baseUrl.$url;
+
+        $complete_url = $this->parseUrl($complete_url);
 
         if ($has_file) {
             $response = $this->header
@@ -58,6 +63,8 @@ class Api extends LaravelFattureInCloudV2
     ): object {
         $complete_url = $this->baseUrl.$url;
 
+        $complete_url = $this->parseUrl($complete_url);
+
         $response = $this->header->put($complete_url, $body);
 
         $response_status = $response->status();
@@ -75,9 +82,11 @@ class Api extends LaravelFattureInCloudV2
         string $url,
         array $query_parameters = []
     ): object {
-        $url = $this->baseUrl.$url;
+        $complete_url = $this->baseUrl.$url;
 
-        $response = $this->header->delete($url, $query_parameters);
+        $complete_url = $this->parseUrl($complete_url);
+
+        $response = $this->header->delete($complete_url, $query_parameters);
 
         $response_status = $response->status();
 
@@ -102,6 +111,17 @@ class Api extends LaravelFattureInCloudV2
         }
 
         return $parsed_data;
+    }
+
+    private function parseUrl(
+        string $url
+    ): string {
+        // used to avoid breaking changes on config base url
+        if (Str::contains($url, '/c/c')) {
+            return Str::replace('/c/c', '/c', $url);
+        }
+
+        return $url;
     }
 
     private function waitThrottle(

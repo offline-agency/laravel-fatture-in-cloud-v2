@@ -6,9 +6,12 @@ use Illuminate\Support\Facades\Validator;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\Client as ClientEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\ClientList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
+use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class Client extends Api
 {
+    use ListTrait;
+
     public function list(
         ?array $additional_data = []
     ) {
@@ -17,7 +20,7 @@ class Client extends Api
         ]);
 
         $response = $this->get(
-            $this->company_id.'/entities/clients',
+            'c/'.$this->company_id.'/entities/clients',
             $additional_data
         );
 
@@ -30,6 +33,20 @@ class Client extends Api
         return new ClientList($clients);
     }
 
+    public function all(
+        ?array $additional_data = []
+    ) {
+        $all_clients = $this->getAll([
+            'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
+        ], 'c/'.$this->company_id.'/entities/clients', $additional_data);
+
+        return gettype($all_clients) !== 'array'
+            ? $all_clients
+            : array_map(function ($client) {
+                return new ClientEntity($client);
+            }, $all_clients);
+    }
+
     public function detail(
         int $client_id,
         ?array $additional_data = []
@@ -39,7 +56,7 @@ class Client extends Api
         ]);
 
         $response = $this->get(
-            $this->company_id.'/entities/clients/'.$client_id,
+            'c/'.$this->company_id.'/entities/clients/'.$client_id,
             $additional_data
         );
 
@@ -56,7 +73,7 @@ class Client extends Api
         int $client_id
     ) {
         $response = $this->destroy(
-            $this->company_id.'/entities/clients/'.$client_id
+            'c/'.$this->company_id.'/entities/clients/'.$client_id
         );
 
         if (! $response->success) {
@@ -79,7 +96,7 @@ class Client extends Api
         }
 
         $response = $this->post(
-            $this->company_id.'/entities/clients',
+            'c/'.$this->company_id.'/entities/clients',
             $body
         );
 
@@ -106,7 +123,7 @@ class Client extends Api
         }
 
         $response = $this->put(
-            $this->company_id.'/entities/clients/'.$client_id,
+            'c/'.$this->company_id.'/entities/clients/'.$client_id,
             $body
         );
 

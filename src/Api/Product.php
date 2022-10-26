@@ -6,9 +6,12 @@ use Illuminate\Support\Facades\Validator;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\Product as ProductEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\ProductList;
+use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class Product extends Api
 {
+    use ListTrait;
+
     public function list(
         ?array $additional_data = []
     ) {
@@ -17,7 +20,7 @@ class Product extends Api
         ]);
 
         $response = $this->get(
-            $this->company_id.'/products',
+            'c/'.$this->company_id.'/products',
             $additional_data
         );
 
@@ -30,6 +33,20 @@ class Product extends Api
         return new ProductList($products);
     }
 
+    public function all(
+        ?array $additional_data = []
+    ) {
+        $all_products = $this->getAll([
+            'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
+        ], 'c/'.$this->company_id.'/products', $additional_data);
+
+        return gettype($all_products) !== 'array'
+            ? $all_products
+            : array_map(function ($product) {
+                return new ProductEntity($product);
+            }, $all_products);
+    }
+
     public function detail(
         int $product_id,
         ?array $additional_data = []
@@ -39,7 +56,7 @@ class Product extends Api
         ]);
 
         $response = $this->get(
-            $this->company_id.'/products/'.$product_id,
+            'c/'.$this->company_id.'/products/'.$product_id,
             $additional_data
         );
 
@@ -56,7 +73,7 @@ class Product extends Api
         int $product_id
     ) {
         $response = $this->destroy(
-            $this->company_id.'/products/'.$product_id
+            'c/'.$this->company_id.'/products/'.$product_id
         );
 
         if (! $response->success) {
@@ -81,7 +98,7 @@ class Product extends Api
         }
 
         $response = $this->post(
-            $this->company_id.'/products',
+            'c/'.$this->company_id.'/products',
             $body
         );
 
@@ -110,7 +127,7 @@ class Product extends Api
         }
 
         $response = $this->put(
-            $this->company_id.'/products/'.$product_id,
+            'c/'.$this->company_id.'/products/'.$product_id,
             $body
         );
 
