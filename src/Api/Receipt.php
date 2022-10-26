@@ -8,9 +8,17 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\Receipt as ReceiptEnt
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\ReceiptList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\ReceiptMonthlyTotals;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\ReceiptPreCreateInfo;
+use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class Receipt extends Api
 {
+    use ListTrait;
+
+    const RECEIPT_TYPES = [
+        'sales_receipt',
+        'till_receipt'
+    ];
+
     public function list(
         ?array $additional_data = []
     ) {
@@ -30,6 +38,20 @@ class Receipt extends Api
         $receipts = $response->data;
 
         return new ReceiptList($receipts);
+    }
+
+    public function all(
+        ?array $additional_data = []
+    ) {
+        $all_receipts = $this->getAll([
+            'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
+        ], 'c/'.$this->company_id.'/receipts', $additional_data);
+
+        return gettype($all_receipts) !== 'array'
+            ? $all_receipts
+            : array_map(function ($receipt) {
+                return new ReceiptEntity($receipt);
+            }, $all_receipts);
     }
 
     public function detail(
@@ -129,10 +151,8 @@ class Receipt extends Api
 
     public function preCreateInfo() {
         $response = $this->get(
-            'c/'.$this->company_id.'/receipts/info'
+            'c/'.$this->company_id.'/receipts/info',
         );
-
-        dd($response);
 
         if (! $response->success) {
             return new Error($response->data);
@@ -147,7 +167,16 @@ class Receipt extends Api
         string $type,
         string $year
     ) {
-        //TODO validate type
+        $validator = Validator::make(['type' => $type], [
+            'type' => 'required|in:'.implode(',', Receipt::RECEIPT_TYPES),
+        ], [
+            'type.in' => 'The selected type is invalid. Select one between '.implode(', ', Receipt::RECEIPT_TYPES),
+        ]);
+
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
         $response = $this->get(
             'c/'.$this->company_id.'/receipts/monthly_totals',
             [
@@ -162,6 +191,8 @@ class Receipt extends Api
 
         $receipts = $response->data->data;
 
-        return new ReceiptMonthlyTotals($receipts);
+        return array_map(function ($receipt) {
+            return new ReceiptMonthlyTotals($receipt);
+        }, $receipts);
     }
 }

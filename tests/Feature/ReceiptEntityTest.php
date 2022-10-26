@@ -9,7 +9,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Api\Receipt;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\Receipt as ReceiptEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\ReceiptList;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\ReceiptMonthlyTotals;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\ReceiptPagination;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\ReceiptPreCreateInfo;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ReceiptFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
 
@@ -33,6 +35,37 @@ class ReceiptEntityTest extends TestCase
         $this->assertIsArray($response->getItems());
         $this->assertCount(2, $response->getItems());
         $this->assertInstanceOf(ReceiptEntity::class, $response->getItems()[0]);
+    }
+
+    public function test_all_receipts()
+    {
+        Http::fake([
+            'receipts' => Http::response(
+                (new ReceiptFakeResponse())->getReceiptsFakeAll()
+            ),
+        ]);
+
+        $receipts = new Receipt();
+        $response = $receipts->all();
+
+        $this->assertIsArray($response);
+        $this->assertCount(2, $response);
+        $this->assertInstanceOf(ReceiptEntity::class, $response[0]);
+    }
+
+    public function test_error_on_all_receipts()
+    {
+        Http::fake([
+            'receipts' => Http::response(
+                (new ReceiptFakeResponse())->getReceiptFakeError(),
+                401
+            ),
+        ]);
+
+        $receipts = new Receipt();
+        $response = $receipts->all();
+
+        $this->assertInstanceOf(Error::class, $response);
     }
 
     public function test_list_receipts_has_receipts_method()
@@ -295,9 +328,47 @@ class ReceiptEntityTest extends TestCase
 
     public function test_pre_create_info_receipt()
     {
+        Http::fake([
+            'receipts/info' => Http::response(
+                (new ReceiptFakeResponse())->getReceiptsFakePreCreateInfo()
+            ),
+        ]);
+
         $receipt = new Receipt();
         $response = $receipt->preCreateInfo();
 
-        dd($response);
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(ReceiptPreCreateInfo::class, $response);
+    }
+
+    // monthly totals
+
+    public function test_monthly_totals_receipt()
+    {
+        $type = 'till_receipt';
+        $year = 2022;
+
+        Http::fake([
+            'receipts/monthly_totals?type='.$type.'&year='.$year => Http::response(
+                (new ReceiptFakeResponse())->getReceiptsFakeMonthlyTotals()
+            ),
+        ]);
+
+        $receipt = new Receipt();
+        $response = $receipt->monthlyTotals($type, $year);
+
+        $this->assertIsArray($response);
+        $this->assertCount(2, $response);
+        $this->assertInstanceOf(ReceiptMonthlyTotals::class, $response[0]);
+    }
+
+    public function test_validation_error_on_create_issued_document()
+    {
+        $receipt = new Receipt();
+        $response = $receipt->monthlyTotals('fake_type', 2022);
+
+        $this->assertNotNull($response);
+        $this->assertInstanceOf(MessageBag::class, $response);
+        $this->assertArrayHasKey('type', $response->messages());
     }
 }
