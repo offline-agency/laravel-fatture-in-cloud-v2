@@ -25,8 +25,7 @@ class IssuedEInvoice extends FakeResponse
 
     public function getIssuedEInvoiceFakeGetXML(
         array $params = []
-    )
-    {
+    ) {
         return $this->value($params, 'value', 'fake_value');
     }
 
