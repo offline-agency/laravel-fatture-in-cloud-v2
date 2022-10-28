@@ -3,14 +3,12 @@
 namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 
 use Illuminate\Support\Facades\Http;
-use OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument;
 use OfflineAgency\LaravelFattureInCloudV2\Api\IssuedEInvoice;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedEInvoice\IssuedEInvoiceRejectionReason;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedEInvoice\IssuedEInvoiceSend;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedEInvoice\IssuedEInvoiceVerifyXML;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedEInvoiceFakeResponse;
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ReceiptFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
 
 class IssuedEInvoiceEntityTest extends TestCase
