@@ -2,24 +2,43 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Fake;
 
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument\Attachment;
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument\Document;
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument\DocumentList;
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument\Email;
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument\PreCreateInfo;
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument\ScheduleEmail;
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocument\Total;
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedEInvoice\SingleIssuedEInvoice;
+use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedEInvoice\IssuedEInvoice;
 
 class IssuedEInvoiceFakeResponse extends FakeResponse
 {
-    public function getIssuedEInvoiceFakeDetail(
+    public function getIssuedEInvoiceFakeSend(
         array $params = []
     ) {
         return json_encode([
-                'data' => [
-                    (new SingleIssuedEInvoice())->getVatTypeFakeDetail($params),
-                ],
+                'data' => (new IssuedEInvoice())->getIssuedEInvoiceFakeSend($params),
             ]);
+    }
+
+    public function getIssuedEInvoiceFakeVerifyXML(
+        array $params = []
+    ) {
+        return json_encode([
+                'data' => (new IssuedEInvoice())->getIssuedEInvoiceFakeVerifyXML($params),
+            ]);
+    }
+
+    public function getIssuedEInvoiceFakeRejectionReason(
+        array $params = []
+    ) {
+        return json_encode([
+                'data' => (new IssuedEInvoice())->getIssuedEInvoiceFakeRejectionReason($params),
+            ]);
+    }
+
+    public function getIssuedEInvoiceFakeGetXML(
+        array $params = []
+    ) {
+        return json_encode((new IssuedEInvoice())->getIssuedEInvoiceFakeGetXML($params));
+    }
+
+    public function getIssuedEInvoiceFakeError(
+        array $params = []
+    ) {
+        return json_encode((new ErrorFakeResponse())->getErrorFake($params));
     }
 }

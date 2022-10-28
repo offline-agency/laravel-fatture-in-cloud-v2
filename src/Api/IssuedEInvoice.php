@@ -6,7 +6,7 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedEInvoice\IssuedEInvoiceRejectionReason;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedEInvoice\IssuedEInvoiceVerifyXML;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedEInvoice\IssuedEInvoice as IssuedEInvoiceEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedEInvoice\IssuedEInvoiceSend;
 
 class IssuedEInvoice extends Api
 {
@@ -28,7 +28,7 @@ class IssuedEInvoice extends Api
 
         $issued_e_invoice = $response->data->data;
 
-        return new IssuedEInvoiceEntity($issued_e_invoice);
+        return new IssuedEInvoiceSend($issued_e_invoice);
     }
 
     public function verifyXML(
@@ -65,11 +65,7 @@ class IssuedEInvoice extends Api
             return new Error($response->data);
         }
 
-        dd($response);
-
-        $issued_document_response = $response->data;
-
-        return $issued_document_response;
+        return $response;
     }
 
     public function getRejectionReason(
