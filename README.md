@@ -12,7 +12,9 @@
 
 ## Documentation, Installation, and Usage Instructions
 See the [documentation](https://docs.offlineagency.com/laravel-fatture-in-cloud-v2/) for detailed installation and usage instructions.
-
+``` php
+composer require offline-agency/laravel-fatture-in-cloud-v2
+```
 ## What It Does
 
 This package provides a simple Laravel integration with [Fatture in Cloud APIs v2](https://developers.fattureincloud.it/). Let's see some example:
