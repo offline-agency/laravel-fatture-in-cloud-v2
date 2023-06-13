@@ -14,7 +14,7 @@ class ClientFakeResponse extends FakeResponse
                 'data' => [
                     (new SingleClient())->getClientFakeDetail($params),
                     (new SingleClient())->getClientFakeDetail($params),
-                ],
+                ]
             ],
             (new PaginationFakeResponse())->getPaginationFake($params)
         ));
