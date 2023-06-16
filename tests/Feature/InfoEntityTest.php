@@ -173,7 +173,7 @@ class InfoEntityTest extends TestCase
 
         $response = $info->listPaymentAccounts();
 
-        $this->assertIsBool($response->hasItems());
+        $this->assertFalse($response->hasItems());
     }
 
     public function test_error_on_list_payment_accounts_types()
@@ -222,7 +222,7 @@ class InfoEntityTest extends TestCase
 
         $response = $info->listRevenueCenters();
 
-        $this->assertIsBool($response->hasItems());
+        $this->assertFalse($response->hasItems());
     }
 
 
@@ -272,7 +272,7 @@ class InfoEntityTest extends TestCase
 
         $response = $info->listCostCenters();
 
-        $this->assertIsBool($response->hasItems());
+        $this->assertFalse($response->hasItems());
     }
 
     public function test_error_on_list_cost_centers_types()
