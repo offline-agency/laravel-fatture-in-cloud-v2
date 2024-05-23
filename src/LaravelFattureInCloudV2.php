@@ -55,7 +55,7 @@ class LaravelFattureInCloudV2
     private function setHeader()
     {
         $this->header = Http::withHeaders([
-            'Accept'        => 'application/json',
+            'Accept' => 'application/json',
             'Authorization' => 'Bearer '.$this->getBearer(),
         ]);
     }
