@@ -53,7 +53,7 @@ class Document extends FakeResponse
             'is_marked' => $this->value($params, 'is_marked', false),
             'created_at' => $this->value($params, 'created_at', date('Y-m-d H:i:s')),
             'updated_at' => $this->value($params, 'updated_at', date('Y-m-d H:i:s')),
-            'entity' =>  (new Entity())->getEntityFake($params),
+            'entity' => (new Entity())->getEntityFake($params),
             'date' => $this->value($params, 'date', date('Y-m-d')),
             'number' => $this->value($params, 'number', 1),
             'currency' => (new Currency())->getCurrencyFake($params),
