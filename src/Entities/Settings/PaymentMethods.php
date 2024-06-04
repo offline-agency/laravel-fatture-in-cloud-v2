@@ -3,7 +3,7 @@ namespace App\Entities\Settings;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
 
-class Setting extends AbstractEntity
+class PaymentMethods extends AbstractEntity
 {
     /**
      * @var int
@@ -26,14 +26,28 @@ class Setting extends AbstractEntity
     public $is_default;
 
     /**
-     * @var object
+     * @var array
      * */
-    public $default_payment_account;
+    public $default_payment_account = [
+        'id' => null,
+        'name' => null,
+        'type' => null,
+        'iban' => null,
+        'sia' => null,
+        'cuc' => null,
+        'virtual' => null,
+    ];
 
     /**
-     * @var object
+     * @var array
      * */
-    public $details;
+    public $details = [
+        [
+            'title' => null,
+            'description' => null,
+        ],
+    ];
+
 
     /**
      * @var string
