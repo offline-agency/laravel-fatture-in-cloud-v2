@@ -1,6 +1,6 @@
 <?php
 
-namespace OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocuments;
+namespace OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
 

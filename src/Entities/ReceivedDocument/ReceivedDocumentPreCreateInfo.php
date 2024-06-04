@@ -1,10 +1,10 @@
 <?php
 
-namespace OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocuments;
+namespace OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
 
-class ReceivedDocumentsPreCreateInfo extends AbstractEntity
+class ReceivedDocumentPreCreateInfo extends AbstractEntity
 {
     /**
      * @var object
