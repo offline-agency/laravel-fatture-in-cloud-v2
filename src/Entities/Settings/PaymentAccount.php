@@ -1,5 +1,5 @@
 <?php
-namespace App\Entities\Settings;
+namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Settings;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
 

@@ -2,9 +2,9 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
-use App\Entities\Settings\PaymentMethods;
-use App\Entities\Settings\PaymentAccount;
-use App\Entities\Settings\VatType;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\PaymentMethods;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\PaymentAccount;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\VatType;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Request;
@@ -40,22 +40,30 @@ class Setting extends Api
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        $paymentMethod = new PaymentMethods();
-        $paymentMethod->fill($data);
-        $paymentMethod->save();
+        try {
+            $paymentMethod = new PaymentMethods();
+            $paymentMethod->fill($data);
+            $paymentMethod->save();
 
-        return response()->json(['message' => 'Metodo di pagamento creato con successo', 'payment_method_id' => $paymentMethod->id], 201);
+            return response()->json(['message' => 'Metodo di pagamento creato con successo', 'payment_method_id' => $paymentMethod->id], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Impossibile creare il metodo di pagamento'], 500);
+        }
     }
 
     public function getPaymentMethod($id)
     {
-        $paymentMethod = PaymentMethods::find($id);
+        try{
+            $paymentMethod = PaymentMethods::find($id);
 
-        if (!$paymentMethod) {
-            return Response->json(['error' => 'Metodo di pagamento non trovato'], 404);
+            if (!$paymentMethod) {
+                return response()->json(['error' => 'Metodo di pagamento non trovato'], 404);
+            }
+
+            return response()->json(['payment_method' => $paymentMethod], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Impossibile trovare il metodo di pagamento'], 500);
         }
-
-        return Response->json(['payment_method' => $paymentMethod], 200);
     }
 
     public function updatePaymentMethod(Request $request, $id)
