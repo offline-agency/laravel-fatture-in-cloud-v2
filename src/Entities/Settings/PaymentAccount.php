@@ -11,18 +11,6 @@ class PaymentAccount extends AbstractEntity
     public $id;
 
     /**
-     * @var int
-     */
-    public $company_id;
-
-    /**
-     * @var int
-     */
-    public $payment_account_id;
-
-
-
-    /**
      * @var string
     */
     public $name;
