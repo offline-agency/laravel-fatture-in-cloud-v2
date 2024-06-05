@@ -17,6 +17,15 @@ class ReceivedDocumentPagination extends Pagination
         return $this->changePage($this->first_page_url);
     }
 
+    public function goToLastPage()
+    {
+        if (is_null($this->last_page_url)) {
+            return null;
+        }
+
+        return $this->changePage($this->last_page_url);
+    }
+
     public function goToPrevPage()
     {
         if (! $this->hasPrevPage()) {

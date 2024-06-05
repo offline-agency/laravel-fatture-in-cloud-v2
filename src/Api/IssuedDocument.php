@@ -226,7 +226,7 @@ class IssuedDocument extends Api
             return $validator->errors();
         }
 
-        $response = $this->put(
+        $response = $this->post(
             'c/'.$this->company_id.'/issued_documents/'.$document_id.'/totals',
             $body
         );

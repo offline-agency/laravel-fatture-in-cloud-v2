@@ -10,7 +10,6 @@ class ReceivedDocumentList
     use ListTrait;
 
     private $items;
-
     private $pagination;
 
     public function __construct($received_document_response)

@@ -7,22 +7,24 @@ use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\ReceivedDocument;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocument as ReceivedDocumentEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentGetExistingTotals;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentPagination;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentPreCreateInfo;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ReceivedDocumentFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
 
+
 class ReceivedDocumentEntityTest extends TestCase
 {
     // list
 
-    public function test_list_Received_documents()
+    public function test_list_received_documents()
     {
         $type = 'invoice';
 
         Http::fake([
-            'Received_documents?type='.$type => Http::response(
+            'received_documents?type='.$type => Http::response(
                 (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList()
             ),
         ]);
@@ -42,7 +44,7 @@ class ReceivedDocumentEntityTest extends TestCase
         $type = 'invoice';
 
         Http::fake([
-            'Received_documents?type='.$type => Http::response(
+            'received_documents?type='.$type => Http::response(
                 (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeAll()
             ),
         ]);
@@ -60,7 +62,7 @@ class ReceivedDocumentEntityTest extends TestCase
         $type = 'invoice';
 
         Http::fake([
-            'Received_documents?type='.$type => Http::response(
+            'received_documents?type='.$type => Http::response(
                 (new ReceivedDocumentFakeResponse())->getReceivedDocumentFakeError(),
                 401
             ),
@@ -72,12 +74,12 @@ class ReceivedDocumentEntityTest extends TestCase
         $this->assertInstanceOf(Error::class, $response);
     }
 
-    public function test_list_Received_documents_has_Received_documents_method()
+    public function test_list_received_documents_has_received_documents_method()
     {
         $type = 'invoice';
 
         Http::fake([
-            'Received_documents?type='.$type => Http::response(
+            'received_documents?type='.$type => Http::response(
                 (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList()
             ),
         ]);
@@ -88,12 +90,12 @@ class ReceivedDocumentEntityTest extends TestCase
         $this->assertTrue($response->hasItems());
     }
 
-    public function test_empty_list_Received_documents_has_Received_documents_method()
+    public function test_empty_list_received_documents_has_received_documents_method()
     {
         $type = 'invoice';
 
         Http::fake([
-            'Received_documents?type='.$type => Http::response(
+            'received_documents?type='.$type => Http::response(
                 (new ReceivedDocumentFakeResponse())->getEmptyReceivedDocumentsFakeList()
             ),
         ]);
@@ -104,12 +106,12 @@ class ReceivedDocumentEntityTest extends TestCase
         $this->assertFalse($response->hasItems());
     }
 
-    public function test_error_on_list_Received_documents()
+    public function test_error_on_list_received_documents()
     {
         $type = 'invoice';
 
         Http::fake([
-            'Received_documents?type='.$type => Http::response(
+            'received_documents?type='.$type => Http::response(
                 (new ReceivedDocumentFakeResponse())->getReceivedDocumentFakeError(),
                 401
             ),
@@ -131,26 +133,26 @@ class ReceivedDocumentEntityTest extends TestCase
 
         $this->assertIsObject($query_params);
 
-        $this->assertObjectHasAttribute('type', $query_params);
-        $this->assertObjectHasAttribute('additional_data', $query_params);
+        $this->assertObjectHasProperty('type', $query_params);
+        $this->assertObjectHasProperty('additional_data', $query_params);
 
         $this->assertEquals('document_type', $query_params->type);
         $this->assertIsArray($query_params->additional_data);
         $this->assertCount(2, $query_params->additional_data);
     }
 
-    public function test_go_to_Received_document_next_page()
+    public function test_go_to_received_document_next_page()
     {
         $type = 'invoice';
 
         $received_document_list = new ReceivedDocumentList(json_decode(
             (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList([
-                'next_page_url' => 'https://fake_url/Received_documents?type='.$type.'&per_page=10&page=2',
+                'next_page_url' => 'https://fake_url/received_documents?type='.$type.'&per_page=10&page=2',
             ])
         ));
 
         Http::fake([
-            'Received_documents?per_page=10&page=2&type='.$type => Http::response(
+            'received_documents?per_page=10&page=2&type='.$type => Http::response(
                 (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList()
             ),
         ]);
@@ -160,18 +162,18 @@ class ReceivedDocumentEntityTest extends TestCase
         $this->assertInstanceOf(ReceivedDocumentList::class, $next_page_response);
     }
 
-    public function test_go_to_Received_document_prev_page()
+    public function test_go_to_received_document_prev_page()
     {
         $type = 'invoice';
 
         $received_document_list = new ReceivedDocumentList(json_decode(
             (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList([
-                'prev_page_url' => 'https://fake_url/Received_documents?type='.$type.'&per_page=10&page=1',
+                'prev_page_url' => 'https://fake_url/received_documents?type='.$type.'&per_page=10&page=1',
             ])
         ));
 
         Http::fake([
-            'Received_documents?per_page=10&page=1&type='.$type => Http::response(
+            'received_documents?per_page=10&page=1&type='.$type => Http::response(
                 (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList()
             ),
         ]);
@@ -181,18 +183,18 @@ class ReceivedDocumentEntityTest extends TestCase
         $this->assertInstanceOf(ReceivedDocumentList::class, $prev_page_response);
     }
 
-    public function test_go_to_Received_document_first_page()
+    public function test_go_to_received_document_first_page()
     {
         $type = 'invoice';
 
         $received_document_list = new ReceivedDocumentList(json_decode(
             (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList([
-                'first_page_url' => 'https://fake_url/Received_documents?type='.$type.'&per_page=10&page=1',
+                'first_page_url' => 'https://fake_url/received_documents?type='.$type.'&per_page=10&page=1',
             ])
         ));
 
         Http::fake([
-            'Received_documents?per_page=10&page=1&type='.$type => Http::response(
+            'received_documents?per_page=10&page=1&type='.$type => Http::response(
                 (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList()
             ),
         ]);
@@ -202,18 +204,18 @@ class ReceivedDocumentEntityTest extends TestCase
         $this->assertInstanceOf(ReceivedDocumentList::class, $first_page_response);
     }
 
-    public function test_go_to_Received_document_last_page()
+    public function test_go_to_received_document_last_page()
     {
         $type = 'invoice';
 
         $received_document_list = new ReceivedDocumentList(json_decode(
             (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList([
-                'last_page_url' => 'https://fake_url/Received_documents?type='.$type.'&per_page=10&page=2',
+                'last_page_url' => 'https://fake_url/received_documents?type='.$type.'&per_page=10&page=2',
             ])
         ));
 
         Http::fake([
-            'Received_documents?per_page=10&page=2&type='.$type => Http::response(
+            'received_documents?per_page=10&page=2&type='.$type => Http::response(
                 (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList()
             ),
         ]);
@@ -225,12 +227,12 @@ class ReceivedDocumentEntityTest extends TestCase
 
     // single
 
-    public function test_detail_Received_document()
+    public function test_detail_received_document()
     {
         $document_id = 1;
 
         Http::fake([
-            'Received_documents/'.$document_id => Http::response(
+            'received_documents/'.$document_id => Http::response(
                 (new ReceivedDocumentFakeResponse())->getReceivedDocumentFakeDetail()
             ),
         ]);
@@ -242,12 +244,12 @@ class ReceivedDocumentEntityTest extends TestCase
         $this->assertInstanceOf(ReceivedDocumentEntity::class, $response);
     }
 
-    public function test_bin_Received_document()
+    public function test_bin_received_document()
     {
         $document_id = 1;
 
         Http::fake([
-            'bin/Received_documents/'.$document_id => Http::response(
+            'bin/received_documents/'.$document_id => Http::response(
                 (new ReceivedDocumentFakeResponse())->getReceivedDocumentFakeDetail()
             ),
         ]);
@@ -259,26 +261,26 @@ class ReceivedDocumentEntityTest extends TestCase
         $this->assertInstanceOf(ReceivedDocumentEntity::class, $response);
     }
 
-    public function test_delete_Received_document()
+    public function test_delete_received_document()
     {
         $document_id = 1;
 
         Http::fake([
-            'Received_documents/'.$document_id => Http::response(),
+            'received_documents/'.$document_id => Http::response(),
         ]);
 
-        $received_documents = new ReceivedDocument();
-        $response = $received_documents->delete($document_id);
+        $issued_documents = new ReceivedDocument();
+        $response = $issued_documents->delete($document_id);
 
         $this->assertEquals('Document deleted', $response);
     }
 
-    public function test_Received_document_bin_detail_from_detail()
+    public function test_received_document_bin_detail_from_detail()
     {
         $document_id = 1;
 
         Http::fake([
-            'Received_documents/'.$document_id => Http::response(
+            'received_documents/'.$document_id => Http::response(
                 (new ReceivedDocumentFakeResponse())->getReceivedDocumentFakeDetail()
             ),
         ]);
@@ -290,18 +292,18 @@ class ReceivedDocumentEntityTest extends TestCase
         $this->assertInstanceOf(ReceivedDocumentEntity::class, $response);
     }
 
-    public function test_Received_document_bin_detail_from_bin()
+    public function test_received_document_bin_detail_from_bin()
     {
         $document_id = 1;
 
         Http::fake([
-            'Received_documents/'.$document_id => Http::response(
+            'received_documents/'.$document_id => Http::response(
                 (new ReceivedDocumentFakeResponse())->getReceivedDocumentFakeDetail()
             ),
         ]);
 
         Http::fake([
-            'Received_documents/'.$document_id.'?fields=id' => Http::response(
+            'received_documents/'.$document_id.'?fields=id' => Http::response(
                 (new ReceivedDocumentFakeResponse())->getReceivedDocumentFakeErrorDetail(),
                 401
             ),
@@ -318,18 +320,18 @@ class ReceivedDocumentEntityTest extends TestCase
 
     // create
 
-    public function test_create_Received_document()
+    public function test_create_received_document()
     {
         $entity_name = 'Test S.R.L';
 
         Http::fake([
-            'Received_documents' => Http::response(
+            'received_documents' => Http::response([
                 (new ReceivedDocumentFakeResponse())->getReceivedDocumentFakeDetail([
                     'entity' => [
                         'name' => $entity_name,
                     ],
                 ])
-            ),
+            ]),
         ]);
 
         $received_document = new ReceivedDocument();
@@ -345,8 +347,7 @@ class ReceivedDocumentEntityTest extends TestCase
         $this->assertNotNull($response);
         $this->assertInstanceOf(ReceivedDocumentEntity::class, $response);
     }
-
-    public function test_validation_error_on_create_Received_document()
+    public function test_validation_error_on_create_received_document()
     {
         $received_document = new ReceivedDocument();
         $response = $received_document->create([]);
@@ -395,13 +396,13 @@ class ReceivedDocumentEntityTest extends TestCase
 
     // edit
 
-    public function test_edit_Received_document()
+    public function test_edit_received_document()
     {
         $document_id = 1;
         $entity_name = 'Test S.R.L Updated';
 
         Http::fake([
-            'Received_documents/'.$document_id => Http::response(
+            'received_documents/'.$document_id => Http::response(
                 (new ReceivedDocumentFakeResponse())->getReceivedDocumentFakeDetail([
                     'entity' => [
                         'name' => $entity_name,
@@ -423,7 +424,7 @@ class ReceivedDocumentEntityTest extends TestCase
         $this->assertInstanceOf(ReceivedDocumentEntity::class, $response);
     }
 
-    public function test_validation_error_on_edit_Received_document()
+    public function test_validation_error_on_edit_received_document()
     {
         $document_id = 1;
 
@@ -458,10 +459,10 @@ class ReceivedDocumentEntityTest extends TestCase
 
     // new totals
 
-    public function test_get_new_totals_Received_document()
+    public function test_get_new_totals_received_document()
     {
         Http::fake([
-            'Received_documents/totals' => Http::response(
+            'received_documents/totals' => Http::response(
                 (new ReceivedDocumentFakeResponse())->getReceivedDocumentFakeTotals()
             ),
         ]);
@@ -477,10 +478,10 @@ class ReceivedDocumentEntityTest extends TestCase
         ]);
 
         $this->assertNotNull($response);
-        $this->assertInstanceOf(ReceivedDocumentTotals::class, $response);
+        $this->assertInstanceOf(ReceivedDocumentGetExistingTotals::class, $response);
     }
 
-    public function test_validation_error_on_get_new_totals_Received_document()
+    public function test_validation_error_on_get_new_totals_received_document()
     {
         $received_document = new ReceivedDocument();
         $response = $received_document->getNewTotals([]);
@@ -529,12 +530,12 @@ class ReceivedDocumentEntityTest extends TestCase
 
     // existing totals
 
-    public function test_get_existing_totals_Received_document()
+    public function test_get_existing_totals_received_document()
     {
         $document_id = 1;
 
         Http::fake([
-            'Received_documents/'.$document_id.'/totals' => Http::response(
+            'received_documents/'.$document_id.'/totals' => Http::response(
                 (new ReceivedDocumentFakeResponse())->getReceivedDocumentFakeTotals()
             ),
         ]);
@@ -548,11 +549,11 @@ class ReceivedDocumentEntityTest extends TestCase
             ],
         ]);
 
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(ReceivedDocumentTotals::class, $response);
+        $this-> assertNotNull($response);
+        $this->assertInstanceOf(ReceivedDocumentGetExistingTotals::class, $response);
     }
 
-    public function test_validation_error_on_get_existing_totals_Received_document()
+    public function test_validation_error_on_get_existing_totals_received_document()
     {
         $document_id = 1;
 
@@ -587,12 +588,12 @@ class ReceivedDocumentEntityTest extends TestCase
 
     // info
 
-    public function test_pre_create_info_Received_document()
+    public function test_pre_create_info_received_document()
     {
         $type = 'invoice';
 
         Http::fake([
-            'Received_documents/info?type='.$type => Http::response(
+            'received_documents/info?type='.$type => Http::response(
                 (new ReceivedDocumentFakeResponse())->getReceivedDocumentFakePreCreateInfo()
             ),
         ]);
@@ -602,153 +603,5 @@ class ReceivedDocumentEntityTest extends TestCase
 
         $this->assertNotNull($response);
         $this->assertInstanceOf(ReceivedDocumentPreCreateInfo::class, $response);
-    }
-
-    // emails
-
-    public function test_email_data_Received_document()
-    {
-        $document_id = 1;
-
-        Http::fake([
-            'Received_documents/'.$document_id.'/email' => Http::response(
-                (new ReceivedDocumentFakeResponse())->getReceivedDocumentFakEmailData()
-            ),
-        ]);
-
-        $received_document = new ReceivedDocument();
-        $response = $received_document->emailData($document_id);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(ReceivedDocumentEmail::class, $response);
-    }
-
-    public function test_schedule_email_Received_document()
-    {
-        $document_id = 1;
-
-        Http::fake([
-            'Received_documents/'.$document_id.'/email' => Http::response(
-                (new ReceivedDocumentFakeResponse())->getReceivedDocumentFakScheduleEmail()
-            ),
-        ]);
-
-        $received_document = new ReceivedDocument();
-        $response = $received_document->scheduleEmail($document_id, [
-            'data' => [
-                'sender_email' => 'fake_sender_email@gmail.com',
-                'recipient_email' => 'fake_recipient_email@gmail.com',
-                'subject' => 'fake_subject',
-                'body' => 'fake_body',
-                'include' => [
-                    'document' => true,
-                    'delivery_note' => false,
-                    'attachment' => false,
-                    'accompanying_invoice' => false,
-                ],
-                'attach_pdf' => false,
-                'send_copy' => true,
-            ],
-        ]);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(ReceivedDocumentScheduleEmail::class, $response);
-    }
-
-    public function test_validation_error_on_schedule_email_Received_document()
-    {
-        $document_id = 1;
-
-        $received_document = new ReceivedDocument();
-        $response = $received_document->scheduleEmail($document_id, []);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(MessageBag::class, $response);
-        $this->assertArrayHasKey('data', $response->messages());
-
-        $received_document = new ReceivedDocument();
-        $response = $received_document->scheduleEmail($document_id, [
-            'data' => [
-                'sender_email' => 'fake_email@gmail.com',
-            ],
-        ]);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(MessageBag::class, $response);
-        $this->assertArrayNotHasKey('data.sender_id', $response->messages());
-        $this->assertArrayNotHasKey('data.sender_email', $response->messages());
-        $this->assertArrayHasKey('data.recipient_email', $response->messages());
-        $this->assertArrayHasKey('data.subject', $response->messages());
-        $this->assertArrayHasKey('data.body', $response->messages());
-        $this->assertArrayHasKey('data.include', $response->messages());
-        $this->assertArrayHasKey('data.attach_pdf', $response->messages());
-        $this->assertArrayHasKey('data.send_copy', $response->messages());
-
-        $received_document = new ReceivedDocument();
-        $response = $received_document->scheduleEmail($document_id, [
-            'data' => [
-                'sender_email' => 'fake_email@gmail.com',
-                'recipient_email' => 'fake_email@gmail.com',
-                'subject' => 'fake_subject',
-                'body' => 'fake_body',
-                'attach_pdf' => 'fake_attach_pdf',
-                'send_copy' => 'fake_send_copy',
-                'include' => [
-                    'document' => 'fake_document',
-                ],
-            ],
-        ]);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(MessageBag::class, $response);
-        $this->assertArrayHasKey('data.include.delivery_note', $response->messages());
-        $this->assertArrayHasKey('data.include.attachment', $response->messages());
-        $this->assertArrayHasKey('data.include.accompanying_invoice', $response->messages());
-        $this->assertArrayNotHasKey('data.include.document', $response->messages());
-    }
-
-    // attachment
-
-    public function test_attachment_Received_document()
-    {
-        Http::fake([
-            'Received_documents/attachment' => Http::response(
-                (new ReceivedDocumentFakeResponse())->getReceivedDocumentFakScheduleAttachment()
-            ),
-        ]);
-
-        $received_document = new ReceivedDocument();
-        $response = $received_document->attachment([
-            'filename' => 'test-file.pdf',
-            'attachment' => 'fake_attachment',
-        ]);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(ReceivedDocumentAttachment::class, $response);
-    }
-
-    public function test_validation_error_on_attachment_Received_document()
-    {
-        $received_document = new ReceivedDocument();
-        $response = $received_document->attachment([]);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(MessageBag::class, $response);
-        $this->assertArrayHasKey('filename', $response->messages());
-        $this->assertArrayHasKey('attachment', $response->messages());
-    }
-
-    public function test_delete_attachment_Received_document()
-    {
-        $document_id = 1;
-
-        Http::fake([
-            'Received_documents/'.$document_id.'/attachment' => Http::response(),
-        ]);
-
-        $received_document = new ReceivedDocument();
-        $response = $received_document->deleteAttachment($document_id);
-
-        $this->assertEquals('Attachment deleted', $response);
     }
 }

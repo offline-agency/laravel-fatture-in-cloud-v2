@@ -5,10 +5,15 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 use Illuminate\Support\Facades\Validator;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocument as ReceivedDocumentEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentGetExistingTotals;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentList;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentPreCreateInfo;
+use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class ReceivedDocument extends Api
 {
+    use ListTrait;
+
     const DOCUMENT_TYPES = [
         'expense',
         'passive_credit_note',
@@ -42,18 +47,75 @@ class ReceivedDocument extends Api
         return new ReceivedDocumentList($received_document_response);
     }
 
+    public function all(
+        string $type,
+        ?array $additional_data = []
+    ) {
+        $additional_data = array_merge($additional_data, [
+            'type' => $type,
+        ]);
+
+        $all_documents = $this->getAll([
+            'type', 'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
+        ], 'c/'.$this->company_id.'/received_documents', $additional_data);
+
+        return gettype($all_documents) !== 'array'
+            ? $all_documents
+            : array_map(function($document) {
+                return new ReceivedDocumentEntity($document);
+            }, $all_documents);
+    }
+
+    public function detail(
+        int $document_id,
+        ?array $additional_data = []
+    ) {
+        $additional_data = $this->data($additional_data, [
+            'fields', 'fieldset',
+        ]);
+
+        $response = $this->get(
+            'c/'.$this->company_id.'/received_documents/'.$document_id,
+            $additional_data
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $received_document = $response->data->data;
+
+        return new ReceivedDocumentEntity($received_document);
+    }
+
+    public function bin(
+        int $document_id
+    ) {
+        $response = $this->get(
+            'c/'.$this->company_id.'/bin/received_documents/'.$document_id
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $received_document = $response->data->data;
+
+        return new ReceivedDocumentEntity($received_document);
+    }
+
     public function delete(
         int $document_id
     ) {
-       $response = $this->destroy(
-           'c/'.$this->company_id.'/received_document/'.$document_id
-       );
+        $response = $this->destroy(
+            'c/'.$this->company_id.'/received_documents/'.$document_id
+        );
 
-       if (! $response->success) {
-           return new Error($response->data);
-       }
+        if (! $response->success) {
+            return new Error($response->data);
+        }
 
-       return 'Document deleted';
+        return 'Document deleted';
     }
 
     public function create(
@@ -99,7 +161,7 @@ class ReceivedDocument extends Api
         }
 
         $response = $this->put(
-            'c/'.$this->company_id.'/received_document/'.$document_id,
+            'c/'.$this->company_id.'/received_documents/'.$document_id,
             $body
         );
 
@@ -169,17 +231,17 @@ class ReceivedDocument extends Api
         }
 
         $response = $this->post(
-            'c/' . $this->company_id . '/Received_documents/'.$document_id.'/totals',
+            'c/'.$this->company_id.'/received_documents/'.$document_id.'/totals',
             $body
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
         $received_document = $response->data->data;
 
-        return new ReceivedDocumentEntity($received_document);
+        return new ReceivedDocumentGetExistingTotals($received_document);
     }
 
     public function uploadAttachment(
@@ -208,7 +270,7 @@ class ReceivedDocument extends Api
         return new ReceivedDocumentEntity($attachment_token);
     }
 
-    public function getPreCreateInfo(
+    public function preCreateInfo(
         string $type
     ) {
         $response = $this->get(
@@ -222,8 +284,35 @@ class ReceivedDocument extends Api
             return new Error($response->data);
         }
 
-        $infoReceivedDocuments = $response->data->data;
+        $info = $response->data->data;
 
-        return new ReceivedDocumentEntity($infoReceivedDocuments);
+        return new ReceivedDocumentPreCreateInfo($info);
+    }
+
+    public function binDetail(
+        int $document_id,
+        ?array $additional_data = []
+    ) {
+        $document = $this->detail(
+            $document_id,
+            $additional_data
+        );
+
+        if ($document instanceof Error) {
+            $document = $this->bin($document_id);
+
+            if (
+                ! $document instanceof Error
+                && $document->type === 'proforma'
+                && ! is_null($document->merged_in)
+            ) {
+                $document = $this->detail(
+                    $document->merged_in->id,
+                    $additional_data
+                );
+            }
+        }
+
+        return $document;
     }
 }
