@@ -174,20 +174,6 @@ class ReceivedDocument extends Api
         return new ReceivedDocumentEntity($received_document);
     }
 
-    public function deleteAttachment(
-        int $document_id
-    ) {
-        $response = $this->destroy(
-            'c/'.$this->company_id.'/received_documents/'.$document_id.'/attachment'
-        );
-
-        if (! $response->success) {
-            return new Error($response->data);
-        }
-
-        return 'Attachment deleted';
-    }
-
     public function getNewTotals(
         array $body
     ) {
@@ -242,32 +228,6 @@ class ReceivedDocument extends Api
         $received_document = $response->data->data;
 
         return new ReceivedDocumentGetExistingTotals($received_document);
-    }
-
-    public function uploadAttachment(
-        array $body = []
-    ) {
-        $validator = Validator::make($body, [
-            'filename' => 'required',
-            'attachment' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return $validator->errors();
-        }
-
-        $response = $this->post(
-            'c/' . $this->company_id . '/received_documents/attachment',
-            $body,
-        );
-
-        if (!$response->success) {
-            return new Error($response->data);
-        }
-
-        $attachment_token = $response->data->data;
-
-        return new ReceivedDocumentEntity($attachment_token);
     }
 
     public function preCreateInfo(

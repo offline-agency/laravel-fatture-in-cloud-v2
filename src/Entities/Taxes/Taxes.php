@@ -1,4 +1,5 @@
 <?php
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
@@ -6,9 +7,14 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
 class Taxes extends AbstractEntity
 {
     /**
-     *@var int
+     * @var int
      */
     public $id;
+
+    /**
+     * @var string
+     */
+    public $type; //TODO: can be only some values
 
     /**
      * @var string
@@ -18,7 +24,7 @@ class Taxes extends AbstractEntity
     /**
      * @var string
      */
-    public $status;//TODO: can be only some values
+    public $status; //TODO: can be only some values
 
     /**
      * @var object
@@ -40,3 +46,4 @@ class Taxes extends AbstractEntity
      */
     public $description;
 }
+
