@@ -6,7 +6,7 @@ use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\FakeResponse;
 
 class Document extends FakeResponse
 {
-    public function  getReceivedDocumentFakeDetail(
+    public function getReceivedDocumentFakeDetail(
         array $params = []
     ): array {
         return [

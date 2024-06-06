@@ -204,7 +204,7 @@ class ReceivedDocument extends Api
         }
 
         $response = $this->post(
-            'c/'.$this->company_id.'/Received_documents/totals',
+            'c/'.$this->company_id.'/received_documents/totals',
             $body
         );
 
@@ -214,7 +214,7 @@ class ReceivedDocument extends Api
 
         $received_document = $response->data->data;
 
-        return new ReceivedDocumentEntity($received_document);
+        return new ReceivedDocumentGetExistingTotals($received_document);
     }
 
     public function getExistingTotals(

@@ -21,7 +21,7 @@ class ReceivedDocumentEntityTest extends TestCase
 
     public function test_list_received_documents()
     {
-        $type = 'invoice';
+        $type = 'expense';
 
         Http::fake([
             'received_documents?type='.$type => Http::response(
@@ -41,7 +41,7 @@ class ReceivedDocumentEntityTest extends TestCase
 
     public function test_all_documents()
     {
-        $type = 'invoice';
+        $type = 'expense';
 
         Http::fake([
             'received_documents?type='.$type => Http::response(
@@ -59,7 +59,7 @@ class ReceivedDocumentEntityTest extends TestCase
 
     public function test_error_on_all_documents()
     {
-        $type = 'invoice';
+        $type = 'expense';
 
         Http::fake([
             'received_documents?type='.$type => Http::response(
@@ -76,7 +76,7 @@ class ReceivedDocumentEntityTest extends TestCase
 
     public function test_list_received_documents_has_received_documents_method()
     {
-        $type = 'invoice';
+        $type = 'expense';
 
         Http::fake([
             'received_documents?type='.$type => Http::response(
@@ -92,7 +92,7 @@ class ReceivedDocumentEntityTest extends TestCase
 
     public function test_empty_list_received_documents_has_received_documents_method()
     {
-        $type = 'invoice';
+        $type = 'expense';
 
         Http::fake([
             'received_documents?type='.$type => Http::response(
@@ -108,7 +108,7 @@ class ReceivedDocumentEntityTest extends TestCase
 
     public function test_error_on_list_received_documents()
     {
-        $type = 'invoice';
+        $type = 'expense';
 
         Http::fake([
             'received_documents?type='.$type => Http::response(
@@ -143,7 +143,7 @@ class ReceivedDocumentEntityTest extends TestCase
 
     public function test_go_to_received_document_next_page()
     {
-        $type = 'invoice';
+        $type = 'expense';
 
         $received_document_list = new ReceivedDocumentList(json_decode(
             (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList([
@@ -164,7 +164,7 @@ class ReceivedDocumentEntityTest extends TestCase
 
     public function test_go_to_received_document_prev_page()
     {
-        $type = 'invoice';
+        $type = 'expense';
 
         $received_document_list = new ReceivedDocumentList(json_decode(
             (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList([
@@ -185,7 +185,7 @@ class ReceivedDocumentEntityTest extends TestCase
 
     public function test_go_to_received_document_first_page()
     {
-        $type = 'invoice';
+        $type = 'expense';
 
         $received_document_list = new ReceivedDocumentList(json_decode(
             (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList([
@@ -206,7 +206,7 @@ class ReceivedDocumentEntityTest extends TestCase
 
     public function test_go_to_received_document_last_page()
     {
-        $type = 'invoice';
+        $type = 'expense';
 
         $received_document_list = new ReceivedDocumentList(json_decode(
             (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList([
@@ -269,8 +269,8 @@ class ReceivedDocumentEntityTest extends TestCase
             'received_documents/'.$document_id => Http::response(),
         ]);
 
-        $issued_documents = new ReceivedDocument();
-        $response = $issued_documents->delete($document_id);
+        $received_documents = new ReceivedDocument();
+        $response = $received_documents->delete($document_id);
 
         $this->assertEquals('Document deleted', $response);
     }
@@ -325,19 +325,19 @@ class ReceivedDocumentEntityTest extends TestCase
         $entity_name = 'Test S.R.L';
 
         Http::fake([
-            'received_documents' => Http::response([
+            'received_documents' => Http::response(
                 (new ReceivedDocumentFakeResponse())->getReceivedDocumentFakeDetail([
                     'entity' => [
                         'name' => $entity_name,
                     ],
                 ])
-            ]),
+            ),
         ]);
 
         $received_document = new ReceivedDocument();
         $response = $received_document->create([
             'data' => [
-                'type' => 'invoice',
+                'type' => 'expense',
                 'entity' => [
                     'name' => $entity_name,
                 ],
@@ -347,6 +347,7 @@ class ReceivedDocumentEntityTest extends TestCase
         $this->assertNotNull($response);
         $this->assertInstanceOf(ReceivedDocumentEntity::class, $response);
     }
+
     public function test_validation_error_on_create_received_document()
     {
         $received_document = new ReceivedDocument();
@@ -384,7 +385,7 @@ class ReceivedDocumentEntityTest extends TestCase
         $received_document = new ReceivedDocument();
         $response = $received_document->create([
             'data' => [
-                'type' => 'invoice',
+                'type' => 'expense',
                 'entity' => [],
             ],
         ]);
@@ -470,7 +471,7 @@ class ReceivedDocumentEntityTest extends TestCase
         $received_document = new ReceivedDocument();
         $response = $received_document->getNewTotals([
             'data' => [
-                'type' => 'invoice',
+                'type' => 'expense',
                 'entity' => [
                     'name' => 'Test S.P.A',
                 ],
@@ -518,7 +519,7 @@ class ReceivedDocumentEntityTest extends TestCase
         $received_document = new ReceivedDocument();
         $response = $received_document->getNewTotals([
             'data' => [
-                'type' => 'invoice',
+                'type' => 'expense',
                 'entity' => [],
             ],
         ]);
@@ -590,7 +591,7 @@ class ReceivedDocumentEntityTest extends TestCase
 
     public function test_pre_create_info_received_document()
     {
-        $type = 'invoice';
+        $type = 'expense';
 
         Http::fake([
             'received_documents/info?type='.$type => Http::response(
