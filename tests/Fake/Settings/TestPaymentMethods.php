@@ -12,7 +12,7 @@ class TestPaymentMethods extends FakeResponse
         return [
             'id' => $this->value($params, 'id', 4),
             'name' => $this->value($params, 'name', 'Default'),
-            'type' => $this->value($params, 'type', 'User'),
+            'type' => $this->value($params, 'type', null),
             'is_default' => $this->value($params, 'is_default', false),
             'default_payment_account' => [
                 'id' => $this->value($params, 'default_payment_account.id', null),
@@ -27,9 +27,9 @@ class TestPaymentMethods extends FakeResponse
                 'title' => $this->value($params, 'details.title', null),
                 'description' => $this->value($params, 'details.description', null),
             ],
-            'bank_iban' => $this->value($params, 'bank_iban', 'AD1200012030200359100100'),
-            'bank_name' => $this->value($params, 'bank_name', 'Padova'),
-            'ei_payment_method' => $this->value($params, 'ei_payment_method', 'idk')
+            'bank_iban' => $this->value($params, 'bank_iban', null),
+            'bank_name' => $this->value($params, 'bank_name', null),
+            'ei_payment_method' => $this->value($params, 'ei_payment_method', null)
         ];
     }
 }

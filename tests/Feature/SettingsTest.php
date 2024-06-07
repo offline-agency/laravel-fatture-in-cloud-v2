@@ -1,11 +1,13 @@
 <?php
 
+namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
+
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\Settings\TestPaymentAccount;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\Settings\TestPaymentMethods;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\Settings\TestTypeVat;
 use PHPUnit\Framework\TestCase;
 
-class FakeSettingsResponse extends TestCase
+class SettingsTest extends TestCase
 {
     public function testGetFakePaymentMethods()
     {

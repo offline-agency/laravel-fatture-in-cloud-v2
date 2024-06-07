@@ -1,11 +1,11 @@
 <?php
 
-namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Fake;
+namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 
-use PHPUnit\Framework\TestCase;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ArchiveDocument\TestArchiveDocument;
+use PHPUnit\Framework\TestCase;
 
-class FakeArchiveDocumentsResponse extends TestCase
+class ArchiveDocumentsTest extends TestCase
 {
     public function testGetFakeArchiveDocument()
     {

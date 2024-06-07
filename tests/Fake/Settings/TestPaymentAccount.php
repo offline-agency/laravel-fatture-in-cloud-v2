@@ -10,11 +10,11 @@ class TestPaymentAccount extends FakeResponse
     ): array {
         return [
             'id' => $this->value($param, 'id', 1),
-            'name' => $this->value($param, 'name', 'Mario'),
-            'type' => $this->value($param, 'type', 'admin'),
-            'iban' => $this->value($param, 'iban', 'IT60X0542811101000000123456'),
-            'sia' => $this->value($param, 'sia', 'I5jF9'),
-            'cuc' => $this->value($param, 'cuc', 'SIAI5jF9'),
+            'name' => $this->value($param, 'name', null),
+            'type' => $this->value($param, 'type', null),
+            'iban' => $this->value($param, 'iban', null),
+            'sia' => $this->value($param, 'sia', null),
+            'cuc' => $this->value($param, 'cuc', null),
             'virtual' => $this->value($param, 'virtual', true),
         ];
     }

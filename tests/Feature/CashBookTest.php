@@ -1,8 +1,11 @@
 <?php
+
+namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
+
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\CashBook;
 use PHPUnit\Framework\TestCase;
 
-class FakeCashBookResponse extends TestCase
+class CashBookTest extends TestCase
 {
     public function testGetFakeCashBookEntry()
     {
