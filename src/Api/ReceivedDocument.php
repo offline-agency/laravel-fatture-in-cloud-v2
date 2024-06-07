@@ -5,8 +5,9 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 use Illuminate\Support\Facades\Validator;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocument as ReceivedDocumentEntity;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentGetExistingTotals;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentTotals;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentList;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentAttachment;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentPreCreateInfo;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
@@ -200,7 +201,7 @@ class ReceivedDocument extends Api
 
         $received_document = $response->data->data;
 
-        return new ReceivedDocumentGetExistingTotals($received_document);
+        return new ReceivedDocumentTotals($received_document);
     }
 
     public function getExistingTotals(
@@ -227,7 +228,7 @@ class ReceivedDocument extends Api
 
         $received_document = $response->data->data;
 
-        return new ReceivedDocumentGetExistingTotals($received_document);
+        return new ReceivedDocumentTotals($received_document);
     }
 
     public function preCreateInfo(
@@ -247,6 +248,47 @@ class ReceivedDocument extends Api
         $info = $response->data->data;
 
         return new ReceivedDocumentPreCreateInfo($info);
+    }
+
+    public function attachment(
+        array $body = []
+    ) {
+        $validator = Validator::make($body, [
+            'filename' => 'required',
+            'attachment' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        $response = $this->post(
+            'c/'.$this->company_id.'/received_documents/attachment',
+            $body,
+            true
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $attachment_token = $response->data->data;
+
+            return new ReceivedDocumentAttachment($attachment_token);
+    }
+
+    public function deleteAttachment(
+        int $document_id
+    ) {
+        $response = $this->destroy(
+            'c/'.$this->company_id.'/received_documents/'.$document_id.'/attachment'
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        return 'Attachment deleted';
     }
 
     public function binDetail(

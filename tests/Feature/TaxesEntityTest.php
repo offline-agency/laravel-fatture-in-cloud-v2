@@ -270,7 +270,7 @@ class TaxesEntityTest extends TestCase
         $taxes = new Taxes();
         $response = $taxes->delete($document_id);
 
-        $this->assertEquals('Document deleted', $response);
+        $this->assertEquals('Taxes deleted', $response);
     }
 
     public function test_taxes_bin_detail_from_detail()
@@ -348,15 +348,15 @@ class TaxesEntityTest extends TestCase
 
     public function test_validation_error_on_create_taxes()
     {
-        $received_document = new Taxes();
-        $response = $received_document->create([]);
+        $taxes = new Taxes();
+        $response = $taxes->create([]);
 
         $this->assertNotNull($response);
         $this->assertInstanceOf(MessageBag::class, $response);
         $this->assertArrayHasKey('data', $response->messages());
 
-        $received_document = new Taxes();
-        $response = $received_document->create([
+        $taxes = new Taxes();
+        $response = $taxes->create([
             'data' => [],
         ]);
 
@@ -365,8 +365,8 @@ class TaxesEntityTest extends TestCase
         $this->assertArrayHasKey('data', $response->messages());
         $this->assertArrayHasKey('data.entity.name', $response->messages());
 
-        $received_document = new Taxes();
-        $response = $received_document->create([
+        $taxes = new Taxes();
+        $response = $taxes->create([
             'data' => [
                 'entity' => [
                     'name' => 'Test S.R.L.',
@@ -378,8 +378,8 @@ class TaxesEntityTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $response);
         $this->assertArrayHasKey('data.type', $response->messages());
 
-        $received_document = new Taxes();
-        $response = $received_document->create([
+        $taxes = new Taxes();
+        $response = $taxes->create([
             'data' => [
                 'type' => 'expense',
                 'entity' => [],
@@ -451,6 +451,20 @@ class TaxesEntityTest extends TestCase
         $this->assertNotNull($response);
         $this->assertInstanceOf(MessageBag::class, $response);
         $this->assertArrayHasKey('data.entity.name', $response->messages());
+    }
+
+    public function test_delete_attachment_taxes()
+    {
+        $document_id = 1;
+
+        Http::fake([
+            'taxes/'.$document_id.'/attachment' => Http::response(),
+        ]);
+
+        $taxes = new Taxes();
+        $response = $taxes->deleteAttachment($document_id);
+
+        $this->assertEquals('Attachment deleted', $response);
     }
 
 }

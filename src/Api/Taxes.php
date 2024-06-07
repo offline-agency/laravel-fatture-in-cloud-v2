@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Validator;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\Taxes as TaxesEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\TaxesList;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\TaxesAttachment;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class Taxes extends Api
@@ -112,7 +113,7 @@ class Taxes extends Api
             return new Error($response->data);
         }
 
-        return 'Document deleted';
+        return 'Taxes deleted';
     }
 
     public function create(
@@ -120,7 +121,7 @@ class Taxes extends Api
     ) {
         $validator = Validator::make($body, [
             'data' => 'required',
-            'data.type' => 'required|in:'.implode(',', ReceivedDocument::DOCUMENT_TYPES),
+            'data.type' => 'required|in:'.implode(',', Taxes::DOCUMENT_TYPES),
             'data.entity.name' => 'required',
         ], [
             'data.type.in' => 'The selected data.type is invalid. Select one between '.implode(', ', Taxes::DOCUMENT_TYPES),
@@ -166,9 +167,9 @@ class Taxes extends Api
             return new Error($response->data);
         }
 
-        $received_document = $response->data->data;
+        $taxes = $response->data->data;
 
-        return new TaxesEntity($received_document);
+        return new TaxesEntity($taxes);
     }
 
     public function binDetail(
@@ -196,5 +197,46 @@ class Taxes extends Api
         }
 
         return $document;
+    }
+
+    public function attachment(
+        array $body = []
+    ) {
+        $validator = Validator::make($body, [
+            'filename' => 'required',
+            'attachment' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        $response = $this->post(
+            'c/'.$this->company_id.'/taxes/attachment',
+            $body,
+            true
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $attachment_token = $response->data->data;
+
+        return new TaxesAttachment($attachment_token);
+    }
+
+    public function deleteAttachment(
+        int $document_id
+    ) {
+        $response = $this->destroy(
+            'c/'.$this->company_id.'/taxes/'.$document_id.'/attachment'
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        return 'Attachment deleted';
     }
 }

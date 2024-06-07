@@ -7,7 +7,7 @@ use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\ReceivedDocument;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocument as ReceivedDocumentEntity;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentGetExistingTotals;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentTotals;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentPagination;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentPreCreateInfo;
@@ -479,7 +479,7 @@ class ReceivedDocumentEntityTest extends TestCase
         ]);
 
         $this->assertNotNull($response);
-        $this->assertInstanceOf(ReceivedDocumentGetExistingTotals::class, $response);
+        $this->assertInstanceOf(ReceivedDocumentTotals::class, $response);
     }
 
     public function test_validation_error_on_get_new_totals_received_document()
@@ -551,7 +551,7 @@ class ReceivedDocumentEntityTest extends TestCase
         ]);
 
         $this-> assertNotNull($response);
-        $this->assertInstanceOf(ReceivedDocumentGetExistingTotals::class, $response);
+        $this->assertInstanceOf(ReceivedDocumentTotals::class, $response);
     }
 
     public function test_validation_error_on_get_existing_totals_received_document()
@@ -605,4 +605,20 @@ class ReceivedDocumentEntityTest extends TestCase
         $this->assertNotNull($response);
         $this->assertInstanceOf(ReceivedDocumentPreCreateInfo::class, $response);
     }
+
+    public function test_delete_attachment_received_document()
+    {
+        $document_id = 1;
+
+        Http::fake([
+            'received_documents/'.$document_id.'/attachment' => Http::response(),
+        ]);
+
+        $received_document = new ReceivedDocument();
+        $response = $received_document->deleteAttachment($document_id);
+
+        $this->assertEquals('Attachment deleted', $response);
+    }
+
+
 }

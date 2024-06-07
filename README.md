@@ -85,7 +85,7 @@ $response = $issued_documents->bin($document_id);
 ```
 
 ### Rate limit [![HOT](https://img.shields.io/static/v1.svg?label=&message=HOT&color=red)]()
-This package provides a method to intercept throttle errors (403, 429) and automatically retry.
+This     package provides a method to intercept throttle errors (403, 429) and automatically retry.
 You can specify limits on your config, remember to use milliseconds to indicate time:
 
 ```php
@@ -114,11 +114,11 @@ We are currently work on this package to implement all endpoints. Enable notific
 
 🔜 Issued e-invoices
 
-❌ Received Documents
+✅ Received Documents
 
 ✅ Receipts
 
-❌ Taxes
+✅ Taxes
 
 ❌ Archive
 
