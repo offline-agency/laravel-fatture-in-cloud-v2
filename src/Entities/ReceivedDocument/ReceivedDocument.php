@@ -17,6 +17,11 @@ class ReceivedDocument extends AbstractEntity
     public $type; //TODO: can be only some values
 
     /**
+     * @var null|object
+     */
+    public $merged_in; //TODO: relate another class
+
+    /**
      * @var object
      */
     public $entity; //TODO: relate another class

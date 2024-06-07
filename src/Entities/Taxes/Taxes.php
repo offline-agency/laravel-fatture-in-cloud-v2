@@ -17,6 +17,11 @@ class Taxes extends AbstractEntity
     public $type; //TODO: can be only some values
 
     /**
+     * @var null|object
+     */
+    public $merged_in; //TODO: relate another class
+
+    /**
      * @var string
      */
     public $due_date; //TODO: date format

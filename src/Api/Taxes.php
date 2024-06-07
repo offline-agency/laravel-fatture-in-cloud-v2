@@ -5,9 +5,7 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 use Illuminate\Support\Facades\Validator;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\Taxes as TaxesEntity;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\TaxesCreate;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\TaxesList;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\TaxesPagination;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class Taxes extends Api
