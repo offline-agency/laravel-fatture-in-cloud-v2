@@ -5,7 +5,7 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\CashBook;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Request;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\CashBook\ListCashbookEntries;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\CashBook\CashbookEntries;
 
 class Cashbooks extends Api
 {
@@ -51,7 +51,7 @@ class Cashbooks extends Api
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        $cashbookEntries = ListCashbookEntries::where($request->all())->get();
+        $cashbookEntries = CashbookEntries::where($request->all())->get();
 
         return response()->json(['data' => $cashbookEntries], 200);
     }
@@ -99,7 +99,7 @@ class Cashbooks extends Api
         }
 
         try {
-            $cashbookEntry = new ListCashbookEntries();
+            $cashbookEntry = new CashbookEntries();
             $cashbookEntry->fill($data);
             $cashbookEntry->save();
 
@@ -112,7 +112,7 @@ class Cashbooks extends Api
     public function getCashBookEntry($id)
     {
         try {
-            $cashbookEntry = ListCashbookEntries::find($id);
+            $cashbookEntry = CashbookEntries::find($id);
 
             if (!$cashbookEntry) {
                 return response()->json(['error' => 'Voce del cashbook non trovata'], 404);
@@ -166,7 +166,7 @@ class Cashbooks extends Api
         }
 
         try {
-            $cashbookEntry = ListCashbookEntries::find($id);
+            $cashbookEntry = CashbookEntries::find($id);
 
             if (!$cashbookEntry) {
                 return response()->json(['error' => 'Voce del cashbook non trovata'], 404);
@@ -184,7 +184,7 @@ class Cashbooks extends Api
     public function deleteCashBookEntry($id)
     {
         try {
-            $cashbookEntry = ListCashbookEntries::find($id);
+            $cashbookEntry = CashbookEntries::find($id);
 
             if (!$cashbookEntry) {
                 return response()->json(['error' => 'Voce del cashbook non trovata'], 404);

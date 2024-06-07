@@ -3,7 +3,7 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Entities\CashBook;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
 
-class ListCashbookEntries extends AbstractEntity
+class CashbookEntries extends AbstractEntity
 {
     /**
      * @var string
