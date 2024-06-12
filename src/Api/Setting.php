@@ -2,12 +2,16 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
+
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\Vat;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\PaymentMethods;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\PaymentAccount;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\VatType;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Request;
+use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ErrorFakeResponse;
 
 
 class Setting extends Api
@@ -40,34 +44,38 @@ class Setting extends Api
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        try {
-            $paymentMethod = new PaymentMethods();
-            $paymentMethod->fill($data);
-            $paymentMethod->save();
+        $response = $this->post(
+            'c/'.$this->company_id.'/Settings/payment_methods',
+            $data
+        );
 
-            return response()->json(['message' => 'Metodo di pagamento creato con successo', 'payment_method_id' => $paymentMethod->id], 201);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Impossibile creare il metodo di pagamento'], 500);
+        if (!$response->success) {
+            return new Error($response->data);
         }
+
+        $paymentMethod = new PaymentMethods();
+
+        return new PaymentMethods($paymentMethod);
     }
 
-    public function getPaymentMethod($id)
+    public function getPaymentMethod($payment_method_id)
     {
-        try{
-            $paymentMethod = PaymentMethods::find($id);
+            $response = $this->get(
+                'c/'.$this->company_id.'/Settings/payment_methods/'.$payment_method_id
+            );
 
-            if (!$paymentMethod) {
-                return response()->json(['error' => 'Metodo di pagamento non trovato'], 404);
+            if (!$response->success){
+                return new Error($response->data);
             }
 
-            return response()->json(['payment_method' => $paymentMethod], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Impossibile trovare il metodo di pagamento'], 500);
-        }
+            $paymentMethod = $response->data;
+
+            return response()->json(['payment_method' => $paymentMethod], 201);
     }
 
-    public function updatePaymentMethod(Request $request, $id)
+    public function updatePaymentMethod(Request $request, $payment_method_id)
     {
+
         $data = $request->all();
 
         $validator = Validator::make($data, [
@@ -95,29 +103,37 @@ class Setting extends Api
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        $paymentMethod = PaymentMethods::find($id);
+        $response = $this->put(
+            'c/'.$this->company_id.'/Settings/payment_methods/'.$payment_method_id,
+            $data
+        );
 
-        if (!$paymentMethod) {
-            return response()->json(['error' => 'Metodo di pagamento non trovato'], 404);
+        if (! $response->success) {
+            return new Error($response->data);
         }
 
-        $paymentMethod->update($data);
+        $payment_method = $response->data->data;
 
-        return response()->json(['message' => 'Metodo di pagamento aggiornato con successo', 'payment_method_id' => $id], 200);
+        return new PaymentMethods($payment_method);
     }
 
-    public function deletePaymentMethod($id)
+    public function deletePaymentMethod($payment_method_id)
     {
-        $paymentMethod = PaymentMethods::find($id);
+        $response = $this->destroy(
+            'c/'.$this->company_id.'/Settings/payment_methods/'.$payment_method_id
+        );
 
-        if (!$paymentMethod) {
-            return response()->json(['error' => 'Metodo di pagamento non trovato'], 404);
+        if (! $response->success) {
+            return new Error($response->data);
         }
 
-        $paymentMethod->delete();
-
-        return response()->json(['message' => 'Metodo di pagamento eliminato con successo'], 200);
+        return response()->json(['message' => 'Metodo di pagamento eliminato con successo'], 201);
     }
+
+
+
+    // PaymentAccount
+
 
     public function createPaymentAccount(Request $request)
     {
@@ -137,25 +153,36 @@ class Setting extends Api
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        $paymentAccount = new PaymentAccount();
-        $paymentAccount->fill($data);
-        $paymentAccount->save();
+        $response = $this->post(
+            'c/'.$this->company_id.'/Settings/payment_accounts',
+            $data
+        );
 
-        return response()->json(['message' => 'Account di pagamento creato con successo', 'payment_account_id' => $paymentAccount->id], 201);
-    }
-
-    public function getPaymentAccount($id)
-    {
-        $paymentAccount = PaymentAccount::find($id);
-
-        if (!$paymentAccount) {
-            return response()->json(['error' => 'Account di pagamento non trovato'], 404);
+        if (! $response->success) {
+            return new Error($response->data);
         }
 
-        return response()->json(['payment_account' => $paymentAccount], 200);
+        $paymentAccount = new PaymentAccount();
+
+        return new PaymentAccount($paymentAccount);
     }
 
-    public function updatePaymentAccount(Request $request, $id)
+    public function getPaymentAccount($payment_account_id)
+    {
+        $response = $this->get(
+            'c/'.$this->company_id.'/Settings/payment_accounts/'.$payment_account_id
+        );
+
+        if (!$response->success) {
+            return new Error($response->data);
+        }
+
+        $paymentAccount = $response->data;
+
+        return response()->json(['payment_account' => $paymentAccount], 201);
+    }
+
+    public function updatePaymentAccount(Request $request, $payment_account_id)
     {
         $data = $request->all();
 
@@ -173,29 +200,38 @@ class Setting extends Api
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        $paymentAccount = PaymentAccount::find($id);
+        $response = $this->put(
+            'c/'.$this->company_id.'/Settings/payment_accounts/'.$payment_account_id,
+            $data
+        );
 
-        if(!$paymentAccount) {
-            return response()->json(['error' => 'Account di pagamento non trovato'], 404);
+        if (! $response->success) {
+            return new Error($response->data);
         }
 
-        $paymentAccount->update($data);
+        $payment_account = $response->data;
 
-        return response()->json(['message' => 'Account aggiornato con successo', 'payment_account_id' => $id], 200);
+        return new PaymentAccount($payment_account);
     }
 
-    public function deletePaymentAccount($id)
+    public function deletePaymentAccount($payment_account_id)
     {
-        $paymentAccount = PaymentAccount::find($id);
+        $response = $this->destroy(
+            'c/'.$this->company_id.'/Settings/payment_accounts/'.$payment_account_id
+        );
 
-        if (!$paymentAccount) {
-            return response()->json(['error' => 'Account di pagamento non trovato'], 404);
+        if (!$response->success) {
+            return new Error($response->data);
         }
 
-        $paymentAccount->delete();
-
-        return response()->json(['message' => 'Account di pagamento eliminato con successo'], 200);
+        return response()->json(['message' => 'Account di pagamento eliminato con successo'], 201);
     }
+
+
+
+
+
+    // VatType
 
     public function createVatType(Request $request)
     {
@@ -217,27 +253,37 @@ class Setting extends Api
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        $vatType = new VatType();
-        $vatType->fill($data);
-        $vatType->save();
+        $response = $this->post(
+            'c/'.$this->company_id.'/Settings/vat_types',
+            $data
+        );
 
-        return response()->json(['message' => 'Tipo di IVA creato con successo', 'vat_type_id' => $vatType->id], 201);
-    }
-
-    public function getVatType($id)
-    {
-        $vatType = VatType::find($id);
-
-        if (!$vatType) {
-            return response()->json(['error' => 'Tipo di IVA non trovato'], 404);
+        if (! $response->success) {
+            return new Error($response->data);
         }
 
-        $vatType->editable = false;
-
-        return response()->json(['data' => $vatType], 200);
+        $vatType = new VatType();
+        return new VatType($vatType);
+        //return response()->json(['message' => 'Tipo di IVA creato con successo', 'vat_type_id' => $vatType->id], 201);
     }
 
-    public function updateVatType(Request $request, $id)
+    public function getVatType($vat_type_id)
+    {
+        $response = $this->get(
+            'c/'.$this->company_id.'/Settings/vat_types/'.$vat_type_id
+        );
+
+        if (!$response->success) {
+            return new Error($response->data);
+            //return response()->json(['error' => 'Tipo di IVA non trovato'], 400);
+        }
+
+        $vatType = $response->data;
+
+        return response()->json(['data' => $vatType], 201);
+    }
+
+    public function updateVatType(Request $request, $vat_type_id)
     {
         $data = $request->all();
 
@@ -255,27 +301,31 @@ class Setting extends Api
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        $vatType = VatType::find($id);
+        $response = $this->put(
+            'c/'.$this->company_id.'/Settings/vat_types/'.$vat_type_id,
+            $data
+        );
 
-        if (!$vatType) {
-            return response()->json(['error' => 'Tipo di IVA non trovato'], 404);
+        if (!$response->success) {
+            return new Error($response->data);
         }
 
-        $vatType->fill($data);
-        $vatType->save();
+        $vat_type = $response->data;
 
-        return response()->json(['message' => 'Tipo di IVA aggiornato con successo', 'data' => $vatType], 200);
+        return new VatType($vat_type);
+        //return response()->json(['message' => 'Tipo di IVA aggiornato con successo', 'data' => $vatType], 201);
     }
 
-    public function deleteVatType($id)
+    public function deleteVatType($vat_type_id)
     {
-        $vatType = VatType::find($id);
+        $response = $this->destroy(
+            'c/'.$this->company_id.'/Settings/vat_types'.$vat_type_id
+        );
 
-        if (!$vatType) {
-            return response()->json(['error' => 'Tipo di IVA non trovato'], 404);
+        if (!$response->success) {
+            return new Error($response->data);
+            //return response()->json(['error' => 'Tipo di IVA non trovato'], 404);
         }
-
-        $vatType->delete();
 
         return response()->json(['message' => 'Tipo di IVA eliminato con successo'], 200);
     }

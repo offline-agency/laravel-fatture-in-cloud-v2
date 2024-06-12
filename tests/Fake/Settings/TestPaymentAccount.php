@@ -1,21 +1,21 @@
 <?php
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\Settings;
 
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\FakeResponse;
 
 class TestPaymentAccount extends FakeResponse
 {
-    public function getFakePaymentAccount(
-        array $param = []
+    public function getPaymentAccountFakeDetail(
+        array $params = []
     ): array {
         return [
-            'id' => $this->value($param, 'id', 1),
-            'name' => $this->value($param, 'name', null),
-            'type' => $this->value($param, 'type', null),
-            'iban' => $this->value($param, 'iban', null),
-            'sia' => $this->value($param, 'sia', null),
-            'cuc' => $this->value($param, 'cuc', null),
-            'virtual' => $this->value($param, 'virtual', true),
+            'name' => $this->value($params, 'payment_account.name', 'John Doe'),
+            'type' => $this->value($params, 'payment_account.type', null),
+            'iban' => $this->value($params, 'payment_account.iban', ''),
+            'sia' => $this->value($params, 'payment_account.sia', ''),
+            'cuc' => $this->value($params, 'payment_account.cuc', ''),
+            'virtual' => $this->value($params, 'payment_account.virtual', false)
         ];
     }
 }

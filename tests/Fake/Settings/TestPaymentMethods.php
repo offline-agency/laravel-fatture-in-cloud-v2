@@ -10,8 +10,8 @@ class TestPaymentMethods extends FakeResponse
         array $params = []
     ): array {
         return [
-            'id' => $this->value($params, 'id', 4),
-            'name' => $this->value($params, 'name', 'Default'),
+            'id' => $this->value($params, 'id', null),
+            'name' => $this->value($params, 'name', null),
             'type' => $this->value($params, 'type', null),
             'is_default' => $this->value($params, 'is_default', false),
             'default_payment_account' => [

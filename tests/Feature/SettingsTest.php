@@ -1,100 +1,275 @@
 <?php
 
-namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
-
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\Settings\TestPaymentAccount;
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\Settings\TestPaymentMethods;
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\Settings\TestTypeVat;
-use PHPUnit\Framework\TestCase;
+use Illuminate\Support\Facades\Http;
+use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocumentFakeResponse;
+use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
+use Illuminate\Http\Request;
+use OfflineAgency\LaravelFattureInCloudV2\Api\Setting;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\PaymentMethods;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\PaymentAccount;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\VatType;
 
 class SettingsTest extends TestCase
 {
-    public function testGetFakePaymentMethods()
+    public function testCreatePaymentMethod()
     {
-        $testPaymentMethods = new TestPaymentMethods();
-
-        $result = $testPaymentMethods->getFakePaymentMethods([
+        $data = [
             'id' => 1,
-            'name' => 'TestName',
-            'type' => 'TestType',
+            'name' => 'Test Payment Method',
+            'type' => 'credit_card',
             'is_default' => true,
-            'default_payment_account.id' => 100,
-            'default_payment_account.name' => 'AccountName',
-            'default_payment_account.type' => 'AccountType',
-            'default_payment_account.iban' => 'IT60X0542811101000000123456',
-            'default_payment_account.sia' => 'SIA123',
-            'default_payment_account.cuc' => 'CUC123',
-            'default_payment_account.virtual' => true,
-            'details.title' => 'DetailTitle',
-            'details.description' => 'DetailDescription',
+            'default_payment_account' => [
+                'id' => 1,
+                'name' => 'Default Account',
+                'type' => 'bank_account',
+                'iban' => 'IT60X0542811101000000123456',
+                'sia' => 'ABCDEF',
+                'cuc' => 'XYZ123',
+                'virtual' => false
+            ],
+            'details' => [
+                ['title' => 'Detail 1', 'description' => 'Description 1']
+            ],
             'bank_iban' => 'IT60X0542811101000000123456',
-            'bank_name' => 'BankName',
-            'ei_payment_method' => 'PaymentMethod'
-        ]);
+            'bank_name' => 'Test Bank',
+            'bank_beneficiary' => 'Test Beneficiary',
+            'ei_payment_method' => 'ei_method',
+        ];
 
-        $this->assertEquals(1, $result['id']);
-        $this->assertEquals('TestName', $result['name']);
-        $this->assertEquals('TestType', $result['type']);
-        $this->assertTrue($result['is_default']);
-        $this->assertEquals(100, $result['default_payment_account']['id']);
-        $this->assertEquals('AccountName', $result['default_payment_account']['name']);
-        $this->assertEquals('AccountType', $result['default_payment_account']['type']);
-        $this->assertEquals('IT60X0542811101000000123456', $result['default_payment_account']['iban']);
-        $this->assertEquals('SIA123', $result['default_payment_account']['sia']);
-        $this->assertEquals('CUC123', $result['default_payment_account']['cuc']);
-        $this->assertTrue($result['default_payment_account']['virtual']);
-        $this->assertEquals('DetailTitle', $result['details']['title']);
-        $this->assertEquals('DetailDescription', $result['details']['description']);
-        $this->assertEquals('IT60X0542811101000000123456', $result['bank_iban']);
-        $this->assertEquals('BankName', $result['bank_name']);
-        $this->assertEquals('PaymentMethod', $result['ei_payment_method']);
+        $request = Request::create('/api/settings/payment-method', 'POST', $data);
+        $settingApi = new Setting();
+
+        $response = $settingApi->createPaymentMethod($request);
+dd($response);
+        $this->assertEquals(201, $response->status());
+        $this->assertEquals('Metodo di pagamento creato con successo', $response->getData()->message);
+        $this->assertEquals(1, $response->getData()->payment_method_id);
     }
 
-    public function testGetFakePaymentAccount()
+    public function testGetPaymentMethod()
     {
-        $testPaymentAccount = new TestPaymentAccount();
 
-        $result = $testPaymentAccount->getFakePaymentAccount([
-            'id' => 2,
-            'name' => 'TestName',
-            'type' => 'TestType',
+
+        Http::fake([
+            'payment_methods' => Http::response(
+                (new \OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\SettingFakeResponse())->getPaymentMethodFakeDetail()
+            ),
+        ]);
+
+        $settingApi = new Setting();
+        $response = $settingApi->getPaymentMethod(1);
+        dd($response);
+        $this->assertEquals(201, $response->status());
+        $this->assertObjectHasProperty('payment_method', $response->getData());
+    }
+
+
+    public function testUpdatePaymentMethod()
+    {
+        $data = [
+            'id' => 1,
+            'name' => 'Updated Payment Method',
+            'type' => 'bank_transfer',
+            'is_default' => false,
+            'default_payment_account' => [
+                'id' => 1,
+                'name' => 'Updated Default Account',
+                'type' => 'bank_account',
+                'iban' => 'IT60X0542811101000000123456',
+                'sia' => 'ABCDEF',
+                'cuc' => 'XYZ123',
+                'virtual' => false
+            ],
+            'details' => [
+                ['title' => 'Detail 1', 'description' => 'Updated Description 1']
+            ],
+            'bank_iban' => 'IT60X0542811101000000123456',
+            'bank_name' => 'Updated Bank Name',
+            'bank_beneficiary' => 'Updated Bank Beneficiary',
+            'ei_payment_method' => 'updated_ei_method',
+        ];
+
+        $request = Request::create('/api/settings/update-payment-method', 'PUT', $data);
+        $settingApi = new Setting();
+
+        Http::fake([
+            'update_payment_methods' => Http::response(['message' => 'Metodo di pagamento aggiornato con successo'], 201)
+        ]);
+
+
+        $response = $settingApi->updatePaymentMethod($request, 1);
+dd($response);
+        $this->assertEquals(201, $response->status());
+        /*if ($response->status() === 400) {
+            dd($response->getData());
+        }*/
+        $this->assertEquals('Metodo di pagamento aggiornato con successo', $response->getData()->message);
+        $this->assertEquals(1, $response->getData()->payment_method_id);
+    }
+
+    public function testDeletePaymentMethod()
+    {
+        $paymentMethodId=1;
+
+        Http::fake([
+            'delete_payment_methods' => Http::response(),
+        ]);
+
+        $payMethod = new Setting();
+        $response = $payMethod->deletePaymentMethod(1);
+dd($response);
+        $this->assertEquals(201, $response->status());
+        $this->assertEquals('Metodo di pagamento eliminato con successo', $response->getData()->message);
+    }
+
+
+    // Test PaymentAccount
+
+
+    public function testCreatePaymentAccount()
+    {
+        $data = [
+            'id' => 1,
+            'name' => 'Test Account',
+            'type' => 'bank_account',
             'iban' => 'IT60X0542811101000000123456',
-            'sia' => 'SIA123',
-            'cuc' => 'CUC123',
-            'virtual' => true,
-        ]);
+            'sia' => 'ABCDEF',
+            'cuc' => 'XYZ123',
+            'virtual' => false
+        ];
 
-        $this->assertEquals(2, $result['id']);
-        $this->assertEquals('TestName', $result['name']);
-        $this->assertEquals('TestType', $result['type']);
-        $this->assertEquals('IT60X0542811101000000123456', $result['iban']);
-        $this->assertEquals('SIA123', $result['sia']);
-        $this->assertEquals('CUC123', $result['cuc']);
-        $this->assertTrue($result['virtual']);
+        $request = Request::create('/api/settings/payment-account', 'POST', $data);
+        $settingApi = new Setting();
+
+        $response = $settingApi->createPaymentAccount($request);
+
+        dd($response);
+        $this->assertEquals(201, $response->status());
+        $this->assertEquals('Account di pagamento creato con successo', $response->getData()->message);
     }
 
-    public function testGetFakeVatType()
+    public function testGetPaymentAccount()
     {
-        $testVatType = new TestTypeVat();
-
-        $result = $testVatType->getFakeVatType([
-            'id' => 3,
-            'value' => 5.2,
-            'description' => 'A description',
-            'notes' => 'A note',
-            'e_invoice' => true,
-            'ei_type' => 'Wood',
-            'editable' => false,
-            'is_disabled' => false,
+        Http::fake([
+            'payment_account' => Http::response(
+                (new \OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\SettingFakeResponse())->getPaymentAccountFakeDetail()
+            ),
         ]);
 
-        $this->assertEquals(3, $result['id']);
-        $this->assertEquals(5.2, $result['value']);
-        $this->assertEquals('A description', $result['description']);
-        $this->assertEquals('A note', $result['notes']);
-        $this->assertTrue($result['e_invoice']);
-        $this->assertEquals('Wood', $result['ei_type']);
-        $this->assertFalse($result['editable']);
-        $this->assertFalse($result['is_disabled']);
+        $settingApi = new Setting();
+        $response = $settingApi->getPaymentAccount(1);
+dd($response);
+        $this->assertEquals(201, $response->status());
+        $this->assertObjectHasProperty('payment_account', $response->getData());
+    }
+
+    public function testUpdatePaymentAccount()
+    {
+        $data = [
+            'name' => 'Updated Account',
+            'type' => 'bank_account',
+            'iban' => 'IT60X0542811101000000123456',
+            'sia' => 'ABCDEF',
+            'cuc' => 'XYZ123',
+            'virtual' => false
+        ];
+
+        $request = Request::create('/api/settings/payment-account/1', 'PUT', $data);
+        $settingApi = new Setting();
+
+        $response = $settingApi->updatePaymentAccount($request, 1);
+        dd($response);
+        $this->assertEquals(201, $response->status());
+        $this->assertEquals('Account aggiornato con successo', $response->getData()->message);
+    }
+
+    public function testDeletePaymentAccount()
+    {
+        Http::fake([
+            'delete_payment_account' => Http::response(),
+        ]);
+
+        $payAccount = new Setting();
+        $response = $payAccount->deletePaymentAccount(1);
+dd($response);
+        $this->assertEquals(201, $response->status());
+        $this->assertEquals('Account di pagamento eliminato con successo', $response->getData()->message);
+    }
+
+
+    // Test VatType
+
+
+    public function testCreateVatType()
+    {
+        $data = [
+            'id' => 1,
+            'value' => 22.0,
+            'description' => 'IVA 22%',
+            'notes' => 'Note',
+            'e_invoice' => true,
+            'ei_type' => 'e_type',
+            'ei_description' => 'e_description',
+            'editable' => true,
+            'is_disabled' => false
+        ];
+
+        $request = Request::create('/api/settings/vat-type', 'POST', $data);
+        $settingApi = new Setting();
+
+        $response = $settingApi->createVatType($request);
+dd($response);
+        $this->assertEquals(201, $response->status());
+        $this->assertEquals('Tipo di IVA creato con successo', $response->getData()->message);
+    }
+
+    public function testGetVatType()
+    {
+        Http::fake([
+            'vat_type' => Http::response(
+                (new \OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\SettingFakeResponse())->getVatTypeFakeDetail()
+            ),
+        ]);
+
+        $settingApi = new Setting();
+        $response = $settingApi->getVatType(1);
+dd($response);
+        $this->assertEquals(200, $response->status());
+        $this->assertObjectHasProperty('vat_type', $response->getData());
+    }
+
+    public function testUpdateVatType()
+    {
+        $data = [
+            'value' => 10.0,
+            'description' => 'IVA 10%',
+            'notes' => 'Updated Notes',
+            'e_invoice' => false,
+            'ei_type' => 'updated_e_type',
+            'ei_description' => 'updated_e_description',
+            'editable' => false,
+            'is_disabled' => true
+        ];
+
+        $request = Request::create('/api/settings/vat-type/1', 'PUT', $data);
+        $settingApi = new Setting();
+
+        $response = $settingApi->updateVatType($request, 1);
+dd($response);
+        $this->assertEquals(201, $response->status());
+        $this->assertEquals('Tipo di IVA aggiornato con successo', $response->getData()->message);
+    }
+
+    public function testDeleteVatType()
+    {
+        Http::fake([
+            'delete_tay_type' => Http::response(),
+        ]);
+
+        $vatTypeApi = new Setting();
+        $response = $vatTypeApi->deleteVatType(1);
+dd($response);
+        $this->assertEquals(200, $response->status());
+        $this->assertEquals('Tipo di IVA eliminato con successo', $response->getData()->message);
     }
 }
