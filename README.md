@@ -120,13 +120,13 @@ We are currently work on this package to implement all endpoints. Enable notific
 
 ❌ Taxes
 
-❌ Archive
+🔜 Archive
 
-❌ Cashbook
+🔜 Cashbook
 
 🔜 Info
 
-❌ Settings
+🔜 Settings
 
 ## Testing
 
