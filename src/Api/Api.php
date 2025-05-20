@@ -23,7 +23,7 @@ class Api extends LaravelFattureInCloudV2
         if ($response_status === 403 || $response_status === 429) {
             $this->waitThrottle($response_status);
 
-            $this->get($url, $query_parameters);
+            return $this->get($url, $query_parameters);
         }
 
         return $this->parseResponse($response);
@@ -51,7 +51,7 @@ class Api extends LaravelFattureInCloudV2
         if ($response_status === 403 || $response_status === 429) {
             $this->waitThrottle($response_status);
 
-            $this->post($url, $body);
+            return $this->post($url, $body);
         }
 
         return $this->parseResponse($response);
@@ -72,7 +72,7 @@ class Api extends LaravelFattureInCloudV2
         if ($response_status === 403 || $response_status === 429) {
             $this->waitThrottle($response_status);
 
-            $this->put($url, $body);
+            return $this->put($url, $body);
         }
 
         return $this->parseResponse($response);
@@ -93,7 +93,7 @@ class Api extends LaravelFattureInCloudV2
         if ($response_status === 403 || $response_status === 429) {
             $this->waitThrottle($response_status);
 
-            $this->destroy($url, $query_parameters);
+            return $this->destroy($url, $query_parameters);
         }
 
         return $this->parseResponse($response);
