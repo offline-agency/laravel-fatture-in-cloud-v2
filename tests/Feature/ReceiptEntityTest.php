@@ -362,7 +362,7 @@ class ReceiptEntityTest extends TestCase
         $this->assertInstanceOf(ReceiptMonthlyTotals::class, $response[0]);
     }
 
-    public function test_validation_error_on_create_issued_document()
+    public function test_validation_error_on_monthly_totals()
     {
         $receipt = new Receipt();
         $response = $receipt->monthlyTotals('fake_type', 2022);
