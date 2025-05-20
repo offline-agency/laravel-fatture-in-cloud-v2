@@ -129,13 +129,13 @@ class Api extends LaravelFattureInCloudV2
     ) {
         switch ($status) {
             case 403:
-                usleep(config('fatture-in-cloud-v2.limits.403'));
+                usleep(config('fatture-in-cloud-v2.limits.403') * 1000);
                 break;
             case 429:
-                usleep(config('fatture-in-cloud-v2.limits.429'));
+                usleep(config('fatture-in-cloud-v2.limits.429') * 1000);
                 break;
             default:
-                usleep(config('fatture-in-cloud-v2.limits.default'));
+                usleep(config('fatture-in-cloud-v2.limits.default') * 1000);
                 break;
         }
     }
