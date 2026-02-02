@@ -1,33 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedEInvoice;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
-
-class IssuedEInvoiceRejectionReason extends AbstractEntity
+readonly class IssuedEInvoiceRejectionReason
 {
-    /**
-     * @var string
-     */
-    public $reason;
+    public ?string $reason;
+    public ?string $eiStatus;
+    public ?string $solution;
+    public ?string $code;
+    public ?string $date;
 
-    /**
-     * @var string
-     */
-    public $ei_status;
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
 
-    /**
-     * @var string
-     */
-    public $solution;
+        if (!is_array($parameters)) {
+            $parameters = [];
+        }
 
-    /**
-     * @var string
-     */
-    public $code;
-
-    /**
-     * @var string
-     */
-    public $date;
+        $this->reason = $parameters['reason'] ?? null;
+        $this->eiStatus = $parameters['ei_status'] ?? null;
+        $this->solution = $parameters['solution'] ?? null;
+        $this->code = $parameters['code'] ?? null;
+        $this->date = $parameters['date'] ?? null;
+    }
 }

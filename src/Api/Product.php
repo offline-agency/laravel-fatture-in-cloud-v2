@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\Product as ProductEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\ProductList;
@@ -12,19 +15,24 @@ class Product extends Api
 {
     use ListTrait;
 
-    public function list(
-        ?array $additional_data = []
-    ) {
-        $additional_data = $this->data($additional_data, [
-            'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
+    public function list(array $additionalData = []): ProductList|Error
+    {
+        $additionalData = $this->data($additionalData, [
+            'fields',
+            'fieldset',
+            'sort',
+            'page',
+            'per_page',
+            'q',
         ]);
 
+        /** @var object $response */
         $response = $this->get(
-            'c/'.$this->company_id.'/products',
-            $additional_data
+            'c/' . $this->companyId . '/products',
+            $additionalData
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
@@ -33,76 +41,43 @@ class Product extends Api
         return new ProductList($products);
     }
 
-    public function all(
-        ?array $additional_data = []
-    ) {
-        $all_products = $this->getAll([
-            'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
-        ], 'c/'.$this->company_id.'/products', $additional_data);
+    /**
+     * @return array<ProductEntity>|Error
+     */
+    public function all(array $additionalData = []): array|Error
+    {
+        $allProducts = $this->getAll([
+            'fields',
+            'fieldset',
+            'sort',
+            'page',
+            'per_page',
+            'q',
+        ], 'c/' . $this->companyId . '/products', $additionalData);
 
-        return gettype($all_products) !== 'array'
-            ? $all_products
-            : array_map(function ($product) {
-                return new ProductEntity($product);
-            }, $all_products);
+        if ($allProducts instanceof Error) {
+            return $allProducts;
+        }
+
+        return array_map(function ($product) {
+            return new ProductEntity($product);
+        }, $allProducts);
     }
 
-    public function detail(
-        int $product_id,
-        ?array $additional_data = []
-    ) {
-        $additional_data = $this->data($additional_data, [
-            'fields', 'fieldset',
+    public function detail(int $productId, array $additionalData = []): ProductEntity|Error
+    {
+        $additionalData = $this->data($additionalData, [
+            'fields',
+            'fieldset',
         ]);
 
+        /** @var object $response */
         $response = $this->get(
-            'c/'.$this->company_id.'/products/'.$product_id,
-            $additional_data
+            'c/' . $this->companyId . '/products/' . $productId,
+            $additionalData
         );
 
-        if (! $response->success) {
-            return new Error($response->data);
-        }
-
-        $products = $response->data->data;
-
-        return new ProductEntity($products);
-    }
-
-    public function delete(
-        int $product_id
-    ) {
-        $response = $this->destroy(
-            'c/'.$this->company_id.'/products/'.$product_id
-        );
-
-        if (! $response->success) {
-            return new Error($response->data);
-        }
-
-        return 'Product deleted';
-    }
-
-    public function create(
-        array $body = []
-    ) {
-        $validator = Validator::make($body, [
-            'data' => 'required',
-            'data.name' => 'required_without_all:data.code,data.description',
-            'data.code' => 'required_without_all:data.name,data.description',
-            'data.description' => 'required_without_all:data.name,data.code',
-        ]);
-
-        if ($validator->fails()) {
-            return $validator->errors();
-        }
-
-        $response = $this->post(
-            'c/'.$this->company_id.'/products',
-            $body
-        );
-
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
@@ -111,10 +86,22 @@ class Product extends Api
         return new ProductEntity($product);
     }
 
-    public function edit(
-        int $product_id,
-        array $body = []
-    ) {
+    public function delete(int $productId): string|Error
+    {
+        /** @var object $response */
+        $response = $this->destroy(
+            'c/' . $this->companyId . '/products/' . $productId
+        );
+
+        if (!$response->success) {
+            return new Error($response->data);
+        }
+
+        return 'Product deleted';
+    }
+
+    public function create(array $body = []): ProductEntity|Error|MessageBag
+    {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.name' => 'required_without_all:data.code,data.description',
@@ -126,12 +113,41 @@ class Product extends Api
             return $validator->errors();
         }
 
-        $response = $this->put(
-            'c/'.$this->company_id.'/products/'.$product_id,
+        /** @var object $response */
+        $response = $this->post(
+            'c/' . $this->companyId . '/products',
             $body
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
+            return new Error($response->data);
+        }
+
+        $product = $response->data->data;
+
+        return new ProductEntity($product);
+    }
+
+    public function edit(int $productId, array $body = []): ProductEntity|Error|MessageBag
+    {
+        $validator = Validator::make($body, [
+            'data' => 'required',
+            'data.name' => 'required_without_all:data.code,data.description',
+            'data.code' => 'required_without_all:data.name,data.description',
+            'data.description' => 'required_without_all:data.name,data.code',
+        ]);
+
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        /** @var object $response */
+        $response = $this->put(
+            'c/' . $this->companyId . '/products/' . $productId,
+            $body
+        );
+
+        if (!$response->success) {
             return new Error($response->data);
         }
 

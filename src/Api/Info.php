@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
@@ -7,19 +9,19 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\InfoList;
 
 class Info extends Api
 {
-    public function listVatTypes(
-        ?array $additional_data = []
-    ) {
-        $additional_data = $this->data($additional_data, [
+    public function listVatTypes(array $additionalData = []): InfoList|Error
+    {
+        $additionalData = $this->data($additionalData, [
             'fieldset',
         ]);
 
+        /** @var object $response */
         $response = $this->get(
-            $this->company_id.'/info/vat_types',
-            $additional_data
+            'c/' . $this->companyId . '/info/vat_types',
+            $additionalData
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 

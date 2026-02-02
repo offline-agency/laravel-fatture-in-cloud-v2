@@ -2,11 +2,11 @@
     "name": "offline-agency/laravel-fatture-in-cloud-v2",
     "description": "A wrapper plugin with Fatture in Cloud Api V2 written in Laravel PHP",
     "keywords": [
-    "laravel",
-    "integration",
-    "api",
-    "fatture in cloud"
-  ],
+        "laravel",
+        "integration",
+        "api",
+        "fatture in cloud"
+    ],
     "homepage": "https://github.com/offline-agency/laravel-fatture-in-cloud-v2",
     "license": "MIT",
     "type": "library",
@@ -17,17 +17,18 @@
         }
     ],
     "require": {
-        "php": ">=7.3",
+        "php": "^8.4",
         "ext-json": "*",
-        "illuminate/support": "^5.8|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
-        "guzzlehttp/guzzle": "^5.8|^6.5|7.0.1|^7.2",
-        "illuminate/container": "^5.8|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
-        "illuminate/http": "^5.8|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0"
+        "illuminate/support": "^12.0",
+        "illuminate/container": "^12.0",
+        "illuminate/http": "^12.0",
+        "illuminate/validation": "^12.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^3.1|^4.0|^5.0|^6.0|^7.0",
-        "phpstan/phpstan": "^1.7",
-        "phpunit/phpunit": "^5.8|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0"
+        "orchestra/testbench": "^10.0",
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "phpstan/phpstan": "^2.1"
     },
     "autoload": {
         "psr-4": {
@@ -39,13 +40,16 @@
             "OfflineAgency\\LaravelFattureInCloudV2\\Tests\\": "tests"
         }
     },
-    "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-
-    },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage-html coverage",
+        "format": "vendor/bin/pint"
     },
     "extra": {
         "laravel": {

@@ -1,23 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
-
-class ReceiptMonthlyTotals extends AbstractEntity
+readonly class ReceiptMonthlyTotals
 {
-    /**
-     * @var float
-     */
-    public $net;
+    public ?float $net;
+    public ?float $gross;
+    public ?int $count;
 
-    /**
-     * @var float
-     */
-    public $gross;
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
 
-    /**
-     * @var int
-     */
-    public $count;
+        $this->net = $parameters['net'] ?? null;
+        $this->gross = $parameters['gross'] ?? null;
+        $this->count = $parameters['count'] ?? null;
+    }
 }

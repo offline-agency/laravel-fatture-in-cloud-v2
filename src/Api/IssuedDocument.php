@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentAttachment;
@@ -17,7 +20,7 @@ class IssuedDocument extends Api
 {
     use ListTrait;
 
-    const DOCUMENT_TYPES = [
+    const array DOCUMENT_TYPES = [
         'invoice',
         'quote',
         'proforma',
@@ -31,136 +34,148 @@ class IssuedDocument extends Api
         'self_supplier_invoice',
     ];
 
-    public function list(
-        string $type,
-        ?array $additional_data = []
-    ) {
-        $additional_data = array_merge($additional_data, [
+    public function list(string $type, array $additionalData = []): IssuedDocumentList|Error
+    {
+        $additionalData = array_merge($additionalData, [
             'type' => $type,
         ]);
 
-        $additional_data = $this->data($additional_data, [
-            'type', 'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
+        $additionalData = $this->data($additionalData, [
+            'type',
+            'fields',
+            'fieldset',
+            'sort',
+            'page',
+            'per_page',
+            'q',
         ]);
 
+        /** @var object $response */
         $response = $this->get(
-            'c/'.$this->company_id.'/issued_documents',
-            $additional_data
+            'c/' . $this->companyId . '/issued_documents',
+            $additionalData
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
-        $issued_document_response = $response->data;
+        $issuedDocumentResponse = $response->data;
 
-        return new IssuedDocumentList($issued_document_response);
+        return new IssuedDocumentList($issuedDocumentResponse);
     }
 
-    public function all(
-        string $type,
-        ?array $additional_data = []
-    ) {
-        $additional_data = array_merge($additional_data, [
+    /**
+     * @return array<IssuedDocumentEntity>|Error
+     */
+    public function all(string $type, array $additionalData = []): array|Error
+    {
+        $additionalData = array_merge($additionalData, [
             'type' => $type,
         ]);
 
-        $all_documents = $this->getAll([
-            'type', 'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
-        ], 'c/'.$this->company_id.'/issued_documents', $additional_data);
+        $allDocuments = $this->getAll([
+            'type',
+            'fields',
+            'fieldset',
+            'sort',
+            'page',
+            'per_page',
+            'q',
+        ], 'c/' . $this->companyId . '/issued_documents', $additionalData);
 
-        return gettype($all_documents) !== 'array'
-            ? $all_documents
-            : array_map(function ($document) {
-                return new IssuedDocumentEntity($document);
-            }, $all_documents);
+        if ($allDocuments instanceof Error) {
+            return $allDocuments;
+        }
+
+        return array_map(function ($document) {
+            return new IssuedDocumentEntity($document);
+        }, $allDocuments);
     }
 
-    public function detail(
-        int $document_id,
-        ?array $additional_data = []
-    ) {
-        $additional_data = $this->data($additional_data, [
-            'fields', 'fieldset',
+    public function detail(int $documentId, array $additionalData = []): IssuedDocumentEntity|Error
+    {
+        $additionalData = $this->data($additionalData, [
+            'fields',
+            'fieldset',
         ]);
 
+        /** @var object $response */
         $response = $this->get(
-            'c/'.$this->company_id.'/issued_documents/'.$document_id,
-            $additional_data
+            'c/' . $this->companyId . '/issued_documents/' . $documentId,
+            $additionalData
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
-        $issued_document = $response->data->data;
+        $issuedDocument = $response->data->data;
 
-        return new IssuedDocumentEntity($issued_document);
+        return new IssuedDocumentEntity($issuedDocument);
     }
 
-    public function bin(
-        int $document_id
-    ) {
+    public function bin(int $documentId): IssuedDocumentEntity|Error
+    {
+        /** @var object $response */
         $response = $this->get(
-            'c/'.$this->company_id.'/bin/issued_documents/'.$document_id
+            'c/' . $this->companyId . '/bin/issued_documents/' . $documentId
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
-        $issued_document = $response->data->data;
+        $issuedDocument = $response->data->data;
 
-        return new IssuedDocumentEntity($issued_document);
+        return new IssuedDocumentEntity($issuedDocument);
     }
 
-    public function delete(
-        int $document_id
-    ) {
+    public function delete(int $documentId): string|Error
+    {
+        /** @var object $response */
         $response = $this->destroy(
-            'c/'.$this->company_id.'/issued_documents/'.$document_id
+            'c/' . $this->companyId . '/issued_documents/' . $documentId
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
         return 'Document deleted';
     }
 
-    public function create(
-        array $body = []
-    ) {
+    public function create(array $body = []): IssuedDocumentEntity|Error|MessageBag
+    {
         $validator = Validator::make($body, [
             'data' => 'required',
-            'data.type' => 'required|in:'.implode(',', IssuedDocument::DOCUMENT_TYPES),
+            'data.type' => 'required|in:' . implode(',', self::DOCUMENT_TYPES),
             'data.entity.name' => 'required',
         ], [
-            'data.type.in' => 'The selected data.type is invalid. Select one between '.implode(', ', IssuedDocument::DOCUMENT_TYPES),
+            'data.type.in' => 'The selected data.type is invalid. Select one between ' . implode(', ', self::DOCUMENT_TYPES),
         ]);
 
         if ($validator->fails()) {
             return $validator->errors();
         }
 
+        /** @var object $response */
         $response = $this->post(
-            'c/'.$this->company_id.'/issued_documents',
+            'c/' . $this->companyId . '/issued_documents',
             $body
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
-        $issued_document = $response->data->data;
+        $issuedDocument = $response->data->data;
 
-        return new IssuedDocumentEntity($issued_document);
+        return new IssuedDocumentEntity($issuedDocument);
     }
 
-    public function edit(
-        int $document_id,
-        array $body = []
-    ) {
+    public function edit(int $documentId, array $body = []): IssuedDocumentEntity|Error|MessageBag
+    {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.entity.name' => 'required',
@@ -170,53 +185,52 @@ class IssuedDocument extends Api
             return $validator->errors();
         }
 
+        /** @var object $response */
         $response = $this->put(
-            'c/'.$this->company_id.'/issued_documents/'.$document_id,
+            'c/' . $this->companyId . '/issued_documents/' . $documentId,
             $body
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
-        $issued_document = $response->data->data;
+        $issuedDocument = $response->data->data;
 
-        return new IssuedDocumentEntity($issued_document);
+        return new IssuedDocumentEntity($issuedDocument);
     }
 
-    public function getNewTotals(
-        array $body
-    ) {
+    public function getNewTotals(array $body): IssuedDocumentTotals|Error|MessageBag
+    {
         $validator = Validator::make($body, [
             'data' => 'required',
-            'data.type' => 'required|in:'.implode(',', IssuedDocument::DOCUMENT_TYPES),
+            'data.type' => 'required|in:' . implode(',', self::DOCUMENT_TYPES),
             'data.entity.name' => 'required',
         ], [
-            'data.type.in' => 'The selected data.type is invalid. Select one between '.implode(', ', IssuedDocument::DOCUMENT_TYPES),
+            'data.type.in' => 'The selected data.type is invalid. Select one between ' . implode(', ', self::DOCUMENT_TYPES),
         ]);
 
         if ($validator->fails()) {
             return $validator->errors();
         }
 
+        /** @var object $response */
         $response = $this->post(
-            'c/'.$this->company_id.'/issued_documents/totals',
+            'c/' . $this->companyId . '/issued_documents/totals',
             $body
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
-        $issued_document = $response->data->data;
+        $issuedDocument = $response->data->data;
 
-        return new IssuedDocumentTotals($issued_document);
+        return new IssuedDocumentTotals($issuedDocument);
     }
 
-    public function getExistingTotals(
-        int $document_id,
-        array $body = []
-    ) {
+    public function getExistingTotals(int $documentId, array $body = []): IssuedDocumentTotals|Error|MessageBag
+    {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.entity.name' => 'required',
@@ -226,31 +240,32 @@ class IssuedDocument extends Api
             return $validator->errors();
         }
 
+        /** @var object $response */
         $response = $this->put(
-            'c/'.$this->company_id.'/issued_documents/'.$document_id.'/totals',
+            'c/' . $this->companyId . '/issued_documents/' . $documentId . '/totals',
             $body
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
-        $issued_document = $response->data->data;
+        $issuedDocument = $response->data->data;
 
-        return new IssuedDocumentTotals($issued_document);
+        return new IssuedDocumentTotals($issuedDocument);
     }
 
-    public function preCreateInfo(
-        string $type
-    ) {
+    public function preCreateInfo(string $type): IssuedDocumentPreCreateInfo|Error
+    {
+        /** @var object $response */
         $response = $this->get(
-            'c/'.$this->company_id.'/issued_documents/info',
+            'c/' . $this->companyId . '/issued_documents/info',
             [
                 'type' => $type,
             ]
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
@@ -259,14 +274,14 @@ class IssuedDocument extends Api
         return new IssuedDocumentPreCreateInfo($info);
     }
 
-    public function emailData(
-        int $document_id
-    ) {
+    public function emailData(int $documentId): IssuedDocumentEmail|Error
+    {
+        /** @var object $response */
         $response = $this->get(
-            'c/'.$this->company_id.'/issued_documents/'.$document_id.'/email'
+            'c/' . $this->companyId . '/issued_documents/' . $documentId . '/email'
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
@@ -275,9 +290,8 @@ class IssuedDocument extends Api
         return new IssuedDocumentEmail($email);
     }
 
-    public function attachment(
-        array $body = []
-    ) {
+    public function attachment(array $body = []): IssuedDocumentAttachment|Error|MessageBag
+    {
         $validator = Validator::make($body, [
             'filename' => 'required',
             'attachment' => 'required',
@@ -287,39 +301,38 @@ class IssuedDocument extends Api
             return $validator->errors();
         }
 
+        /** @var object $response */
         $response = $this->post(
-            'c/'.$this->company_id.'/issued_documents/attachment',
+            'c/' . $this->companyId . '/issued_documents/attachment',
             $body,
             true
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
-        $attachment_token = $response->data->data;
+        $attachmentToken = $response->data->data;
 
-        return new IssuedDocumentAttachment($attachment_token);
+        return new IssuedDocumentAttachment($attachmentToken);
     }
 
-    public function deleteAttachment(
-        int $document_id
-    ) {
+    public function deleteAttachment(int $documentId): string|Error
+    {
+        /** @var object $response */
         $response = $this->destroy(
-            'c/'.$this->company_id.'/issued_documents/'.$document_id.'/attachment'
+            'c/' . $this->companyId . '/issued_documents/' . $documentId . '/attachment'
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
         return 'Attachment deleted';
     }
 
-    public function scheduleEmail(
-        int $document_id,
-        array $body = []
-    ) {
+    public function scheduleEmail(int $documentId, array $body = []): IssuedDocumentScheduleEmail|Error|MessageBag
+    {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.sender_id' => 'required_without:data.sender_email',
@@ -340,40 +353,46 @@ class IssuedDocument extends Api
             return $validator->errors();
         }
 
+        /** @var object $response */
         $response = $this->post(
-            'c/'.$this->company_id.'/issued_documents/'.$document_id.'/email',
+            'c/' . $this->companyId . '/issued_documents/' . $documentId . '/email',
             $body
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
-        $schedule_email = $response->data->data;
+        $scheduleEmail = $response->data->data;
 
-        return new IssuedDocumentScheduleEmail($schedule_email);
+        return new IssuedDocumentScheduleEmail($scheduleEmail);
     }
 
-    public function binDetail(
-        int $document_id,
-        ?array $additional_data = []
-    ) {
-        $document = $this->detail(
-            $document_id,
-            $additional_data
-        );
+    public function binDetail(int $documentId, array $additionalData = []): IssuedDocumentEntity|Error
+    {
+        $document = $this->detail($documentId, $additionalData);
 
         if ($document instanceof Error) {
-            $document = $this->bin($document_id);
+            $document = $this->bin($documentId);
 
             if (
-                ! $document instanceof Error
+                !$document instanceof Error
+                && isset($document->type)
                 && $document->type === 'proforma'
-                && ! is_null($document->merged_in)
+                && isset($document->merged_in)
+                && !is_null($document->merged_in)
             ) {
+                // Fixed accessing property on object
+                $mergedIn = $document->merged_in;
+                if (!is_object($mergedIn) || !isset($mergedIn->id)) {
+                    return $document;
+                }
+
+                $id = (int) $mergedIn->id;
+
                 $document = $this->detail(
-                    $document->merged_in->id,
-                    $additional_data
+                    $id,
+                    $additionalData
                 );
             }
         }

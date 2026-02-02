@@ -1,118 +1,65 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
-
-class Supplier extends AbstractEntity
+readonly class Supplier
 {
-    /**
-     * @var int
-     */
-    public $id;
+    public ?int $id;
+    public ?string $code;
+    public ?string $name;
+    public ?string $type;
+    public ?string $firstName;
+    public ?string $lastName;
+    public ?string $contactPerson;
+    public ?string $vatNumber;
+    public ?string $taxCode;
+    public ?string $addressStreet;
+    public ?string $addressPostalCode;
+    public ?string $addressCity;
+    public ?string $addressProvince;
+    public ?string $addressExtra;
+    public ?string $country;
+    public ?string $email;
+    public ?string $certifiedEmail;
+    public ?string $phone;
+    public ?string $fax;
+    public ?string $notes;
+    public ?string $createdAt;
+    public ?string $updatedAt;
 
-    /**
-     * @var string
-     */
-    public $code;
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
 
-    /**
-     * @var string
-     */
-    public $name;
+        if (!is_array($parameters)) {
+            $parameters = [];
+        }
 
-    /**
-     * @var string
-     */
-    public $type; //TODO: can be only some values
-
-    /**
-     * @var string
-     */
-    public $first_name;
-
-    /**
-     * @var string
-     */
-    public $last_name;
-
-    /**
-     * @var string
-     */
-    public $contact_person;
-
-    /**
-     * @var string
-     */
-    public $vat_number;
-
-    /**
-     * @var string
-     */
-    public $tax_code;
-
-    /**
-     * @var string
-     */
-    public $address_street;
-
-    /**
-     * @var string
-     */
-    public $address_postal_code;
-
-    /**
-     * @var string
-     */
-    public $address_city;
-
-    /**
-     * @var string
-     */
-    public $address_province;
-
-    /**
-     * @var string
-     */
-    public $address_extra;
-
-    /**
-     * @var string
-     */
-    public $country;
-
-    /**
-     * @var string
-     */
-    public $email;
-
-    /**
-     * @var string
-     */
-    public $certified_email;
-
-    /**
-     * @var string
-     */
-    public $phone;
-
-    /**
-     * @var string
-     */
-    public $fax;
-
-    /**
-     * @var string
-     */
-    public $notes;
-
-    /**
-     * @var string
-     */
-    public $created_at;
-
-    /**
-     * @var string
-     */
-    public $updated_at;
+        $this->id = $parameters['id'] ?? null;
+        $this->code = $parameters['code'] ?? null;
+        $this->name = $parameters['name'] ?? null;
+        $this->type = $parameters['type'] ?? null;
+        $this->firstName = $parameters['first_name'] ?? null;
+        $this->lastName = $parameters['last_name'] ?? null;
+        $this->contactPerson = $parameters['contact_person'] ?? null;
+        $this->vatNumber = $parameters['vat_number'] ?? null;
+        $this->taxCode = $parameters['tax_code'] ?? null;
+        $this->addressStreet = $parameters['address_street'] ?? null;
+        $this->addressPostalCode = $parameters['address_postal_code'] ?? null;
+        $this->addressCity = $parameters['address_city'] ?? null;
+        $this->addressProvince = $parameters['address_province'] ?? null;
+        $this->addressExtra = $parameters['address_extra'] ?? null;
+        $this->country = $parameters['country'] ?? null;
+        $this->email = $parameters['email'] ?? null;
+        $this->certifiedEmail = $parameters['certified_email'] ?? null;
+        $this->phone = $parameters['phone'] ?? null;
+        $this->fax = $parameters['fax'] ?? null;
+        $this->notes = $parameters['notes'] ?? null;
+        $this->createdAt = $parameters['created_at'] ?? null;
+        $this->updatedAt = $parameters['updated_at'] ?? null;
+    }
 }

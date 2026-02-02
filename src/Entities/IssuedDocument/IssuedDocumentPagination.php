@@ -1,75 +1,77 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument;
 
 use Illuminate\Support\Arr;
 use OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Pagination;
 
-class IssuedDocumentPagination extends Pagination
+readonly class IssuedDocumentPagination extends Pagination
 {
-    public function goToFirstPage()
+    public function goToFirstPage(): IssuedDocumentList|Error|null
     {
-        if (is_null($this->first_page_url)) {
+        if (is_null($this->firstPageUrl)) {
             return null;
         }
 
-        return $this->changePage($this->first_page_url);
+        return $this->changePage($this->firstPageUrl);
     }
 
-    public function goToLastPage()
+    public function goToLastPage(): IssuedDocumentList|Error|null
     {
-        if (is_null($this->last_page_url)) {
+        if (is_null($this->lastPageUrl)) {
             return null;
         }
 
-        return $this->changePage($this->last_page_url);
+        return $this->changePage($this->lastPageUrl);
     }
 
-    public function goToPrevPage()
+    public function goToPrevPage(): IssuedDocumentList|Error|null
     {
-        if (! $this->hasPrevPage()) {
+        if (!$this->hasPrevPage()) {
             return null;
         }
 
-        return $this->changePage($this->prev_page_url);
+        return $this->changePage($this->prevPageUrl);
     }
 
-    public function goToNextPage()
+    public function goToNextPage(): IssuedDocumentList|Error|null
     {
-        if (! $this->hasNextPage()) {
+        if (!$this->hasNextPage()) {
             return null;
         }
 
-        return $this->changePage($this->next_page_url);
+        return $this->changePage($this->nextPageUrl);
     }
 
     // helpers
 
-    private function changePage(
-        string $url
-    ) {
-        $query_params = $this->getParsedQueryParams($url);
+    private function changePage(string $url): IssuedDocumentList|Error
+    {
+        $queryParams = $this->getParsedQueryParams($url);
 
-        $issued_document = new IssuedDocument;
+        $issuedDocument = new IssuedDocument();
 
-        return $issued_document->list(
-            $query_params->type,
-            $query_params->additional_data
+        return $issuedDocument->list(
+            $queryParams->type,
+            (array) $queryParams->additional_data
         );
     }
 
-    public function getParsedQueryParams($url): object
+    public function getParsedQueryParams(string $url): object
     {
-        $query_params = $this->getQueryParams($url);
+        $queryParams = $this->getQueryParams($url);
 
-        $type = Arr::get($query_params, 'type');
+        $type = Arr::get($queryParams, 'type');
 
-        unset($query_params['type']);
+        unset($queryParams['type']);
 
         return (object) [
             'type' => $type,
-            'additional_data' => $query_params,
+            'additional_data' => $queryParams,
         ];
     }
 }

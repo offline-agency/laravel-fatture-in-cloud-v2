@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
@@ -12,32 +14,31 @@ class IssuedEInvoice extends Api
 {
     use ListTrait;
 
-    public function send(
-        int $document_id,
-        array $body = []
-    ) {
+    public function send(int $documentId, array $body = []): IssuedEInvoiceSend|Error
+    {
+        /** @var object $response */
         $response = $this->post(
-            'c/'.$this->company_id.'/issued_documents/'.$document_id.'/e_invoice/send',
+            'c/' . $this->companyId . '/issued_documents/' . $documentId . '/e_invoice/send',
             $body
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
-        $issued_e_invoice = $response->data->data;
+        $issuedEInvoice = $response->data->data;
 
-        return new IssuedEInvoiceSend($issued_e_invoice);
+        return new IssuedEInvoiceSend($issuedEInvoice);
     }
 
-    public function verifyXML(
-        int $document_id
-    ) {
+    public function verifyXML(int $documentId): IssuedEInvoiceVerifyXML|Error
+    {
+        /** @var object $response */
         $response = $this->get(
-            'c/'.$this->company_id.'/issued_documents/'.$document_id.'/e_invoice/xml_verify',
+            'c/' . $this->companyId . '/issued_documents/' . $documentId . '/e_invoice/xml_verify',
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
@@ -46,34 +47,33 @@ class IssuedEInvoice extends Api
         return new IssuedEInvoiceVerifyXML($receipts);
     }
 
-    public function getXML(
-        int $document_id,
-        ?array $additional_data = []
-    ) {
-        $additional_data = $this->data($additional_data, [
+    public function getXML(int $documentId, array $additionalData = []): object
+    {
+        $additionalData = $this->data($additionalData, [
             'include_attachment',
         ]);
 
+        /** @var object $response */
         $response = $this->get(
-            'c/'.$this->company_id.'/issued_documents/'.$document_id.'/e_invoice/xml',
-            $additional_data
+            'c/' . $this->companyId . '/issued_documents/' . $documentId . '/e_invoice/xml',
+            $additionalData
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
         return $response;
     }
 
-    public function getRejectionReason(
-        int $document_id
-    ) {
+    public function getRejectionReason(int $documentId): IssuedEInvoiceRejectionReason|Error
+    {
+        /** @var object $response */
         $response = $this->get(
-            'c/'.$this->company_id.'/issued_documents/'.$document_id.'/e_invoice/error_reason',
+            'c/' . $this->companyId . '/issued_documents/' . $documentId . '/e_invoice/error_reason',
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
