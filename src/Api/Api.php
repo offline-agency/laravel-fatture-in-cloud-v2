@@ -1,150 +1,98 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use OfflineAgency\LaravelFattureInCloudV2\LaravelFattureInCloudV2;
+use Illuminate\Support\Facades\Config;
+use OfflineAgency\LaravelFattureInCloudV2\FattureInCloud;
 
-class Api extends LaravelFattureInCloudV2
+class Api
 {
-    protected function get(
-        string $url,
-        array $query_parameters = []
-    ): object {
-        $complete_url = $this->baseUrl.$url;
+    protected FattureInCloud $connector;
+    protected string $companyId;
+    protected string $accessToken;
 
-        $complete_url = $this->parseUrl($complete_url);
-
-        $response = $this->header->get($complete_url, $query_parameters);
-
-        $response_status = $response->status();
-
-        if ($response_status === 403 || $response_status === 429) {
-            $this->waitThrottle($response_status);
-
-            return $this->get($url, $query_parameters);
-        }
-
-        return $this->parseResponse($response);
-    }
-
-    protected function post(
-        string $url,
-        array $body,
-        bool $has_file = false
-    ): object {
-        $complete_url = $this->baseUrl.$url;
-
-        $complete_url = $this->parseUrl($complete_url);
-
-        if ($has_file) {
-            $response = $this->header
-                ->attach('attachment', Arr::get($body, 'attachment'), Arr::get($body, 'filename'))
-                ->post($complete_url, $body);
-        } else {
-            $response = $this->header->post($complete_url, $body);
-        }
-
-        $response_status = $response->status();
-
-        if ($response_status === 403 || $response_status === 429) {
-            $this->waitThrottle($response_status);
-
-            return $this->post($url, $body, $has_file);
-        }
-
-        return $this->parseResponse($response);
-    }
-
-    protected function put(
-        string $url,
-        array $body
-    ): object {
-        $complete_url = $this->baseUrl.$url;
-
-        $complete_url = $this->parseUrl($complete_url);
-
-        $response = $this->header->put($complete_url, $body);
-
-        $response_status = $response->status();
-
-        if ($response_status === 403 || $response_status === 429) {
-            $this->waitThrottle($response_status);
-
-            return $this->put($url, $body);
-        }
-
-        return $this->parseResponse($response);
-    }
-
-    protected function destroy(
-        string $url,
-        array $query_parameters = []
-    ): object {
-        $complete_url = $this->baseUrl.$url;
-
-        $complete_url = $this->parseUrl($complete_url);
-
-        $response = $this->header->delete($complete_url, $query_parameters);
-
-        $response_status = $response->status();
-
-        if ($response_status === 403 || $response_status === 429) {
-            $this->waitThrottle($response_status);
-
-            return $this->destroy($url, $query_parameters);
-        }
-
-        return $this->parseResponse($response);
-    }
-
-    protected function data(
-        array $data,
-        array $fields
-    ): array {
-        $parsed_data = [];
-        foreach ($data as $key => $value) {
-            if (in_array($key, $fields)) {
-                $parsed_data[$key] = $value;
-            }
-        }
-
-        return $parsed_data;
-    }
-
-    private function parseUrl(
-        string $url
-    ): string {
-        // used to avoid breaking changes on config base url
-        if (Str::contains($url, '/c/c')) {
-            return str_replace('/c/c', '/c', $url);
-        }
-
-        return $url;
-    }
-
-    private function waitThrottle(
-        int $status
-    ) {
-        switch ($status) {
-            case 403:
-                usleep(config('fatture-in-cloud-v2.limits.403'));
-                break;
-            case 429:
-                usleep(config('fatture-in-cloud-v2.limits.429'));
-                break;
-            default:
-                usleep(config('fatture-in-cloud-v2.limits.default'));
-                break;
-        }
-    }
-
-    private function parseResponse($response): object
+    public function __construct(?FattureInCloud $connector = null)
     {
+        $this->connector = $connector ?? new FattureInCloud();
+        $this->companyId = $this->connector->getCompanyId();
+        $this->accessToken = $this->connector->getAccessToken();
+    }
+
+    protected function get(string $url, array $queryParameters = []): object
+    {
+        $response = $this->connector->getRequest()
+            ->get($url, $queryParameters);
+
+        return $this->handleResponse($response, 'get', $url, $queryParameters);
+    }
+
+    protected function post(string $url, array $body, bool $hasFile = false): object
+    {
+        $request = $this->connector->getRequest();
+
+        if ($hasFile) {
+            $attachment = Arr::get($body, 'attachment');
+            $filename = Arr::get($body, 'filename');
+            $request->attach('attachment', $attachment, $filename);
+        }
+
+        $response = $request->post($url, $body);
+
+        return $this->handleResponse($response, 'post', $url, $body);
+    }
+
+    protected function put(string $url, array $body): object
+    {
+        $response = $this->connector->getRequest()
+            ->put($url, $body);
+
+        return $this->handleResponse($response, 'put', $url, $body);
+    }
+
+    protected function destroy(string $url, array $queryParameters = []): object
+    {
+        $response = $this->connector->getRequest()
+            ->delete($url, $queryParameters);
+
+        return $this->handleResponse($response, 'destroy', $url, $queryParameters);
+    }
+
+    protected function handleResponse(Response $response, string $method, string $url, array $data = []): object
+    {
+        if ($response->status() === 403 || $response->status() === 429) {
+            $this->waitThrottle($response->status());
+
+            return $this->{$method}($url, $data);
+        }
+
         return (object) [
-            'success' => $response->status() === 200,
-            'data' => json_decode($response),
+            'success' => $response->successful(),
+            'data' => $response->object(),
         ];
+    }
+
+    private function waitThrottle(int $status): void
+    {
+        $limit = match ($status) {
+            403 => Config::get('fatture-in-cloud-v2.limits.403'),
+            429 => Config::get('fatture-in-cloud-v2.limits.429'),
+            default => Config::get('fatture-in-cloud-v2.limits.default'),
+        };
+
+        usleep((int) $limit);
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @param array<string> $fields
+     * @return array<string, mixed>
+     */
+    protected function data(array $data, array $fields): array
+    {
+        return Arr::only($data, $fields);
     }
 }

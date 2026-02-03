@@ -1,19 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\User;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\User\Company as CompanyEntity;
-use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
-class CompanyList
+readonly class CompanyList
 {
-    use ListTrait;
+    /**
+     * @var array<CompanyEntity>
+     */
+    public array $items;
 
-    private $items;
-
-    public function __construct($user_company_response)
+    public function __construct(object $userCompanyResponse)
     {
-        $this->setItems($user_company_response);
+        $this->items = array_map(function ($company) {
+            return new CompanyEntity($company);
+        }, $userCompanyResponse->companies);
     }
 
     /**
@@ -24,11 +28,8 @@ class CompanyList
         return $this->items;
     }
 
-    private function setItems(
-        $user_company_response
-    ): void {
-        $this->items = array_map(function ($company) {
-            return new CompanyEntity($company);
-        }, $user_company_response->companies);
+    public function hasItems(): bool
+    {
+        return count($this->items) > 0;
     }
 }

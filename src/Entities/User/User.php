@@ -1,63 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\User;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
-
-class User extends AbstractEntity
+readonly class User
 {
-    /**
-     * @var int
-     */
-    public $id;
+    public ?int $id;
+    public ?string $name;
+    public ?string $firstName;
+    public ?string $lastName;
+    public ?string $email;
+    public ?string $hash;
+    public ?string $picture;
+    public ?bool $needPasswordChange;
+    public ?bool $needMarketingConsentsConfirmation;
+    public ?bool $needConfirmation;
+    public mixed $details;
 
-    /**
-     * @var string
-     */
-    public $name;
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
 
-    /**
-     * @var string
-     */
-    public $first_name;
-
-    /**
-     * @var string
-     */
-    public $last_name;
-
-    /**
-     * @var string
-     */
-    public $email;
-
-    /**
-     * @var string
-     */
-    public $hash;
-
-    /**
-     * @var string
-     */
-    public $picture;
-
-    /**
-     * @var bool
-     */
-    public $need_password_change;
-
-    /**
-     * @var bool
-     */
-    public $need_marketing_consents_confirmation;
-
-    /**
-     * @var bool
-     */
-    public $need_confirmation;
-
-    /**
-     * @var object
-     */
-    public $details;
+        $this->id = $parameters['id'] ?? null;
+        $this->name = $parameters['name'] ?? null;
+        $this->firstName = $parameters['first_name'] ?? null;
+        $this->lastName = $parameters['last_name'] ?? null;
+        $this->email = $parameters['email'] ?? null;
+        $this->hash = $parameters['hash'] ?? null;
+        $this->picture = $parameters['picture'] ?? null;
+        $this->needPasswordChange = $parameters['need_password_change'] ?? null;
+        $this->needMarketingConsentsConfirmation = $parameters['need_marketing_consents_confirmation'] ?? null;
+        $this->needConfirmation = $parameters['need_confirmation'] ?? null;
+        $this->details = $parameters['details'] ?? null;
+    }
 }
