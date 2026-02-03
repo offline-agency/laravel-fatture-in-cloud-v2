@@ -10,6 +10,23 @@
 
 🔙 This is the documentation for the API v2. You can find the package for the API v1 [here](https://docs.offlineagency.com/laravel-fatture-in-cloud/#laravel-fatture-in-cloud).
 
+## Requirements
+
+- PHP ^8.4
+- Laravel ^12.0
+
+## Key Changes in Recent Update
+
+### Strictly Typed & Readonly Entities
+All entities (e.g., `Client`, `IssuedDocument`) have been refactored to be **readonly** classes with **strict types**.
+- Properties are now immutable.
+- Usage of `mixed` types has been minimized in favor of strict `string`, `int`, `bool`, etc.
+- Constructors ensure safe data mapping from API responses.
+
+### Architecture
+- The package now utilizes a central `FattureInCloud` connector for better state management.
+- API interactions are handled via the native Laravel `Http` client.
+
 ## Documentation, Installation, and Usage Instructions
 
 This package provides a simple Laravel integration with [Fatture in Cloud APIs v2](https://developers.fattureincloud.it/).

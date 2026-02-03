@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\Supplier as SupplierEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\SupplierList;
@@ -12,19 +15,24 @@ class Supplier extends Api
 {
     use ListTrait;
 
-    public function list(
-        ?array $additional_data = []
-    ) {
-        $additional_data = $this->data($additional_data, [
-            'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
+    public function list(array $additionalData = []): SupplierList|Error
+    {
+        $additionalData = $this->data($additionalData, [
+            'fields',
+            'fieldset',
+            'sort',
+            'page',
+            'per_page',
+            'q',
         ]);
 
+        /** @var object $response */
         $response = $this->get(
-            'c/'.$this->company_id.'/entities/suppliers',
-            $additional_data
+            'c/' . $this->companyId . '/entities/suppliers',
+            $additionalData
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
@@ -33,34 +41,43 @@ class Supplier extends Api
         return new SupplierList($suppliers);
     }
 
-    public function all(
-        ?array $additional_data = []
-    ) {
-        $all_suppliers = $this->getAll([
-            'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
-        ], 'c/'.$this->company_id.'/entities/suppliers', $additional_data);
+    /**
+     * @return array<SupplierEntity>|Error
+     */
+    public function all(array $additionalData = []): array|Error
+    {
+        $allSuppliers = $this->getAll([
+            'fields',
+            'fieldset',
+            'sort',
+            'page',
+            'per_page',
+            'q',
+        ], 'c/' . $this->companyId . '/entities/suppliers', $additionalData);
 
-        return gettype($all_suppliers) !== 'array'
-            ? $all_suppliers
-            : array_map(function ($supplier) {
-                return new SupplierEntity($supplier);
-            }, $all_suppliers);
+        if ($allSuppliers instanceof Error) {
+            return $allSuppliers;
+        }
+
+        return array_map(function ($supplier) {
+            return new SupplierEntity($supplier);
+        }, $allSuppliers);
     }
 
-    public function detail(
-        int $supplier_id,
-        ?array $additional_data = []
-    ) {
-        $additional_data = $this->data($additional_data, [
-            'fields', 'fieldset',
+    public function detail(int $supplierId, array $additionalData = []): SupplierEntity|Error
+    {
+        $additionalData = $this->data($additionalData, [
+            'fields',
+            'fieldset',
         ]);
 
+        /** @var object $response */
         $response = $this->get(
-            'c/'.$this->company_id.'/entities/suppliers/'.$supplier_id,
-            $additional_data
+            'c/' . $this->companyId . '/entities/suppliers/' . $supplierId,
+            $additionalData
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
@@ -69,23 +86,22 @@ class Supplier extends Api
         return new SupplierEntity($supplier);
     }
 
-    public function delete(
-        int $supplier_id
-    ) {
+    public function delete(int $supplierId): string|Error
+    {
+        /** @var object $response */
         $response = $this->destroy(
-            'c/'.$this->company_id.'/entities/suppliers/'.$supplier_id
+            'c/' . $this->companyId . '/entities/suppliers/' . $supplierId
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
         return 'Supplier deleted';
     }
 
-    public function create(
-        array $body = []
-    ) {
+    public function create(array $body = []): SupplierEntity|Error|MessageBag
+    {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.name' => 'required',
@@ -95,12 +111,13 @@ class Supplier extends Api
             return $validator->errors();
         }
 
+        /** @var object $response */
         $response = $this->post(
-            'c/'.$this->company_id.'/entities/suppliers',
+            'c/' . $this->companyId . '/entities/suppliers',
             $body
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
@@ -109,10 +126,8 @@ class Supplier extends Api
         return new SupplierEntity($supplier);
     }
 
-    public function edit(
-        int $supplier_id,
-        array $body = []
-    ) {
+    public function edit(int $supplierId, array $body = []): SupplierEntity|Error|MessageBag
+    {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.name' => 'required',
@@ -122,17 +137,18 @@ class Supplier extends Api
             return $validator->errors();
         }
 
+        /** @var object $response */
         $response = $this->put(
-            'c/'.$this->company_id.'/entities/suppliers/'.$supplier_id,
+            'c/' . $this->companyId . '/entities/suppliers/' . $supplierId,
             $body
         );
 
-        if (! $response->success) {
+        if (!$response->success) {
             return new Error($response->data);
         }
 
-        $supplier_id = $response->data->data;
+        $supplier = $response->data->data;
 
-        return new SupplierEntity($supplier_id);
+        return new SupplierEntity($supplier);
     }
 }

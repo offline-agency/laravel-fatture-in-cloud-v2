@@ -1,21 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Client;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\Client as ClientEntity;
-use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
-class ClientList
+readonly class ClientList
 {
-    use ListTrait;
+    /**
+     * @var array<ClientEntity>
+     */
+    public array $items;
 
-    private $items;
-    private $pagination;
+    public ClientPagination $pagination;
 
-    public function __construct($client_response)
+    public function __construct(object $clientResponse)
     {
-        $this->setItems($client_response);
-        $this->setPagination($client_response);
+        $this->items = array_map(function ($client) {
+            return new ClientEntity($client);
+        }, $clientResponse->data);
+
+        $this->pagination = new ClientPagination($clientResponse);
     }
 
     /**
@@ -26,25 +32,13 @@ class ClientList
         return $this->items;
     }
 
-    /**
-     * @return ClientPagination
-     */
     public function getPagination(): ClientPagination
     {
         return $this->pagination;
     }
 
-    private function setItems(
-        $client_response
-    ): void {
-        $this->items = array_map(function ($client) {
-            return new ClientEntity($client);
-        }, $client_response->data);
-    }
-
-    private function setPagination(
-        $client_response
-    ): void {
-        $this->pagination = new ClientPagination($client_response);
+    public function hasItems(): bool
+    {
+        return count($this->items) > 0;
     }
 }

@@ -1,21 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\Receipt as ReceiptEntity;
-use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
-class ReceiptList
+readonly class ReceiptList
 {
-    use ListTrait;
+    /**
+     * @var array<ReceiptEntity>
+     */
+    public array $items;
 
-    private $items;
-    private $pagination;
+    public ReceiptPagination $pagination;
 
-    public function __construct($receipt_response)
+    public function __construct(object $receiptResponse)
     {
-        $this->setItems($receipt_response);
-        $this->setPagination($receipt_response);
+        $this->items = array_map(function ($receipt) {
+            return new ReceiptEntity($receipt);
+        }, $receiptResponse->data);
+
+        $this->pagination = new ReceiptPagination($receiptResponse);
     }
 
     /**
@@ -26,25 +32,13 @@ class ReceiptList
         return $this->items;
     }
 
-    /**
-     * @return ReceiptPagination
-     */
     public function getPagination(): ReceiptPagination
     {
         return $this->pagination;
     }
 
-    private function setItems(
-        $receipt_response
-    ): void {
-        $this->items = array_map(function ($receipt) {
-            return new ReceiptEntity($receipt);
-        }, $receipt_response->data);
-    }
-
-    private function setPagination(
-        $receipt_response
-    ): void {
-        $this->pagination = new ReceiptPagination($receipt_response);
+    public function hasItems(): bool
+    {
+        return count($this->items) > 0;
     }
 }
