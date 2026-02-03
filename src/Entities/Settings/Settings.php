@@ -1,9 +1,11 @@
 <?php
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Settings;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
 
-class Settings extends AbstractEntity{
+class Settings extends AbstractEntity
+{
     /**
      * @var int
      */
@@ -15,19 +17,14 @@ class Settings extends AbstractEntity{
     public $name;
 
     /**
-     * @var string
-     */
-    public $type; //TODO: can be only some values
-
-    /**
      * @var bool
      */
     public $is_default;
 
     /**
-     * @var object
+     * @var string
      */
-    public $default_payment_account;
+    public $type;
 
     /**
      * @var array
@@ -35,23 +32,62 @@ class Settings extends AbstractEntity{
     public $details;
 
     /**
-     * @var string
+     * @var object
      */
-    public $bank_iban;
+    public $default_payment_account;
 
     /**
      * @var string
      */
-    public $bank_name;
+    public $iban;
 
     /**
      * @var string
      */
-    public $bank_beneficiary;
+    public $sia;
+
+    /**
+     * @var bool
+     */
+    public $virtual;
 
     /**
      * @var string
      */
-    public $ei_payment_method;
+    public $description;
 
+    /**
+     * @var int
+     */
+    public $value;
+
+    /**
+     * @var string
+     */
+    public $notes;
+
+    /**
+     * @var bool
+     */
+    public $e_invoice;
+
+    /**
+     * @var int
+     */
+    public $ei_type;
+
+    /**
+     * @var string
+     */
+    public $ei_description;
+
+    /**
+     * @var bool
+     */
+    public $editable;
+
+    /**
+     * @var bool
+     */
+    public $is_disabled;
 }

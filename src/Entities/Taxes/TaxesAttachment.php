@@ -4,7 +4,7 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
 
-class TaxesCreate extends AbstractEntity
+class TaxesAttachment extends AbstractEntity
 {
     /**
      * @var string

@@ -2,15 +2,11 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Fake;
 
-
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ReceivedDocument\Document;
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ReceivedDocument\DocumentList;
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ReceivedDocument\PreCreateInfo;
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ReceivedDocument\Total;
-
-class ReceivedDocumentFakeResponse extends FakeResponse
+use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\Taxes\Document;
+use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\Taxes\DocumentList;
+class TaxesFakeResponse extends FakeResponse
 {
-    public function getReceivedDocumentsFakeList(
+    public function getTaxesFakeList(
         array $params = []
     ) {
         return json_encode(array_merge(
@@ -24,7 +20,7 @@ class ReceivedDocumentFakeResponse extends FakeResponse
         ));
     }
 
-    public function getReceivedDocumentsFakeAll(
+    public function getTaxesFakeAll(
         array $params = []
     ) {
         return json_encode(array_merge(
@@ -37,7 +33,7 @@ class ReceivedDocumentFakeResponse extends FakeResponse
         ));
     }
 
-    public function getEmptyReceivedDocumentsFakeList(
+    public function getEmptyTaxesFakeList(
         array $params = []
     ) {
         return json_encode(array_merge(
@@ -48,37 +44,21 @@ class ReceivedDocumentFakeResponse extends FakeResponse
         ));
     }
 
-    public function getReceivedDocumentFakeDetail(
+    public function getTaxesFakeDetail(
         array $params = []
     ) {
         return json_encode([
-            'data' => (new Document())->getReceivedDocumentFakeDetail($params),
+            'data' => (new Document())->getTaxesFakeDetail($params),
         ]);
     }
 
-    public function getReceivedDocumentFakeTotals(
-        array $params = []
-    ) {
-        return json_encode([
-            'data' => (new Total())->getTotalFake($params,)
-        ]);
-    }
-
-    public function getReceivedDocumentFakePreCreateInfo(
-        array $params = []
-    ) {
-        return json_encode([
-            'data' => (new PreCreateInfo())->getPreCreateInfoFake($params),
-        ]);
-    }
-
-    public function getReceivedDocumentFakeError(
+    public function getTaxesFakeError(
         array $params = []
     ) {
         return json_encode((new ErrorFakeResponse())->getErrorFake($params));
     }
 
-    public function  getReceivedDocumentFakeErrorDetail(
+    public function  getTaxesFakeErrorDetail(
         array $params = []
     ) {
         return json_encode([
