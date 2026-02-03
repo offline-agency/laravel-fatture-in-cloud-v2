@@ -1,13 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
-
-class IssuedDocumentScheduleEmail extends AbstractEntity
+readonly class IssuedDocumentScheduleEmail
 {
-    /**
-     * @var bool
-     */
-    public $scheduled;
+    public ?bool $scheduled;
+
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
+
+        $this->scheduled = $parameters['scheduled'] ?? null;
+    }
 }

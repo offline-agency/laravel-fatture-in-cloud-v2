@@ -1,21 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Product;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\Product as ProductEntity;
-use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
-class ProductList
+readonly class ProductList
 {
-    use ListTrait;
+    /**
+     * @var array<ProductEntity>
+     */
+    public array $items;
 
-    private $items;
-    private $pagination;
+    public ProductPagination $pagination;
 
-    public function __construct($product_response)
+    public function __construct(object $productResponse)
     {
-        $this->setItems($product_response);
-        $this->setPagination($product_response);
+        $this->items = array_map(function ($product) {
+            return new ProductEntity($product);
+        }, $productResponse->data);
+
+        $this->pagination = new ProductPagination($productResponse);
     }
 
     /**
@@ -26,25 +32,13 @@ class ProductList
         return $this->items;
     }
 
-    /**
-     * @return ProductPagination
-     */
     public function getPagination(): ProductPagination
     {
         return $this->pagination;
     }
 
-    private function setItems(
-        $product_response
-    ): void {
-        $this->items = array_map(function ($product) {
-            return new ProductEntity($product);
-        }, $product_response->data);
-    }
-
-    private function setPagination(
-        $product_response
-    ): void {
-        $this->pagination = new ProductPagination($product_response);
+    public function hasItems(): bool
+    {
+        return count($this->items) > 0;
     }
 }

@@ -212,7 +212,7 @@ class SupplierEntityTest extends TestCase
         $this->assertInstanceOf(SupplierEntity::class, $response);
     }
 
-    public function test_validation_error_on_create_issued_document()
+    public function test_validation_error_on_create_supplier()
     {
         $supplier = new Supplier();
         $response = $supplier->create([]);
@@ -259,7 +259,7 @@ class SupplierEntityTest extends TestCase
         $this->assertInstanceOf(SupplierEntity::class, $response);
     }
 
-    public function test_validation_error_on_edit_issued_document()
+    public function test_validation_error_on_edit_supplier()
     {
         $supplier_id = 1;
 

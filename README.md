@@ -10,15 +10,28 @@
 
 🔙 This is the documentation for the API v2. You can find the package for the API v1 [here](https://docs.offlineagency.com/laravel-fatture-in-cloud/#laravel-fatture-in-cloud).
 
+## Requirements
+
+- PHP ^8.4
+- Laravel ^12.0
+
+## Key Changes in Recent Update
+
+### Strictly Typed & Readonly Entities
+All entities (e.g., `Client`, `IssuedDocument`) have been refactored to be **readonly** classes with **strict types**.
+- Properties are now immutable.
+- Usage of `mixed` types has been minimized in favor of strict `string`, `int`, `bool`, etc.
+- Constructors ensure safe data mapping from API responses.
+
+### Architecture
+- The package now utilizes a central `FattureInCloud` connector for better state management.
+- API interactions are handled via the native Laravel `Http` client.
+
 ## Documentation, Installation, and Usage Instructions
+
+This package provides a simple Laravel integration with [Fatture in Cloud APIs v2](https://developers.fattureincloud.it/).
+
 See the [documentation](https://docs.offlineagency.com/laravel-fatture-in-cloud-v2/) for detailed installation and usage instructions.
-``` php
-composer require offline-agency/laravel-fatture-in-cloud-v2
-```
-## What It Does
-
-This package provides a simple Laravel integration with [Fatture in Cloud APIs v2](https://developers.fattureincloud.it/). Let's see some example:
-
 ``` php
 $issued_documents = new \OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument();
 $issued_document_list = $issued_document->list('invoice', [
@@ -85,7 +98,7 @@ $response = $issued_documents->bin($document_id);
 ```
 
 ### Rate limit [![HOT](https://img.shields.io/static/v1.svg?label=&message=HOT&color=red)]()
-This package provides a method to intercept throttle errors (403, 429) and automatically retry.
+This     package provides a method to intercept throttle errors (403, 429) and automatically retry.
 You can specify limits on your config, remember to use milliseconds to indicate time:
 
 ```php
@@ -114,19 +127,19 @@ We are currently work on this package to implement all endpoints. Enable notific
 
 🔜 Issued e-invoices
 
-❌ Received Documents
+✅ Received Documents
 
 ✅ Receipts
 
-❌ Taxes
+✅ Taxes
 
-❌ Archive
+🔜 Archive
 
-❌ Cashbook
+🔜 Cashbook
 
 🔜 Info
 
-❌ Settings
+🔜 Settings
 
 ## Testing
 
@@ -148,7 +161,7 @@ tracker.
 - [Offline Agency](https://github.com/offline-agency)
 - [Giacomo Fabbian](https://github.com/Giacomo92)
 - [Nicolas Sanavia](https://github.com/SanaviaNicolas)
-- [All Contributors](../../contributors)
+- [All Contributors](https://github.com/offline-agency/laravel-fatture-in-cloud-v2/graphs/contributors)
 
 ## About us
 

@@ -135,8 +135,8 @@ class IssuedDocumentEntityTest extends TestCase
 
         $this->assertIsObject($query_params);
 
-        $this->assertObjectHasAttribute('type', $query_params);
-        $this->assertObjectHasAttribute('additional_data', $query_params);
+        $this->assertObjectHasProperty('type', $query_params);
+        $this->assertObjectHasProperty('additional_data', $query_params);
 
         $this->assertEquals('document_type', $query_params->type);
         $this->assertIsArray($query_params->additional_data);
