@@ -1,103 +1,59 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Product;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
-
-class Product extends AbstractEntity
+readonly class Product
 {
-    /**
-     * @var int
-     */
-    public $id;
+    public ?int $id;
+    public ?string $name;
+    public ?string $code;
+    public ?float $netPrice;
+    public ?float $grossPrice;
+    public ?bool $useGrossPrice;
+    public mixed $defaultVat;
+    public ?float $netCost;
+    public ?string $measure;
+    public ?string $description;
+    public ?string $category;
+    public ?string $notes;
+    public ?bool $inStock;
+    public ?float $stockInitial;
+    public ?float $stockCurrent;
+    public ?float $averageCost;
+    public ?float $averagePrice;
+    public ?string $createdAt;
+    public ?string $updatedAt;
 
-    /**
-     * @var string
-     */
-    public $name;
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
 
-    /**
-     * @var string
-     */
-    public $code;
+        if (!is_array($parameters)) {
+            $parameters = [];
+        }
 
-    /**
-     * @var float
-     */
-    public $net_price;
-
-    /**
-     * @var float
-     */
-    public $gross_price;
-
-    /**
-     * @var bool
-     */
-    public $use_gross_price;
-
-    /**
-     * @var object
-     */
-    public $default_vat; //TODO: relate another class
-
-    /**
-     * @var float
-     */
-    public $net_cost;
-
-    /**
-     * @var string
-     */
-    public $measure;
-
-    /**
-     * @var string
-     */
-    public $description;
-
-    /**
-     * @var string
-     */
-    public $category;
-
-    /**
-     * @var string
-     */
-    public $notes;
-
-    /**
-     * @var bool
-     */
-    public $in_stock;
-
-    /**
-     * @var float
-     */
-    public $stock_initial;
-
-    /**
-     * @var float
-     */
-    public $stock_current;
-
-    /**
-     * @var float
-     */
-    public $average_cost;
-
-    /**
-     * @var float
-     */
-    public $average_price;
-
-    /**
-     * @var string
-     */
-    public $created_at;
-
-    /**
-     * @var string
-     */
-    public $updated_at;
+        $this->id = $parameters['id'] ?? null;
+        $this->name = $parameters['name'] ?? null;
+        $this->code = $parameters['code'] ?? null;
+        $this->netPrice = $parameters['net_price'] ?? null;
+        $this->grossPrice = $parameters['gross_price'] ?? null;
+        $this->useGrossPrice = $parameters['use_gross_price'] ?? null;
+        $this->defaultVat = $parameters['default_vat'] ?? null;
+        $this->netCost = $parameters['net_cost'] ?? null;
+        $this->measure = $parameters['measure'] ?? null;
+        $this->description = $parameters['description'] ?? null;
+        $this->category = $parameters['category'] ?? null;
+        $this->notes = $parameters['notes'] ?? null;
+        $this->inStock = $parameters['in_stock'] ?? null;
+        $this->stockInitial = $parameters['stock_initial'] ?? null;
+        $this->stockCurrent = $parameters['stock_current'] ?? null;
+        $this->averageCost = $parameters['average_cost'] ?? null;
+        $this->averagePrice = $parameters['average_price'] ?? null;
+        $this->createdAt = $parameters['created_at'] ?? null;
+        $this->updatedAt = $parameters['updated_at'] ?? null;
+    }
 }

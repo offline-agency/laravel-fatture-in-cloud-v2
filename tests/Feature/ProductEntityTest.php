@@ -244,7 +244,7 @@ class ProductEntityTest extends TestCase
         $this->assertInstanceOf(ProductEntity::class, $response);
     }
 
-    public function test_validation_error_on_create_issued_document()
+    public function test_validation_error_on_create_product()
     {
         $product = new Product();
         $response = $product->create([]);

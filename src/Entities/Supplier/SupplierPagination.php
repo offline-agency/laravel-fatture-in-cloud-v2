@@ -1,59 +1,59 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier;
 
 use OfflineAgency\LaravelFattureInCloudV2\Api\Supplier;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Pagination;
 
-class SupplierPagination extends Pagination
+readonly class SupplierPagination extends Pagination
 {
-    public function goToFirstPage()
+    public function goToFirstPage(): SupplierList|Error|null
     {
-        if (is_null($this->first_page_url)) {
+        if (is_null($this->firstPageUrl)) {
             return null;
         }
 
-        return $this->changePage($this->first_page_url);
+        return $this->changePage($this->firstPageUrl);
     }
 
-    public function goToLastPage()
+    public function goToLastPage(): SupplierList|Error|null
     {
-        if (is_null($this->last_page_url)) {
+        if (is_null($this->lastPageUrl)) {
             return null;
         }
 
-        return $this->changePage($this->last_page_url);
+        return $this->changePage($this->lastPageUrl);
     }
 
-    public function goToPrevPage()
+    public function goToPrevPage(): SupplierList|Error|null
     {
-        if (! $this->hasPrevPage()) {
+        if (!$this->hasPrevPage()) {
             return null;
         }
 
-        return $this->changePage($this->prev_page_url);
+        return $this->changePage($this->prevPageUrl);
     }
 
-    public function goToNextPage()
+    public function goToNextPage(): SupplierList|Error|null
     {
-        if (! $this->hasNextPage()) {
+        if (!$this->hasNextPage()) {
             return null;
         }
 
-        return $this->changePage($this->next_page_url);
+        return $this->changePage($this->nextPageUrl);
     }
 
     // helpers
 
-    private function changePage(
-        string $url
-    ) {
-        $query_params = $this->getQueryParams($url);
+    private function changePage(string $url): SupplierList|Error
+    {
+        $queryParams = $this->getQueryParams($url);
 
-        $supplier = new supplier();
+        $supplier = new Supplier();
 
-        return $supplier->list(
-            $query_params
-        );
+        return $supplier->list($queryParams);
     }
 }

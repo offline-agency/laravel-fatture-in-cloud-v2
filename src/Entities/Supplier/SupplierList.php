@@ -1,18 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\Supplier as SupplierEntity;
 
-class SupplierList
+readonly class SupplierList
 {
-    private $items;
-    private $pagination;
+    /**
+     * @var array<SupplierEntity>
+     */
+    public array $items;
 
-    public function __construct($supplier_response)
+    public SupplierPagination $pagination;
+
+    public function __construct(object $supplierResponse)
     {
-        $this->setItems($supplier_response);
-        $this->setPagination($supplier_response);
+        $this->items = array_map(function ($supplier) {
+            return new SupplierEntity($supplier);
+        }, $supplierResponse->data);
+
+        $this->pagination = new SupplierPagination($supplierResponse);
     }
 
     /**
@@ -23,25 +32,13 @@ class SupplierList
         return $this->items;
     }
 
-    /**
-     * @return SupplierPagination
-     */
     public function getPagination(): SupplierPagination
     {
         return $this->pagination;
     }
 
-    private function setItems(
-        $supplier_response
-    ): void {
-        $this->items = array_map(function ($supplier) {
-            return new SupplierEntity($supplier);
-        }, $supplier_response->data);
-    }
-
-    private function setPagination(
-        $supplier_response
-    ): void {
-        $this->pagination = new SupplierPagination($supplier_response);
+    public function hasItems(): bool
+    {
+        return count($this->items) > 0;
     }
 }
