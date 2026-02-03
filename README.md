@@ -11,14 +11,10 @@
 🔙 This is the documentation for the API v2. You can find the package for the API v1 [here](https://docs.offlineagency.com/laravel-fatture-in-cloud/#laravel-fatture-in-cloud).
 
 ## Documentation, Installation, and Usage Instructions
+
+This package provides a simple Laravel integration with [Fatture in Cloud APIs v2](https://developers.fattureincloud.it/).
+
 See the [documentation](https://docs.offlineagency.com/laravel-fatture-in-cloud-v2/) for detailed installation and usage instructions.
-``` php
-composer require offline-agency/laravel-fatture-in-cloud-v2
-```
-## What It Does
-
-This package provides a simple Laravel integration with [Fatture in Cloud APIs v2](https://developers.fattureincloud.it/). Let's see some example:
-
 ``` php
 $issued_documents = new \OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument();
 $issued_document_list = $issued_document->list('invoice', [
@@ -148,7 +144,7 @@ tracker.
 - [Offline Agency](https://github.com/offline-agency)
 - [Giacomo Fabbian](https://github.com/Giacomo92)
 - [Nicolas Sanavia](https://github.com/SanaviaNicolas)
-- [All Contributors](../../contributors)
+- [All Contributors](https://github.com/offline-agency/laravel-fatture-in-cloud-v2/graphs/contributors)
 
 ## About us
 
