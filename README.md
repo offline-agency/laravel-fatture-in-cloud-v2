@@ -24,7 +24,7 @@ $issued_documents = new \OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocumen
 $issued_document_list = $issued_document->list('invoice', [
     'per_page' => 50
 ]);  
-
+ 
 // return an array of invoices 
 $issued_document_list->getItems();
 
