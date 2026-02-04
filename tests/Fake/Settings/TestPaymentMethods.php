@@ -29,7 +29,7 @@ class TestPaymentMethods extends FakeResponse
             ],
             'bank_iban' => $this->value($params, 'bank_iban', null),
             'bank_name' => $this->value($params, 'bank_name', null),
-            'ei_payment_method' => $this->value($params, 'ei_payment_method', null)
+            'ei_payment_method' => $this->value($params, 'ei_payment_method', null),
         ];
     }
 }

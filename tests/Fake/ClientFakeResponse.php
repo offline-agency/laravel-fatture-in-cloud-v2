@@ -14,7 +14,7 @@ class ClientFakeResponse extends FakeResponse
                 'data' => [
                     (new SingleClient())->getClientFakeDetail($params),
                     (new SingleClient())->getClientFakeDetail($params),
-                ]
+                ],
             ],
             (new PaginationFakeResponse())->getPaginationFake($params)
         ));
@@ -47,11 +47,12 @@ class ClientFakeResponse extends FakeResponse
     public function getClientFakeDetail(
         array $params = []
     ) {
-        return json_encode([
-            'data' => (object) [
-                (new SingleClient())->getClientFakeDetail($params),
-            ],
-        ]
+        return json_encode(
+            [
+                'data' => (object) [
+                    (new SingleClient())->getClientFakeDetail($params),
+                ],
+            ]
         );
     }
 

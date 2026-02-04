@@ -17,7 +17,7 @@ class Receipt extends Api
 {
     use ListTrait;
 
-    const array RECEIPT_TYPES = [
+    const RECEIPT_TYPES = [
         'sales_receipt',
         'till_receipt',
     ];
@@ -35,11 +35,11 @@ class Receipt extends Api
 
         /** @var object $response */
         $response = $this->get(
-            'c/' . $this->companyId . '/receipts',
+            'c/'.$this->companyId.'/receipts',
             $additionalData
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -60,7 +60,7 @@ class Receipt extends Api
             'page',
             'per_page',
             'q',
-        ], 'c/' . $this->companyId . '/receipts', $additionalData);
+        ], 'c/'.$this->companyId.'/receipts', $additionalData);
 
         if ($allReceipts instanceof Error) {
             return $allReceipts;
@@ -80,11 +80,11 @@ class Receipt extends Api
 
         /** @var object $response */
         $response = $this->get(
-            'c/' . $this->companyId . '/receipts/' . $receiptId,
+            'c/'.$this->companyId.'/receipts/'.$receiptId,
             $additionalData
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -97,10 +97,10 @@ class Receipt extends Api
     {
         /** @var object $response */
         $response = $this->destroy(
-            'c/' . $this->companyId . '/receipts/' . $receiptId
+            'c/'.$this->companyId.'/receipts/'.$receiptId
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -123,11 +123,11 @@ class Receipt extends Api
 
         /** @var object $response */
         $response = $this->post(
-            'c/' . $this->companyId . '/receipts',
+            'c/'.$this->companyId.'/receipts',
             $body
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -152,11 +152,11 @@ class Receipt extends Api
 
         /** @var object $response */
         $response = $this->put(
-            'c/' . $this->companyId . '/receipts/' . $receiptId,
+            'c/'.$this->companyId.'/receipts/'.$receiptId,
             $body
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -169,10 +169,10 @@ class Receipt extends Api
     {
         /** @var object $response */
         $response = $this->get(
-            'c/' . $this->companyId . '/receipts/info',
+            'c/'.$this->companyId.'/receipts/info',
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -187,9 +187,9 @@ class Receipt extends Api
     public function monthlyTotals(string $type, string $year): array|Error|MessageBag
     {
         $validator = Validator::make(['type' => $type], [
-            'type' => 'required|in:' . implode(',', self::RECEIPT_TYPES),
+            'type' => 'required|in:'.implode(',', self::RECEIPT_TYPES),
         ], [
-            'type.in' => 'The selected type is invalid. Select one between ' . implode(', ', self::RECEIPT_TYPES),
+            'type.in' => 'The selected type is invalid. Select one between '.implode(', ', self::RECEIPT_TYPES),
         ]);
 
         if ($validator->fails()) {
@@ -198,14 +198,14 @@ class Receipt extends Api
 
         /** @var object $response */
         $response = $this->get(
-            'c/' . $this->companyId . '/receipts/monthly_totals',
+            'c/'.$this->companyId.'/receipts/monthly_totals',
             [
                 'type' => $type,
                 'year' => $year,
             ]
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 

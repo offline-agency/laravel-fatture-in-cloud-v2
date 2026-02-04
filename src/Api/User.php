@@ -17,7 +17,7 @@ class User extends Api
             'user/info',
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -46,7 +46,7 @@ class User extends Api
             $additionalData
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 

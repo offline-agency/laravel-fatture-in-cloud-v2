@@ -44,7 +44,7 @@ class Document extends FakeResponse
             'attachment_token' => $this->value($params, 'attachment_token', ''),
             'locked' => $this->value($params, 'locked', false),
             'created_at' => $this->value($params, 'created_at', date('Y-m-d H:i:s')),
-            'updated_at' => $this->value($params, 'updated_at', date('Y-m-d H:i:s'))
+            'updated_at' => $this->value($params, 'updated_at', date('Y-m-d H:i:s')),
         ];
     }
 }

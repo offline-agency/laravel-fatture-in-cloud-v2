@@ -20,7 +20,7 @@ class Payment extends FakeResponse
                 'id' => $this->value($params, 'payment.payment_account.id', 1),
                 'name' => $this->value($params, 'payment.payment_account.name', 'Braintree'),
                 'virtual' => $this->value($params, 'payment.payment_account.virtual', false),
-            ])
+            ]),
         ];
     }
 }

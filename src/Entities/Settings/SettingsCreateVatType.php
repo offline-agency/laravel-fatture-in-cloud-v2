@@ -1,12 +1,13 @@
 <?php
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Settings;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
 
-class SettingsCreateVatType extends AbstractEntity{
-
+class SettingsCreateVatType extends AbstractEntity
+{
     /**
-     * @var  float
+     * @var float
      */
     public $value;
 
@@ -16,7 +17,7 @@ class SettingsCreateVatType extends AbstractEntity{
     public $description;
 
     /**
-     * @var  string
+     * @var string
      */
     public $notes;
 

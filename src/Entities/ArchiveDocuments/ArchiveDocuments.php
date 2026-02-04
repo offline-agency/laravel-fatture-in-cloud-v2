@@ -1,4 +1,5 @@
 <?php
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\ArchiveDocuments;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
@@ -46,5 +47,4 @@ class ArchiveDocuments extends AbstractEntity
         $this->attachment_token = $attributes['data']['attachment_token'] ?? null;
         $this->category = $attributes['data']['category'] ?? null;
     }
-
 }

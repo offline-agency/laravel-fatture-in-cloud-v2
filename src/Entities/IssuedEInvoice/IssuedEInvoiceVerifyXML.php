@@ -14,7 +14,7 @@ readonly class IssuedEInvoiceVerifyXML
             $parameters = get_object_vars($parameters);
         }
 
-        if (!is_array($parameters)) {
+        if (! is_array($parameters)) {
             $parameters = [];
         }
 

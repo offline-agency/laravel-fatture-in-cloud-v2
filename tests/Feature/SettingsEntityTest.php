@@ -26,8 +26,8 @@ class SettingsEntityTest extends TestCase
             'data' => [
                 'name' => 'Test',
                 'default_payment_account' => [
-                    'name' => 'test'
-                ]
+                    'name' => 'test',
+                ],
             ],
         ]);
 
@@ -83,13 +83,13 @@ class SettingsEntityTest extends TestCase
         $setting_name = 'Test Updated';
 
         Http::fake([
-            'settings/payment_methods/' . $payment_method_id => Http::response(
+            'settings/payment_methods/'.$payment_method_id => Http::response(
                 (new SettingsFakeResponse())->getSettingsFakeDetail([
                     'data' => [
                         'name' => 'Test',
                         'default_payment_account' => [
-                            'name' => 'test'
-                        ]
+                            'name' => 'test',
+                        ],
                     ],
                 ])
             ),
@@ -100,8 +100,8 @@ class SettingsEntityTest extends TestCase
             'data' => [
                 'name' => 'Test',
                 'default_payment_account' => [
-                    'name' => 'test'
-                ]
+                    'name' => 'test',
+                ],
             ],
             'data_s' => [
                 'name' => $setting_name,
@@ -146,7 +146,7 @@ class SettingsEntityTest extends TestCase
         $payment_method_id = 1;
 
         Http::fake([
-            'settings/payment_methods/' . $payment_method_id => Http::response(),
+            'settings/payment_methods/'.$payment_method_id => Http::response(),
         ]);
 
         $settings = new Settings();
@@ -155,7 +155,7 @@ class SettingsEntityTest extends TestCase
         $this->assertEquals('Payment method deleted', $response);
     }
 
-    //Payment Account
+    // Payment Account
 
     public function test_create_payment_account()
     {
@@ -219,14 +219,13 @@ class SettingsEntityTest extends TestCase
         $this->assertInstanceOf(AccountEntity::class, $response);
     }
 
-
     public function test_edit_payment_account()
     {
         $payment_account_id = 1;
         $setting_name = 'Test Updated';
 
         Http::fake([
-            'settings/payment_accounts/' . $payment_account_id => Http::response(
+            'settings/payment_accounts/'.$payment_account_id => Http::response(
                 (new SettingsFakeResponse())->getSettingsFakeDetail([
                     'name' => $setting_name,
                 ])
@@ -278,7 +277,7 @@ class SettingsEntityTest extends TestCase
         $payment_account_id = 1;
 
         Http::fake([
-            'settings/payment_accounts/' . $payment_account_id => Http::response(),
+            'settings/payment_accounts/'.$payment_account_id => Http::response(),
         ]);
 
         $settings = new Settings();
@@ -287,7 +286,7 @@ class SettingsEntityTest extends TestCase
         $this->assertEquals('Payment method deleted', $response);
     }
 
-    //Vat_Type
+    // Vat_Type
 
     public function test_create_vat_type()
     {
@@ -351,14 +350,13 @@ class SettingsEntityTest extends TestCase
         $this->assertInstanceOf(VatTypeEntity::class, $response);
     }
 
-
     public function test_edit_vat_type()
     {
         $vat_type_id = 1;
         $setting_name = 'Test Updated';
 
         Http::fake([
-            'settings/vat_types/' . $vat_type_id => Http::response(
+            'settings/vat_types/'.$vat_type_id => Http::response(
                 (new SettingsFakeResponse())->getSettingsFakeDetail([
                     'name' => $setting_name,
                 ])
@@ -410,7 +408,7 @@ class SettingsEntityTest extends TestCase
         $vat_type_id = 1;
 
         Http::fake([
-            'settings/vat_types/' . $vat_type_id => Http::response(),
+            'settings/vat_types/'.$vat_type_id => Http::response(),
         ]);
 
         $settings = new Settings();

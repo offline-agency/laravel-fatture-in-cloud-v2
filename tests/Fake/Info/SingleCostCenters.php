@@ -8,8 +8,7 @@ class SingleCostCenters extends FakeResponse
 {
     public function getCostCentersTypeFakeDetail(
         array $params = []
-    ): array
-    {
+    ): array {
         return [
             'data' => $this->value($params, 'data', 'fake_data'),
         ];

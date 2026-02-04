@@ -2,17 +2,13 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
-
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\Vat;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\PaymentMethods;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\PaymentAccount;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\VatType;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Request;
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ErrorFakeResponse;
-
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\PaymentAccount;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\PaymentMethods;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\VatType;
 
 class Setting extends Api
 {
@@ -49,7 +45,7 @@ class Setting extends Api
             $data
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -60,17 +56,17 @@ class Setting extends Api
 
     public function getPaymentMethod($payment_method_id)
     {
-            $response = $this->get(
-                'c/'.$this->company_id.'/Settings/payment_methods/'.$payment_method_id
-            );
+        $response = $this->get(
+            'c/'.$this->company_id.'/Settings/payment_methods/'.$payment_method_id
+        );
 
-            if (!$response->success){
-                return new Error($response->data);
-            }
+        if (! $response->success) {
+            return new Error($response->data);
+        }
 
-            $paymentMethod = $response->data;
+        $paymentMethod = $response->data;
 
-            return response()->json(['payment_method' => $paymentMethod], 201);
+        return response()->json(['payment_method' => $paymentMethod], 201);
     }
 
     public function updatePaymentMethod(Request $request, $payment_method_id)
@@ -97,7 +93,6 @@ class Setting extends Api
             'bank_beneficiary' => 'string',
             'ei_payment_method' => 'string',
         ]);
-
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
@@ -130,10 +125,7 @@ class Setting extends Api
         return response()->json(['message' => 'Metodo di pagamento eliminato con successo'], 201);
     }
 
-
-
     // PaymentAccount
-
 
     public function createPaymentAccount(Request $request)
     {
@@ -173,7 +165,7 @@ class Setting extends Api
             'c/'.$this->company_id.'/Settings/payment_accounts/'.$payment_account_id
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -196,7 +188,7 @@ class Setting extends Api
             'virtual' => 'boolean',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
 
@@ -220,16 +212,12 @@ class Setting extends Api
             'c/'.$this->company_id.'/Settings/payment_accounts/'.$payment_account_id
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
         return response()->json(['message' => 'Account di pagamento eliminato con successo'], 201);
     }
-
-
-
-
 
     // VatType
 
@@ -263,8 +251,9 @@ class Setting extends Api
         }
 
         $vatType = new VatType();
+
         return new VatType($vatType);
-        //return response()->json(['message' => 'Tipo di IVA creato con successo', 'vat_type_id' => $vatType->id], 201);
+        // return response()->json(['message' => 'Tipo di IVA creato con successo', 'vat_type_id' => $vatType->id], 201);
     }
 
     public function getVatType($vat_type_id)
@@ -273,9 +262,9 @@ class Setting extends Api
             'c/'.$this->company_id.'/Settings/vat_types/'.$vat_type_id
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
-            //return response()->json(['error' => 'Tipo di IVA non trovato'], 400);
+            // return response()->json(['error' => 'Tipo di IVA non trovato'], 400);
         }
 
         $vatType = $response->data;
@@ -306,14 +295,14 @@ class Setting extends Api
             $data
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
         $vat_type = $response->data;
 
         return new VatType($vat_type);
-        //return response()->json(['message' => 'Tipo di IVA aggiornato con successo', 'data' => $vatType], 201);
+        // return response()->json(['message' => 'Tipo di IVA aggiornato con successo', 'data' => $vatType], 201);
     }
 
     public function deleteVatType($vat_type_id)
@@ -322,9 +311,9 @@ class Setting extends Api
             'c/'.$this->company_id.'/Settings/vat_types'.$vat_type_id
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
-            //return response()->json(['error' => 'Tipo di IVA non trovato'], 404);
+            // return response()->json(['error' => 'Tipo di IVA non trovato'], 404);
         }
 
         return response()->json(['message' => 'Tipo di IVA eliminato con successo'], 200);

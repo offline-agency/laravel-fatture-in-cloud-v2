@@ -7,18 +7,31 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Entities\User;
 readonly class Company
 {
     public ?int $id;
+
     public ?string $name;
+
     public ?string $taxCode;
+
     public ?string $type;
+
     public ?string $accessToken;
+
     public ?int $connectionId;
+
     public mixed $controlledCompanies;
+
     public ?string $alias;
+
     public ?string $vatNumber;
+
     public ?bool $fic;
+
     public ?bool $dic;
+
     public ?string $ficPlan;
+
     public ?string $ficLicenseExpire;
+
     public mixed $permissions;
 
     public function __construct(mixed $parameters = null)
@@ -27,7 +40,7 @@ readonly class Company
             $parameters = get_object_vars($parameters);
         }
 
-        if (!is_array($parameters)) {
+        if (! is_array($parameters)) {
             $parameters = [];
         }
 

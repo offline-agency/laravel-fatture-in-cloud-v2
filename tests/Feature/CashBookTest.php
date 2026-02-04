@@ -2,14 +2,13 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
 
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\CashBook;
-use OfflineAgency\LaravelFattureInCloudV2\Api\Cashbooks;
 use Illuminate\Http\Request;
+use OfflineAgency\LaravelFattureInCloudV2\Api\Cashbooks;
 use PHPUnit\Framework\TestCase;
 
 class CashBookTest extends TestCase
 {
-    public function testCreateFakeCashBookEntry()
+    public function test_create_fake_cash_book_entry()
     {
         $data = [
             'id' => 1,
@@ -45,7 +44,8 @@ class CashBookTest extends TestCase
             ],
         ];
 
-        $request = Request::create('/api/settings/cashbook-entry', 'POST', $data);dd('kj' )      ;
+        $request = Request::create('/api/settings/cashbook-entry', 'POST', $data);
+        dd('kj');
 
         $CashBookApi = new Cashbooks();
 
@@ -55,15 +55,9 @@ class CashBookTest extends TestCase
 
     }
 
-    public function testGetFakeCashBookEntry(){
+    public function test_get_fake_cash_book_entry() {}
 
-    }
+    public function test_edit_fake_cash_book_entry() {}
 
-    public function testEditFakeCashBookEntry(){
-
-    }
-
-    public function testDeleteFakeCashBookEntry(){
-
-    }
+    public function test_delete_fake_cash_book_entry() {}
 }

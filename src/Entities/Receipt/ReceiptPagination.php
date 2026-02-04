@@ -30,7 +30,7 @@ readonly class ReceiptPagination extends Pagination
 
     public function goToPrevPage(): ReceiptList|Error|null
     {
-        if (!$this->hasPrevPage()) {
+        if (! $this->hasPrevPage()) {
             return null;
         }
 
@@ -39,7 +39,7 @@ readonly class ReceiptPagination extends Pagination
 
     public function goToNextPage(): ReceiptList|Error|null
     {
-        if (!$this->hasNextPage()) {
+        if (! $this->hasNextPage()) {
             return null;
         }
 

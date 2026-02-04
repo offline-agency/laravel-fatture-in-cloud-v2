@@ -7,13 +7,12 @@ use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\ReceivedDocument;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocument as ReceivedDocumentEntity;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentTotals;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentPagination;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentPreCreateInfo;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentTotals;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ReceivedDocumentFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
-
 
 class ReceivedDocumentEntityTest extends TestCase
 {
@@ -550,7 +549,7 @@ class ReceivedDocumentEntityTest extends TestCase
             ],
         ]);
 
-        $this-> assertNotNull($response);
+        $this->assertNotNull($response);
         $this->assertInstanceOf(ReceivedDocumentTotals::class, $response);
     }
 
@@ -619,6 +618,4 @@ class ReceivedDocumentEntityTest extends TestCase
 
         $this->assertEquals('Attachment deleted', $response);
     }
-
-
 }

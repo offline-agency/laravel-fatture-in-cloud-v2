@@ -10,7 +10,7 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\Settings as VatTypeE
 
 class Settings extends Api
 {
-    //===Method===
+    // ===Method===
     public function mCreate(
         array $body = []
     ) {
@@ -35,6 +35,7 @@ class Settings extends Api
 
         return new MethodEntity($settings);
     }
+
     public function mDetail(
         int $payment_method_id,
         ?array $additional_data = []
@@ -60,7 +61,7 @@ class Settings extends Api
     public function mEdit(
         int $payment_method_id,
         ?array $body = []
-    ){
+    ) {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.name' => 'required',
@@ -71,11 +72,11 @@ class Settings extends Api
         }
 
         $response = $this->put(
-            'c/' . $this->company_id . '/settings/payment_methods/' . $payment_method_id,
+            'c/'.$this->company_id.'/settings/payment_methods/'.$payment_method_id,
             $body
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -86,20 +87,19 @@ class Settings extends Api
 
     public function mDelete(
         int $payment_method_id
-    )
-    {
+    ) {
         $response = $this->destroy(
-            'c/' . $this->company_id . '/settings/payment_methods/' . $payment_method_id
+            'c/'.$this->company_id.'/settings/payment_methods/'.$payment_method_id
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
         return 'Payment method deleted';
     }
 
-    //===Account===
+    // ===Account===
 
     public function aCreate(
         array $body = []
@@ -136,7 +136,7 @@ class Settings extends Api
         ]);
 
         $response = $this->get(
-            'c/'.$this->company_id.'/settings/payment_accounts' . $payment_account_id,
+            'c/'.$this->company_id.'/settings/payment_accounts'.$payment_account_id,
             $additional_data
         );
 
@@ -152,7 +152,7 @@ class Settings extends Api
     public function aEdit(
         int $payment_account_id,
         ?array $body = []
-    ){
+    ) {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.name' => 'required',
@@ -163,11 +163,11 @@ class Settings extends Api
         }
 
         $response = $this->put(
-            'c/' . $this->company_id . '/settings/payment_accounts/' . $payment_account_id,
+            'c/'.$this->company_id.'/settings/payment_accounts/'.$payment_account_id,
             $body
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -178,20 +178,19 @@ class Settings extends Api
 
     public function aDelete(
         int $payment_account_id
-    )
-    {
+    ) {
         $response = $this->destroy(
-            'c/' . $this->company_id . '/settings/payment_accounts/' . $payment_account_id
+            'c/'.$this->company_id.'/settings/payment_accounts/'.$payment_account_id
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
         return 'Payment method deleted';
     }
 
-    //===Vat_Type===
+    // ===Vat_Type===
     public function vtCreate(
         array $body = []
     ) {
@@ -243,7 +242,7 @@ class Settings extends Api
     public function vtEdit(
         int $vat_type_id,
         ?array $body = []
-    ){
+    ) {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.name' => 'required',
@@ -254,11 +253,11 @@ class Settings extends Api
         }
 
         $response = $this->put(
-            'c/' . $this->company_id . '/settings/vat_types/' . $vat_type_id,
+            'c/'.$this->company_id.'/settings/vat_types/'.$vat_type_id,
             $body
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -269,12 +268,12 @@ class Settings extends Api
 
     public function vtDelete(
         int $vat_type_id
-    ){
+    ) {
         $response = $this->destroy(
-            'c/' . $this->company_id . '/settings/vat_types/' . $vat_type_id
+            'c/'.$this->company_id.'/settings/vat_types/'.$vat_type_id
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 

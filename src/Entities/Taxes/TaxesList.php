@@ -10,6 +10,7 @@ class TaxesList
     use ListTrait;
 
     private $items;
+
     private $pagination;
 
     public function __construct($taxes_response)
@@ -26,9 +27,6 @@ class TaxesList
         return $this->items;
     }
 
-    /**
-     * @return TaxesPagination
-     */
     public function getPagination(): TaxesPagination
     {
         return $this->pagination;

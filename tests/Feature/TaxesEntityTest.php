@@ -12,7 +12,6 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\TaxesPagination;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\TaxesFakeResponse;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
 
-
 class TaxesEntityTest extends TestCase
 {
     // list
@@ -466,5 +465,4 @@ class TaxesEntityTest extends TestCase
 
         $this->assertEquals('Attachment deleted', $response);
     }
-
 }

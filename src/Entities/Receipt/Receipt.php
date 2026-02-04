@@ -7,19 +7,33 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt;
 readonly class Receipt
 {
     public ?int $id;
+
     public ?string $date;
+
     public ?int $number;
+
     public ?string $numeration;
+
     public ?float $amountNet;
+
     public ?float $amountVat;
+
     public ?float $amountGross;
+
     public ?bool $useGrossPrices;
+
     public ?string $type;
+
     public ?string $description;
+
     public ?string $rcCenter;
+
     public ?string $createdAt;
+
     public ?string $updatedAt;
+
     public mixed $paymentAccount;
+
     public mixed $itemsList;
 
     public function __construct(mixed $parameters = null)
@@ -28,7 +42,7 @@ readonly class Receipt
             $parameters = get_object_vars($parameters);
         }
 
-        if (!is_array($parameters)) {
+        if (! is_array($parameters)) {
             $parameters = [];
         }
 

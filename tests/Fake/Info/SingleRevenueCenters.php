@@ -8,8 +8,7 @@ class SingleRevenueCenters extends FakeResponse
 {
     public function getRevenueCentersTypeFakeDetail(
         array $params = []
-    ): array
-    {
+    ): array {
         return [
             'data' => $this->value($params, 'data', 'fake_data'),
         ];

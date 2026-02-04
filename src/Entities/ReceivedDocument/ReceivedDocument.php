@@ -14,22 +14,22 @@ class ReceivedDocument extends AbstractEntity
     /**
      * @var string
      */
-    public $type; //TODO: can be only some values
+    public $type; // TODO: can be only some values
 
     /**
      * @var null|object
      */
-    public $merged_in; //TODO: relate another class
+    public $merged_in; // TODO: relate another class
 
     /**
      * @var object
      */
-    public $entity; //TODO: relate another class
+    public $entity; // TODO: relate another class
 
     /**
      * @var string
      */
-    public $date; //TODO: date format
+    public $date; // TODO: date format
 
     /**
      * @var string

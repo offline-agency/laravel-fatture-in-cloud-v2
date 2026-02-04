@@ -10,6 +10,7 @@ class ReceivedDocumentList
     use ListTrait;
 
     private $items;
+
     private $pagination;
 
     public function __construct($received_document_response)
@@ -26,9 +27,6 @@ class ReceivedDocumentList
         return $this->items;
     }
 
-    /**
-     * @return ReceivedDocumentPagination
-     */
     public function getPagination(): ReceivedDocumentPagination
     {
         return $this->pagination;
@@ -48,4 +46,3 @@ class ReceivedDocumentList
         $this->pagination = new ReceivedDocumentPagination($received_document_response);
     }
 }
-

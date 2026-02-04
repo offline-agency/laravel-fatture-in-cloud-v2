@@ -2,8 +2,8 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Fake;
 
-use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\Settings\TestPaymentMethods;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\Settings\TestPaymentAccount;
+use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\Settings\TestPaymentMethods;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\Settings\TestVatType;
 
 class SettingFakeResponse extends FakeResponse

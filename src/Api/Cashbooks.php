@@ -1,11 +1,12 @@
 <?php
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Response;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\CashBook\CashbookEntries;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class Cashbooks extends Api
@@ -62,15 +63,16 @@ class Cashbooks extends Api
         }
 
         $response = $this->get(
-            'c/' . $this->company_id . '/cashbook',
+            'c/'.$this->company_id.'/cashbook',
             $data
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
         $cashbookEntries = $response->data;
+
         return response()->json(['data' => $cashbookEntries], 201);
     }
 
@@ -115,18 +117,18 @@ class Cashbooks extends Api
         }
 
         $response = $this->post(
-            'c/' . $this->company_id . '/cashbook',
+            'c/'.$this->company_id.'/cashbook',
             $data
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
         $cashBookEntry = new CashbookEntries($response->data->data);
 
         return new CashbookEntries($cashBookEntry);
-        //return response()->json(['message' => 'Voce del cashbook creata con successo', 'data' => $cashBookEntry], 201);
+        // return response()->json(['message' => 'Voce del cashbook creata con successo', 'data' => $cashBookEntry], 201);
     }
 
     public function all(
@@ -161,7 +163,7 @@ class Cashbooks extends Api
             $additional_data
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -169,7 +171,6 @@ class Cashbooks extends Api
 
         return new CashbookEntries($cashbook_entry);
     }
-
 
     public function updateCashBookEntry(Request $request, $entry_id)
     {
@@ -213,11 +214,11 @@ class Cashbooks extends Api
         }
 
         $response = $this->put(
-            'c/' . $this->company_id . '/cashbook/' . $entry_id,
+            'c/'.$this->company_id.'/cashbook/'.$entry_id,
             $data
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -228,13 +229,12 @@ class Cashbooks extends Api
 
     public function delete(
         int $entry_id
-    )
-    {
+    ) {
         $response = $this->destroy(
-            'c/' . $this->company_id . '/cashbook/' . $entry_id
+            'c/'.$this->company_id.'/cashbook/'.$entry_id
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Settings;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
@@ -68,54 +69,53 @@ class PaymentMethods extends AbstractEntity
      */
     public $ei_payment_method;
 
-//    /**
-//     * PaymentMethods constructor.
-//     * @param array|object|null $data
-//     */
-//    public function __construct($data = null)
-//    {
-//        if ($data !== null) {
-//            $this->fill((array)$data);
-//        }
-//    }
-//
-//    /**
-//     * Fill the entity with an array of data.
-//     *
-//     * @param array $data
-//     */
-//    public function fill(array $data)
-//    {
-//        $this->id = isset($data['id']) ? (int)$data['id'] : null;
-//        $this->name = $data['name'] ?? null;
-//        $this->type = $data['type'] ?? null;
-//        $this->is_default = $data['is_default'] ?? null;
-//        $this->default_payment_account = $data['default_payment_account'] ?? [
-//            'id' => null,
-//            'name' => null,
-//            'type' => null,
-//            'iban' => null,
-//            'sia' => null,
-//            'cuc' => null,
-//            'virtual' => null,
-//        ];
-//        $this->details = $data['details'] ?? [
-//            [
-//                'title' => null,
-//                'description' => null,
-//            ],
-//        ];
-//        $this->bank_iban = $data['bank_iban'] ?? null;
-//        $this->bank_name = $data['bank_name'] ?? null;
-//        $this->bank_beneficiary = $data['bank_beneficiary'] ?? null;
-//        $this->ei_payment_method = $data['ei_payment_method'] ?? null;
-//    }
-//
-//    /**
-//     * Save the entity to the database.
-//     * Placeholder method, implement your own logic.
-//     */
-
+    //    /**
+    //     * PaymentMethods constructor.
+    //     * @param array|object|null $data
+    //     */
+    //    public function __construct($data = null)
+    //    {
+    //        if ($data !== null) {
+    //            $this->fill((array)$data);
+    //        }
+    //    }
+    //
+    //    /**
+    //     * Fill the entity with an array of data.
+    //     *
+    //     * @param array $data
+    //     */
+    //    public function fill(array $data)
+    //    {
+    //        $this->id = isset($data['id']) ? (int)$data['id'] : null;
+    //        $this->name = $data['name'] ?? null;
+    //        $this->type = $data['type'] ?? null;
+    //        $this->is_default = $data['is_default'] ?? null;
+    //        $this->default_payment_account = $data['default_payment_account'] ?? [
+    //            'id' => null,
+    //            'name' => null,
+    //            'type' => null,
+    //            'iban' => null,
+    //            'sia' => null,
+    //            'cuc' => null,
+    //            'virtual' => null,
+    //        ];
+    //        $this->details = $data['details'] ?? [
+    //            [
+    //                'title' => null,
+    //                'description' => null,
+    //            ],
+    //        ];
+    //        $this->bank_iban = $data['bank_iban'] ?? null;
+    //        $this->bank_name = $data['bank_name'] ?? null;
+    //        $this->bank_beneficiary = $data['bank_beneficiary'] ?? null;
+    //        $this->ei_payment_method = $data['ei_payment_method'] ?? null;
+    //    }
+    //
+    //    /**
+    //     * Save the entity to the database.
+    //     * Placeholder method, implement your own logic.
+    //     */
 
     /*public function find($id): ?array
     {

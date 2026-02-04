@@ -9,6 +9,5 @@ class ProductsCategories extends AbstractEntity
     /**
      * @var string
      */
-
     public $data;
 }

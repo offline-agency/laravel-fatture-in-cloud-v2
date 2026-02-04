@@ -15,7 +15,7 @@ class PaymentAccount extends FakeResponse
             'iban' => $this->value($params, 'paymentaccount.iban', ''),
             'sia' => $this->value($params, 'paymentaccount.sia', ''),
             'cuc' => $this->value($params, 'paymentaccount.cuc', ''),
-            'virtual' => $this->value($params, 'paymentaccout.virtal', false)
+            'virtual' => $this->value($params, 'paymentaccout.virtal', false),
         ];
     }
 }

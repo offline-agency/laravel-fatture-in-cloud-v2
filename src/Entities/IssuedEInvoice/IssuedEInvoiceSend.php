@@ -7,6 +7,7 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedEInvoice;
 readonly class IssuedEInvoiceSend
 {
     public ?string $name;
+
     public ?string $date;
 
     public function __construct(mixed $parameters = null)
@@ -15,7 +16,7 @@ readonly class IssuedEInvoiceSend
             $parameters = get_object_vars($parameters);
         }
 
-        if (!is_array($parameters)) {
+        if (! is_array($parameters)) {
             $parameters = [];
         }
 

@@ -57,19 +57,19 @@ readonly class Pagination
 
     public function hasNextPage(): bool
     {
-        return !is_null($this->nextPageUrl);
+        return ! is_null($this->nextPageUrl);
     }
 
     public function hasPrevPage(): bool
     {
-        return !is_null($this->prevPageUrl);
+        return ! is_null($this->prevPageUrl);
     }
 
     public function getQueryParams(string $url): array
     {
         $query = parse_url($url, PHP_URL_QUERY);
 
-        if (!$query) {
+        if (! $query) {
             return [];
         }
 

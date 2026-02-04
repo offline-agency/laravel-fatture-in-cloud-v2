@@ -8,8 +8,7 @@ class ItemsValues extends FakeResponse
 {
     public function getItemsValuesFake(
         array $params = []
-    ): array
-    {
+    ): array {
         return [
             'vat' => $this->value($params, 'itemsValues.vat', 'fake_vat'),
         ];

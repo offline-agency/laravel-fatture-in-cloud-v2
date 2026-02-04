@@ -7,7 +7,9 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt;
 readonly class ReceiptMonthlyTotals
 {
     public ?float $net;
+
     public ?float $gross;
+
     public ?int $count;
 
     public function __construct(mixed $parameters = null)

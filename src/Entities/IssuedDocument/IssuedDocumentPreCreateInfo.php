@@ -7,20 +7,35 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument;
 readonly class IssuedDocumentPreCreateInfo
 {
     public mixed $numerations;
+
     public mixed $dnNumerations;
+
     public mixed $defaultValues;
+
     public mixed $extraDataDefaultValues;
+
     public mixed $itemsDefaultValues;
+
     public mixed $countriesList;
+
     public mixed $currenciesList;
+
     public mixed $templatesList;
+
     public mixed $dnTemplatesList;
+
     public mixed $aiTemplatesList;
+
     public mixed $paymentMethodsList;
+
     public mixed $paymentAccountsList;
+
     public mixed $vatTypesList;
+
     public mixed $measuresList;
+
     public mixed $languagesList;
+
     public mixed $eiStructure;
 
     public function __construct(mixed $parameters = null)

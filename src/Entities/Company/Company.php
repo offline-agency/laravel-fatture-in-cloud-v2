@@ -7,32 +7,59 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Company;
 readonly class Company
 {
     public ?int $id;
+
     public ?string $name;
+
     public ?string $alias;
+
     public ?string $vatNumber;
+
     public ?string $taxCode;
+
     public ?string $email;
+
     public ?string $type;
+
     public ?bool $fic;
+
     public ?string $ficPlanName;
+
     public ?string $ficSignupDate;
+
     public ?string $ficLicenseExpire;
+
     public ?bool $useFic;
+
     public ?bool $ficNeedSetup;
+
     public ?string $ficLicenseType;
+
     public ?bool $dic;
+
     public ?string $dicPlanName;
+
     public ?string $dicSignupDate;
+
     public ?string $dicLicenseExpire;
+
     public ?bool $useDic;
+
     public ?string $dicLicenseType;
+
     public ?string $registrationService;
+
     public ?bool $canUseCoupon;
+
     public mixed $accessInfo;
+
     public mixed $planInfo;
+
     public ?bool $isAccountant;
+
     public ?int $accountantId;
+
     public ?string $ficPaymentSubject;
+
     public ?string $dicPaymentSubject;
 
     public function __construct(mixed $parameters = null)

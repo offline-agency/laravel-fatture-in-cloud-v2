@@ -1,4 +1,5 @@
 <?php
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\CashBook;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
@@ -26,7 +27,7 @@ class CashbookEntries extends AbstractEntity
     public $kind;
 
     /**
-     * @var double
+     * @var float
      */
     public $type;
 

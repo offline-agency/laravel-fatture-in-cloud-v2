@@ -1,4 +1,5 @@
 <?php
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Settings;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
@@ -26,7 +27,7 @@ class VatType extends AbstractEntity
     public $notes;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $e_invoice;
 
@@ -41,12 +42,12 @@ class VatType extends AbstractEntity
     public $ei_description;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $editable;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $is_disabled;
 }

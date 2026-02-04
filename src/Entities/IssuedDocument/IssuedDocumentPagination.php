@@ -31,7 +31,7 @@ readonly class IssuedDocumentPagination extends Pagination
 
     public function goToPrevPage(): IssuedDocumentList|Error|null
     {
-        if (!$this->hasPrevPage()) {
+        if (! $this->hasPrevPage()) {
             return null;
         }
 
@@ -40,7 +40,7 @@ readonly class IssuedDocumentPagination extends Pagination
 
     public function goToNextPage(): IssuedDocumentList|Error|null
     {
-        if (!$this->hasNextPage()) {
+        if (! $this->hasNextPage()) {
             return null;
         }
 

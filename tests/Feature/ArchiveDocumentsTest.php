@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class ArchiveDocumentsTest extends TestCase
 {
-    public function testGetFakeArchiveDocument()
+    public function test_get_fake_archive_document()
     {
         $fakeArchiveDocument = new TestArchiveDocument();
 
@@ -49,7 +49,6 @@ class ArchiveDocumentsTest extends TestCase
         $this->assertNotEmpty($result['data']);
         $this->assertTrue(isset($result['data'][0]['id']));
         $this->assertEquals(1, $result['data'][0]['id']);
-
 
         $this->assertNotEmpty($result['data']);
         $this->assertTrue(isset($result['data'][0]['date']));

@@ -7,10 +7,15 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt;
 readonly class ReceiptPreCreateInfo
 {
     public mixed $numerations;
+
     public mixed $numerationsList;
+
     public mixed $rcCentersList;
+
     public mixed $paymentAccountsList;
+
     public mixed $categoriesList;
+
     public mixed $vatTypesList;
 
     public function __construct(mixed $parameters = null)

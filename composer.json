@@ -25,6 +25,8 @@
         "illuminate/support": "*"
     },
     "require-dev": {
+        "laravel/pint": "^1.0",
+        "nunomaduro/larastan": "^2.11",
         "orchestra/testbench": "^3.1|^4.0|^5.0|^6.0|^7.0",
         "phpstan/phpstan": "^1.7",
         "phpunit/phpunit": "^9"
@@ -41,8 +43,9 @@
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
+        "format": "vendor/bin/pint",
+        "format:test": "vendor/bin/pint --test"
     },
     "config": {
         "sort-packages": true

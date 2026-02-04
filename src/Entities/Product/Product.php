@@ -7,23 +7,41 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Product;
 readonly class Product
 {
     public ?int $id;
+
     public ?string $name;
+
     public ?string $code;
+
     public ?float $netPrice;
+
     public ?float $grossPrice;
+
     public ?bool $useGrossPrice;
+
     public mixed $defaultVat;
+
     public ?float $netCost;
+
     public ?string $measure;
+
     public ?string $description;
+
     public ?string $category;
+
     public ?string $notes;
+
     public ?bool $inStock;
+
     public ?float $stockInitial;
+
     public ?float $stockCurrent;
+
     public ?float $averageCost;
+
     public ?float $averagePrice;
+
     public ?string $createdAt;
+
     public ?string $updatedAt;
 
     public function __construct(mixed $parameters = null)
@@ -32,7 +50,7 @@ readonly class Product
             $parameters = get_object_vars($parameters);
         }
 
-        if (!is_array($parameters)) {
+        if (! is_array($parameters)) {
             $parameters = [];
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Info;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\Vat as CostCentersEntity;
@@ -9,6 +10,7 @@ class InfoCostCentersList
     use ListTrait;
 
     private $items;
+
     private $pagination;
 
     public function __construct($cost_centers_response)
@@ -26,8 +28,7 @@ class InfoCostCentersList
 
     private function setItems(
         $cost_centers_response
-    ): void
-    {
+    ): void {
         $this->items = array_map(function ($client) {
             return new CostCentersEntity($client);
         }, $cost_centers_response->data);

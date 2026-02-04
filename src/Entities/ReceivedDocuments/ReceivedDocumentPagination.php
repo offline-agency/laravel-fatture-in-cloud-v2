@@ -11,7 +11,7 @@ class ReceivedDocumentPagination extends Pagination
     public function goToFirstPage()
     {
         if (is_null($this->first_page_url)) {
-            return null;
+            return;
         }
 
         return $this->changePage($this->first_page_url);
@@ -20,7 +20,7 @@ class ReceivedDocumentPagination extends Pagination
     public function goToLastPage()
     {
         if (is_null($this->last_page_url)) {
-            return null;
+            return;
         }
 
         return $this->changePage($this->last_page_url);
@@ -29,7 +29,7 @@ class ReceivedDocumentPagination extends Pagination
     public function goToPrevPage()
     {
         if (! $this->hasPrevPage()) {
-            return null;
+            return;
         }
 
         return $this->changePage($this->prev_page_url);
@@ -38,7 +38,7 @@ class ReceivedDocumentPagination extends Pagination
     public function goToNextPage()
     {
         if (! $this->hasNextPage()) {
-            return null;
+            return;
         }
 
         return $this->changePage($this->next_page_url);
@@ -49,7 +49,7 @@ class ReceivedDocumentPagination extends Pagination
     ) {
         $query_params = $this->getParsedQueryParams($url);
 
-        $received_document = new ReceivedDocument;
+        $received_document = new ReceivedDocument();
 
         return $received_document->list(
             $query_params->type,

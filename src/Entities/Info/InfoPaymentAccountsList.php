@@ -1,4 +1,5 @@
 <?php
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Info;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\Vat as PaymentAccountsEntity;
@@ -9,6 +10,7 @@ class InfoPaymentAccountsList
     use ListTrait;
 
     private $items;
+
     private $pagination;
 
     public function __construct($payment_accounts_response)
@@ -26,8 +28,7 @@ class InfoPaymentAccountsList
 
     private function setItems(
         $payment_accounts_response
-    ): void
-    {
+    ): void {
         $this->items = array_map(function ($client) {
             return new PaymentAccountsEntity($client);
         }, $payment_accounts_response->data);

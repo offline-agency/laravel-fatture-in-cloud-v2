@@ -7,93 +7,181 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument;
 readonly class IssuedDocument
 {
     public ?int $id;
+
     public mixed $entity;
+
     public ?string $type;
+
     public ?int $number;
+
     public ?string $numeration;
+
     public ?string $date;
+
     public ?int $year;
+
     public mixed $currency;
+
     public mixed $language;
+
     public ?string $subject;
+
     public ?string $visibleSubject;
+
     public ?string $rcCenter;
+
     public ?string $notes;
+
     public ?float $rivalsa;
+
     public ?float $rivalsaTaxable;
+
     public ?float $cassa;
+
     public ?float $amountCassa;
+
     public ?float $cassaTaxable;
+
     public ?float $amountCassaTaxable;
+
     public ?float $cassa2;
+
     public ?float $amountCassa2;
+
     public ?float $cassa2Taxable;
+
     public ?float $amountCassa2Taxable;
+
     public ?float $globalCassaTaxable;
+
     public ?float $amountGlobalCassaTaxable;
+
     public ?float $withholdingTax;
+
     public ?float $withholdingTaxTaxable;
+
     public ?float $otherWithholdingTax;
+
     public ?float $stampDuty;
+
     public mixed $paymentMethod;
+
     public ?bool $useSplitPayment;
+
     public mixed $mergedIn;
+
     public mixed $originalDocument;
+
     public ?bool $useGrossPrices;
+
     public ?bool $eInvoice;
+
     public mixed $eiData;
+
     public ?string $eiCassaType;
+
     public ?string $eiCassa2Type;
+
     public ?string $eiWithholdingTaxCausal;
+
     public ?string $eiOtherWithholdingTaxType;
+
     public ?string $eiOtherWithholdingTaxCausal;
+
     public mixed $itemsList;
+
     public mixed $paymentsList;
+
     public mixed $template;
+
     public mixed $deliveryNoteTemplate;
+
     public mixed $accInvTemplate;
+
     public ?int $hMargins;
+
     public ?int $vMargins;
+
     public ?bool $showPayments;
+
     public ?bool $showPaymentMethod;
+
     public ?string $showTotals;
+
     public ?bool $showPaypalButton;
+
     public ?bool $showNotificationButton;
+
     public ?bool $showTspayButton;
+
     public ?bool $deliveryNote;
+
     public ?bool $accompanyingInvoice;
+
     public ?int $dnNumber;
+
     public ?string $dnDate;
+
     public ?string $dnAiPackagesNumber;
+
     public ?string $dnAiWeight;
+
     public ?string $dnAiCausal;
+
     public ?string $dnAiDestination;
+
     public ?string $dnAiTransporter;
+
     public ?string $dnAiNotes;
+
     public ?bool $isMarked;
+
     public ?string $createdAt;
+
     public ?string $updatedAt;
+
     public ?float $amountNet;
+
     public ?float $amountVat;
+
     public ?float $amountGross;
+
     public ?float $amountDueDiscount;
+
     public ?float $amountRivalsa;
+
     public ?float $amountRivalsaTaxable;
+
     public ?float $amountWithholdingTax;
+
     public ?float $amountWithholdingTaxTaxable;
+
     public ?float $amountOtherWithholdingTax;
+
     public ?float $otherWithholdingTaxTaxable;
+
     public ?float $amountEnasarcoTaxable;
+
     public mixed $extraData;
+
     public ?string $seenDate;
+
     public ?string $nextDueDate;
+
     public ?string $url;
+
     public ?string $attachmentUrl;
+
     public mixed $eiRaw;
+
     public mixed $eiTsData;
+
     public ?string $eiStatus;
+
     public ?bool $locked;
+
     public ?bool $hasTsPayPendingPayment;
+
     public ?bool $isFirstEInvoice;
 
     public function __construct(mixed $parameters = null)
@@ -102,7 +190,7 @@ readonly class IssuedDocument
             $parameters = get_object_vars($parameters);
         }
 
-        if (!is_array($parameters)) {
+        if (! is_array($parameters)) {
             $parameters = [];
         }
 

@@ -10,12 +10,13 @@ class InfoFakeResponse extends FakeResponse
     public function getVatTypesFakeList(
         array $params = []
     ) {
-        return json_encode([
-            'data' => [
-                (new SingleVat())->getVatTypeFakeDetail($params),
-                (new SingleVat())->getVatTypeFakeDetail($params),
-            ],
-        ]
+        return json_encode(
+            [
+                'data' => [
+                    (new SingleVat())->getVatTypeFakeDetail($params),
+                    (new SingleVat())->getVatTypeFakeDetail($params),
+                ],
+            ]
         );
     }
 
@@ -40,8 +41,8 @@ class InfoFakeResponse extends FakeResponse
     ) {
         return json_encode([
             'data' => [
-                (new SinglePaymentAccount())->getPaymentAccountFakeDetail($params)
-            ]
+                (new SinglePaymentAccount())->getPaymentAccountFakeDetail($params),
+            ],
         ]);
     }
 

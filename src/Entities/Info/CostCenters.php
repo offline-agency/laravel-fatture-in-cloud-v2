@@ -9,6 +9,5 @@ class CostCenters extends AbstractEntity
     /**
      * @var string
      */
-
     public $data;
 }

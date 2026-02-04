@@ -1,11 +1,10 @@
 <?php
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\ArchiveDocuments\ArchiveDocuments;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Pagination;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Response;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\ArchiveDocuments\ArchiveDocuments;
 
 class ArchiveDocument extends Api
 {
@@ -62,9 +61,10 @@ class ArchiveDocument extends Api
 
             return response()->json(['data' => $archiveDocument], 201);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Errore durante la creazione del documento di archivio: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Errore durante la creazione del documento di archivio: '.$e->getMessage()], 500);
         }
     }
+
     public function getArchiveDocument($id)
     {
         try {
@@ -80,7 +80,7 @@ class ArchiveDocument extends Api
 
             return response()->json(['data' => $archiveDocument], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Errore durante il recupero del documento di archivio: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Errore durante il recupero del documento di archivio: '.$e->getMessage()], 500);
         }
     }
 
@@ -101,7 +101,7 @@ class ArchiveDocument extends Api
 
             $existingArchiveDocument = ArchiveDocuments->find($id);
 
-            if (!$existingArchiveDocument) {
+            if (! $existingArchiveDocument) {
                 return response()->json(['error' => 'Documento di archivio non trovato'], 404);
             }
 
@@ -115,7 +115,7 @@ class ArchiveDocument extends Api
 
             return response()->json(['data' => $existingArchiveDocument], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Errore durante l\'aggiornamento del documento di archivio: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Errore durante l\'aggiornamento del documento di archivio: '.$e->getMessage()], 500);
         }
     }
 
@@ -124,17 +124,18 @@ class ArchiveDocument extends Api
         try {
             $archiveDocumentData = ArchiveDocuments->find($id);
 
-            if (!$archiveDocumentData) {
+            if (! $archiveDocumentData) {
                 return response()->json(['error', 'Documento di archivio non trovato'], 404);
             }
 
             $archiveDocumentData->delete();
 
             return response()->json(['message' => 'Documento di archivio eliminato'], 200);
-        }catch (\Exception $e){
-            return response()->json(['error' => 'Errore durante l\'eliminazione del documento di archivio: ' . $e->getMessage()], 500);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Errore durante l\'eliminazione del documento di archivio: '.$e->getMessage()], 500);
         }
     }
+
     public function uploadDocument(Request $request)
     {
         try {
@@ -151,7 +152,7 @@ class ArchiveDocument extends Api
 
             return response()->json(['message' => 'Token di allegato caricato con successo'], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Errore durante il caricamento del token di allegato: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Errore durante il caricamento del token di allegato: '.$e->getMessage()], 500);
         }
     }
 }

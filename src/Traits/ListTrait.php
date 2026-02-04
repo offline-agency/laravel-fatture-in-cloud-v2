@@ -40,7 +40,7 @@ trait ListTrait
         /** @var object $response */
         $response = $this->get((string) $url, $additionalData);
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -48,7 +48,7 @@ trait ListTrait
 
         $this->all = array_merge($this->all, (array) $responseData->data);
 
-        if (!isset($responseData->next_page_url)) {
+        if (! isset($responseData->next_page_url)) {
             return $this->all;
         }
 

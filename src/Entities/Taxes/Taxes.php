@@ -14,22 +14,22 @@ class Taxes extends AbstractEntity
     /**
      * @var string
      */
-    public $type; //TODO: can be only some values
+    public $type; // TODO: can be only some values
 
     /**
      * @var null|object
      */
-    public $merged_in; //TODO: relate another class
+    public $merged_in; // TODO: relate another class
 
     /**
      * @var string
      */
-    public $due_date; //TODO: date format
+    public $due_date; // TODO: date format
 
     /**
      * @var string
      */
-    public $status; //TODO: can be only some values
+    public $status; // TODO: can be only some values
 
     /**
      * @var object
@@ -51,4 +51,3 @@ class Taxes extends AbstractEntity
      */
     public $description;
 }
-

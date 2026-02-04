@@ -8,8 +8,7 @@ class SingleArchiveCategories extends FakeResponse
 {
     public function getArchiveCategoriesTypeFakeDetail(
         array $params = []
-    ): array
-    {
+    ): array {
         return [
             'data' => $this->value($params, 'data', 'fake_data'),
         ];

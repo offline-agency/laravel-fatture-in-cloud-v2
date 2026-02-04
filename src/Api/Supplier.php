@@ -28,11 +28,11 @@ class Supplier extends Api
 
         /** @var object $response */
         $response = $this->get(
-            'c/' . $this->companyId . '/entities/suppliers',
+            'c/'.$this->companyId.'/entities/suppliers',
             $additionalData
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -53,7 +53,7 @@ class Supplier extends Api
             'page',
             'per_page',
             'q',
-        ], 'c/' . $this->companyId . '/entities/suppliers', $additionalData);
+        ], 'c/'.$this->companyId.'/entities/suppliers', $additionalData);
 
         if ($allSuppliers instanceof Error) {
             return $allSuppliers;
@@ -73,11 +73,11 @@ class Supplier extends Api
 
         /** @var object $response */
         $response = $this->get(
-            'c/' . $this->companyId . '/entities/suppliers/' . $supplierId,
+            'c/'.$this->companyId.'/entities/suppliers/'.$supplierId,
             $additionalData
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -90,10 +90,10 @@ class Supplier extends Api
     {
         /** @var object $response */
         $response = $this->destroy(
-            'c/' . $this->companyId . '/entities/suppliers/' . $supplierId
+            'c/'.$this->companyId.'/entities/suppliers/'.$supplierId
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -113,11 +113,11 @@ class Supplier extends Api
 
         /** @var object $response */
         $response = $this->post(
-            'c/' . $this->companyId . '/entities/suppliers',
+            'c/'.$this->companyId.'/entities/suppliers',
             $body
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -139,11 +139,11 @@ class Supplier extends Api
 
         /** @var object $response */
         $response = $this->put(
-            'c/' . $this->companyId . '/entities/suppliers/' . $supplierId,
+            'c/'.$this->companyId.'/entities/suppliers/'.$supplierId,
             $body
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 

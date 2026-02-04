@@ -27,4 +27,3 @@ class DocumentList extends FakeResponse
         ];
     }
 }
-

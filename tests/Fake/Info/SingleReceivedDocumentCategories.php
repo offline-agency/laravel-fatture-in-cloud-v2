@@ -8,11 +8,9 @@ class SingleReceivedDocumentCategories extends FakeResponse
 {
     public function getReceivedDocumentCategoriesTypeFakeDetail(
         array $params = []
-    ): array
-    {
+    ): array {
         return [
             'data' => $this->value($params, 'data', 'fake_data'),
         ];
     }
 }
-

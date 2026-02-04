@@ -7,15 +7,25 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument;
 readonly class IssuedDocumentEmail
 {
     public ?string $recipientEmail;
+
     public mixed $defaultSenderEmail;
+
     public mixed $senderEmailsList;
+
     public ?string $ccEmail;
+
     public ?string $subject;
+
     public ?string $body;
+
     public ?bool $documentExists;
+
     public ?bool $deliveryNoteExists;
+
     public ?bool $attachmentExists;
+
     public ?bool $accompanyingInvoiceExists;
+
     public ?bool $defaultAttachPdf;
 
     public function __construct(mixed $parameters = null)

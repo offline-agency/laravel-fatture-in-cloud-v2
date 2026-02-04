@@ -1,4 +1,5 @@
 <?php
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Info;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\Vat as ProductsCategoriesEntity;
@@ -9,6 +10,7 @@ class InfoProductsCategoriesList
     use ListTrait;
 
     private $items;
+
     private $pagination;
 
     public function __construct($products_categories_response)
@@ -26,8 +28,7 @@ class InfoProductsCategoriesList
 
     private function setItems(
         $products_categories_response
-    ): void
-    {
+    ): void {
         $this->items = array_map(function ($client) {
             return new ProductsCategoriesEntity($client);
         }, $products_categories_response->data);

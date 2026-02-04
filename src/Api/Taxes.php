@@ -5,8 +5,8 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 use Illuminate\Support\Facades\Validator;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\Taxes as TaxesEntity;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\TaxesList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\TaxesAttachment;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\TaxesList;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class Taxes extends Api
@@ -16,7 +16,7 @@ class Taxes extends Api
     const DOCUMENT_TYPES = [
         'expense',
         'passive_credit_note',
-        'passive_delivery_note'
+        'passive_delivery_note',
     ];
 
     public function list(
@@ -28,7 +28,7 @@ class Taxes extends Api
         ]);
 
         $additional_data = $this->data($additional_data, [
-            'type', 'fields', 'fieldset', 'sort', 'page', 'per_page', 'q'
+            'type', 'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
         ]);
 
         $response = $this->get(
@@ -36,7 +36,7 @@ class Taxes extends Api
             $additional_data
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -47,14 +47,14 @@ class Taxes extends Api
 
     public function all(
         string $type,
-        ?Array $additional_data = []
+        ?array $additional_data = []
     ) {
         $additional_data = array_merge($additional_data, [
             'type' => $type,
         ]);
 
         $all_documents = $this->getAll([
-            'type', 'fields', 'fieldset', 'sort', 'page', 'per_page', 'q'
+            'type', 'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
         ], 'c/'.$this->company_id.'/taxes', $additional_data);
 
         return gettype($all_documents) !== 'array'

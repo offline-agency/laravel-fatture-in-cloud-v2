@@ -7,13 +7,21 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Info;
 readonly class Vat
 {
     public ?int $id;
+
     public ?float $value;
+
     public ?string $description;
+
     public ?string $notes;
+
     public ?bool $eInvoice;
+
     public ?string $eiType;
+
     public ?string $eiDescription;
+
     public ?bool $editable;
+
     public ?bool $isDisabled;
 
     public function __construct(mixed $parameters = null)

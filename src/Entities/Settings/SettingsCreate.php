@@ -1,10 +1,11 @@
 <?php
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Settings;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
 
-class SettingsCreate extends AbstractEntity{
-
+class SettingsCreate extends AbstractEntity
+{
     /**
      * @var string
      */

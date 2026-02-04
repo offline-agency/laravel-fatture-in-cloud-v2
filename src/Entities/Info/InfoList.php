@@ -9,6 +9,7 @@ class InfoList
     use ListTrait;
 
     private $items;
+
     private $pagination;
 
     public function __construct($client_response, string $className)

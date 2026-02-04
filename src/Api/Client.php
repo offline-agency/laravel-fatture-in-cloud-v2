@@ -28,11 +28,11 @@ class Client extends Api
 
         /** @var object $response */
         $response = $this->get(
-            'c/' . $this->companyId . '/entities/clients',
+            'c/'.$this->companyId.'/entities/clients',
             $additionalData
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -53,7 +53,7 @@ class Client extends Api
             'page',
             'per_page',
             'q',
-        ], 'c/' . $this->companyId . '/entities/clients', $additionalData);
+        ], 'c/'.$this->companyId.'/entities/clients', $additionalData);
 
         if ($allClients instanceof Error) {
             return $allClients;
@@ -73,11 +73,11 @@ class Client extends Api
 
         /** @var object $response */
         $response = $this->get(
-            'c/' . $this->companyId . '/entities/clients/' . $clientId,
+            'c/'.$this->companyId.'/entities/clients/'.$clientId,
             $additionalData
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -90,10 +90,10 @@ class Client extends Api
     {
         /** @var object $response */
         $response = $this->destroy(
-            'c/' . $this->companyId . '/entities/clients/' . $clientId
+            'c/'.$this->companyId.'/entities/clients/'.$clientId
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -113,11 +113,11 @@ class Client extends Api
 
         /** @var object $response */
         $response = $this->post(
-            'c/' . $this->companyId . '/entities/clients',
+            'c/'.$this->companyId.'/entities/clients',
             $body
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -139,11 +139,11 @@ class Client extends Api
 
         /** @var object $response */
         $response = $this->put(
-            'c/' . $this->companyId . '/entities/clients/' . $clientId,
+            'c/'.$this->companyId.'/entities/clients/'.$clientId,
             $body
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 

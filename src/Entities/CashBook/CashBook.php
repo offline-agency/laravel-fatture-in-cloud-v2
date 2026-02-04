@@ -1,34 +1,35 @@
 <?php
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\CashBook;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
 
 class CashBook extends AbstractEntity
 {
-
     /**
-     * @var String
+     * @var string
      */
     public $id;
 
     /**
      * @var string
      */
-    public $date; //TODO: date format
+    public $date; // TODO: date format
 
     /**
      * @var string
      */
     public $description;
-    /**
-     * @var string
-     */
-    public $kind;//TODO: can be only some values
 
     /**
      * @var string
      */
-    public $type;//TODO: can be only some values
+    public $kind; // TODO: can be only some values
+
+    /**
+     * @var string
+     */
+    public $type; // TODO: can be only some values
 
     /**
      * @var string

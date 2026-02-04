@@ -7,26 +7,47 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier;
 readonly class Supplier
 {
     public ?int $id;
+
     public ?string $code;
+
     public ?string $name;
+
     public ?string $type;
+
     public ?string $firstName;
+
     public ?string $lastName;
+
     public ?string $contactPerson;
+
     public ?string $vatNumber;
+
     public ?string $taxCode;
+
     public ?string $addressStreet;
+
     public ?string $addressPostalCode;
+
     public ?string $addressCity;
+
     public ?string $addressProvince;
+
     public ?string $addressExtra;
+
     public ?string $country;
+
     public ?string $email;
+
     public ?string $certifiedEmail;
+
     public ?string $phone;
+
     public ?string $fax;
+
     public ?string $notes;
+
     public ?string $createdAt;
+
     public ?string $updatedAt;
 
     public function __construct(mixed $parameters = null)
@@ -35,7 +56,7 @@ readonly class Supplier
             $parameters = get_object_vars($parameters);
         }
 
-        if (!is_array($parameters)) {
+        if (! is_array($parameters)) {
             $parameters = [];
         }
 

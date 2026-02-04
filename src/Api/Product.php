@@ -28,11 +28,11 @@ class Product extends Api
 
         /** @var object $response */
         $response = $this->get(
-            'c/' . $this->companyId . '/products',
+            'c/'.$this->companyId.'/products',
             $additionalData
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -53,7 +53,7 @@ class Product extends Api
             'page',
             'per_page',
             'q',
-        ], 'c/' . $this->companyId . '/products', $additionalData);
+        ], 'c/'.$this->companyId.'/products', $additionalData);
 
         if ($allProducts instanceof Error) {
             return $allProducts;
@@ -73,11 +73,11 @@ class Product extends Api
 
         /** @var object $response */
         $response = $this->get(
-            'c/' . $this->companyId . '/products/' . $productId,
+            'c/'.$this->companyId.'/products/'.$productId,
             $additionalData
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -90,10 +90,10 @@ class Product extends Api
     {
         /** @var object $response */
         $response = $this->destroy(
-            'c/' . $this->companyId . '/products/' . $productId
+            'c/'.$this->companyId.'/products/'.$productId
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -115,11 +115,11 @@ class Product extends Api
 
         /** @var object $response */
         $response = $this->post(
-            'c/' . $this->companyId . '/products',
+            'c/'.$this->companyId.'/products',
             $body
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -143,11 +143,11 @@ class Product extends Api
 
         /** @var object $response */
         $response = $this->put(
-            'c/' . $this->companyId . '/products/' . $productId,
+            'c/'.$this->companyId.'/products/'.$productId,
             $body
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 

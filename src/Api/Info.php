@@ -36,7 +36,7 @@ class Info extends Api
         $additional_data = $this->data($additional_data, [
             'fields',
             'fieldset',
-            'sort'
+            'sort',
         ]);
 
         $response = $this->get(

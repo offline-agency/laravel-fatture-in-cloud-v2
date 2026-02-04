@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Http;
 class FattureInCloud
 {
     protected string $companyId;
+
     protected string $accessToken;
+
     protected string $baseUrl;
 
     public function __construct(?string $companyId = null, ?string $accessToken = null)

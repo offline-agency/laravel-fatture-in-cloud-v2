@@ -1,4 +1,5 @@
 <?php
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Settings;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
@@ -12,7 +13,7 @@ class PaymentAccount extends AbstractEntity
 
     /**
      * @var string
-    */
+     */
     public $name;
 
     /**
@@ -36,7 +37,7 @@ class PaymentAccount extends AbstractEntity
     public $cuc;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $virtual;
 }

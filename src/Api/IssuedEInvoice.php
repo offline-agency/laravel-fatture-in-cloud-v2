@@ -18,11 +18,11 @@ class IssuedEInvoice extends Api
     {
         /** @var object $response */
         $response = $this->post(
-            'c/' . $this->companyId . '/issued_documents/' . $documentId . '/e_invoice/send',
+            'c/'.$this->companyId.'/issued_documents/'.$documentId.'/e_invoice/send',
             $body
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -35,10 +35,10 @@ class IssuedEInvoice extends Api
     {
         /** @var object $response */
         $response = $this->get(
-            'c/' . $this->companyId . '/issued_documents/' . $documentId . '/e_invoice/xml_verify',
+            'c/'.$this->companyId.'/issued_documents/'.$documentId.'/e_invoice/xml_verify',
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -55,11 +55,11 @@ class IssuedEInvoice extends Api
 
         /** @var object $response */
         $response = $this->get(
-            'c/' . $this->companyId . '/issued_documents/' . $documentId . '/e_invoice/xml',
+            'c/'.$this->companyId.'/issued_documents/'.$documentId.'/e_invoice/xml',
             $additionalData
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -70,10 +70,10 @@ class IssuedEInvoice extends Api
     {
         /** @var object $response */
         $response = $this->get(
-            'c/' . $this->companyId . '/issued_documents/' . $documentId . '/e_invoice/error_reason',
+            'c/'.$this->companyId.'/issued_documents/'.$documentId.'/e_invoice/error_reason',
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 

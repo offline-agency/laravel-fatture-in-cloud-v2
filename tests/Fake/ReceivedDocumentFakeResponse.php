@@ -2,7 +2,6 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Fake;
 
-
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ReceivedDocument\Document;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ReceivedDocument\DocumentList;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ReceivedDocument\PreCreateInfo;
@@ -60,7 +59,7 @@ class ReceivedDocumentFakeResponse extends FakeResponse
         array $params = []
     ) {
         return json_encode([
-            'data' => (new Total())->getTotalFake($params,)
+            'data' => (new Total())->getTotalFake($params),
         ]);
     }
 
@@ -78,7 +77,7 @@ class ReceivedDocumentFakeResponse extends FakeResponse
         return json_encode((new ErrorFakeResponse())->getErrorFake($params));
     }
 
-    public function  getReceivedDocumentFakeErrorDetail(
+    public function getReceivedDocumentFakeErrorDetail(
         array $params = []
     ) {
         return json_encode([

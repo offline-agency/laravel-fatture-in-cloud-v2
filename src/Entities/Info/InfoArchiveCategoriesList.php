@@ -1,4 +1,5 @@
 <?php
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Info;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\Vat as ArchiveCategoriesEntity;
@@ -9,6 +10,7 @@ class InfoArchiveCategoriesList
     use ListTrait;
 
     private $items;
+
     private $pagination;
 
     public function __construct($archive_categories_response)
@@ -26,8 +28,7 @@ class InfoArchiveCategoriesList
 
     private function setItems(
         $archive_categories_response
-    ): void
-    {
+    ): void {
         $this->items = array_map(function ($client) {
             return new ArchiveCategoriesEntity($client);
         }, $archive_categories_response->data);

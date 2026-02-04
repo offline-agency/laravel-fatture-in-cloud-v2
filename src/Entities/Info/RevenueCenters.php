@@ -9,6 +9,5 @@ class RevenueCenters extends AbstractEntity
     /**
      * @var string
      */
-
     public $data;
 }

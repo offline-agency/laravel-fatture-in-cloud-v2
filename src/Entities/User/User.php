@@ -7,15 +7,25 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Entities\User;
 readonly class User
 {
     public ?int $id;
+
     public ?string $name;
+
     public ?string $firstName;
+
     public ?string $lastName;
+
     public ?string $email;
+
     public ?string $hash;
+
     public ?string $picture;
+
     public ?bool $needPasswordChange;
+
     public ?bool $needMarketingConsentsConfirmation;
+
     public ?bool $needConfirmation;
+
     public mixed $details;
 
     public function __construct(mixed $parameters = null)

@@ -9,9 +9,13 @@ use Illuminate\Support\Facades\Http;
 class LaravelFattureInCloudV2
 {
     private $company;
+
     private $bearer;
+
     protected $baseUrl;
+
     protected $header;
+
     protected $company_id;
 
     /**

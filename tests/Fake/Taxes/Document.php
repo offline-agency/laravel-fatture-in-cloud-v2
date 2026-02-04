@@ -16,7 +16,7 @@ class Document extends FakeResponse
             'payment_account' => (new PaymentAccount())->getPaymentAccountFake($params),
             'amount' => $this->value($params, 'amount', 0),
             'attachment_url' => $this->value($params, 'attachment_url', ''),
-            'description' => $this->value($params, 'description', '')
+            'description' => $this->value($params, 'description', ''),
         ];
     }
 }

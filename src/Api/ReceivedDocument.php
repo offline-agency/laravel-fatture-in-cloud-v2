@@ -5,10 +5,10 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 use Illuminate\Support\Facades\Validator;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocument as ReceivedDocumentEntity;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentTotals;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentAttachment;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentPreCreateInfo;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentTotals;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class ReceivedDocument extends Api
@@ -18,28 +18,27 @@ class ReceivedDocument extends Api
     const DOCUMENT_TYPES = [
         'expense',
         'passive_credit_note',
-        'passive_delivery_note'
+        'passive_delivery_note',
     ];
 
     public function list(
         string $type,
         ?array $additional_data = []
-    )
-    {
+    ) {
         $additional_data = array_merge($additional_data, [
             'type' => $type,
         ]);
 
         $additional_data = $this->data($additional_data, [
-            'type', 'fields', 'fieldset', 'sort', 'page', 'per_page', 'q'
+            'type', 'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
         ]);
 
         $response = $this->get(
-            'c/' . $this->company_id . 'received_documents',
+            'c/'.$this->company_id.'received_documents',
             $additional_data
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 
@@ -62,7 +61,7 @@ class ReceivedDocument extends Api
 
         return gettype($all_documents) !== 'array'
             ? $all_documents
-            : array_map(function($document) {
+            : array_map(function ($document) {
                 return new ReceivedDocumentEntity($document);
             }, $all_documents);
     }
@@ -274,7 +273,7 @@ class ReceivedDocument extends Api
 
         $attachment_token = $response->data->data;
 
-            return new ReceivedDocumentAttachment($attachment_token);
+        return new ReceivedDocumentAttachment($attachment_token);
     }
 
     public function deleteAttachment(

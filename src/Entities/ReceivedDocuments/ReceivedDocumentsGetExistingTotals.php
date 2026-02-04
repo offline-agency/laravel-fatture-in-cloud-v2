@@ -15,7 +15,4 @@ class ReceivedDocumentsGetExistingTotals extends AbstractEntity
      * @var float
      */
     public $payments_sum;
-
 }
-
-

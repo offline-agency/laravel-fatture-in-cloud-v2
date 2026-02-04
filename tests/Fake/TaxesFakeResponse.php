@@ -4,6 +4,7 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Fake;
 
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\Taxes\Document;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\Taxes\DocumentList;
+
 class TaxesFakeResponse extends FakeResponse
 {
     public function getTaxesFakeList(
@@ -58,7 +59,7 @@ class TaxesFakeResponse extends FakeResponse
         return json_encode((new ErrorFakeResponse())->getErrorFake($params));
     }
 
-    public function  getTaxesFakeErrorDetail(
+    public function getTaxesFakeErrorDetail(
         array $params = []
     ) {
         return json_encode([

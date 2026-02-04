@@ -1,4 +1,5 @@
 <?php
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Info;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\Vat as ReceivedDocumentCategoriesEntity;
@@ -9,6 +10,7 @@ class InfoReceivedDocumentCategoriesList
     use ListTrait;
 
     private $items;
+
     private $pagination;
 
     public function __construct($received_document_categories_response)
@@ -26,8 +28,7 @@ class InfoReceivedDocumentCategoriesList
 
     private function setItems(
         $received_document_categories_response
-    ): void
-    {
+    ): void {
         $this->items = array_map(function ($client) {
             return new ReceivedDocumentCategoriesEntity($client);
         }, $received_document_categories_response->data);

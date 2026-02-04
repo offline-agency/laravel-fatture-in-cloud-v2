@@ -18,11 +18,11 @@ class Company extends Api
 
         /** @var object $response */
         $response = $this->get(
-            'c/' . $companyId . '/company/info',
+            'c/'.$companyId.'/company/info',
             $additionalData
         );
 
-        if (!$response->success) {
+        if (! $response->success) {
             return new Error($response->data);
         }
 

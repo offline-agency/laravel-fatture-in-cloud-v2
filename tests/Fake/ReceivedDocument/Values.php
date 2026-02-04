@@ -8,8 +8,7 @@ class Values extends FakeResponse
 {
     public function getValuesFake(
         array $params = []
-    ): array
-    {
+    ): array {
         return [
             'detailed' => $this->value($params, 'values.detailed', false),
         ];

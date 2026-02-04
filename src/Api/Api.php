@@ -12,7 +12,9 @@ use OfflineAgency\LaravelFattureInCloudV2\FattureInCloud;
 class Api
 {
     protected FattureInCloud $connector;
+
     protected string $companyId;
+
     protected string $accessToken;
 
     public function __construct(?FattureInCloud $connector = null)
@@ -87,8 +89,8 @@ class Api
     }
 
     /**
-     * @param array<string, mixed> $data
-     * @param array<string> $fields
+     * @param  array<string, mixed>  $data
+     * @param  array<string>  $fields
      * @return array<string, mixed>
      */
     protected function data(array $data, array $fields): array

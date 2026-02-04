@@ -7,24 +7,43 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument;
 readonly class IssuedDocumentTotals
 {
     public ?float $amountNet;
+
     public ?float $amountRivalsa;
+
     public ?float $amountNetWithRivalsa;
+
     public ?float $amountCassa;
+
     public ?float $taxableAmount;
+
     public ?float $notTaxableAmount;
+
     public ?float $amountVat;
+
     public ?float $amountGross;
+
     public ?float $taxableAmountWithholdingTax;
+
     public ?float $amountWithholdingTax;
+
     public ?float $taxableAmountOtherWithholdingTax;
+
     public ?float $amountOtherWithholdingTax;
+
     public ?float $amountEnasarcoTaxable;
+
     public ?float $stampDuty;
+
     public ?float $amountDue;
+
     public ?float $amountDueDiscount;
+
     public ?float $amountGlobalCassaTaxable;
+
     public ?bool $isEnasarcoMaximalExceeded;
+
     public ?float $paymentsSum;
+
     public mixed $vatList;
 
     public function __construct(mixed $parameters = null)
