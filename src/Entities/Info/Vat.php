@@ -8,6 +8,8 @@ readonly class Vat
 {
     public ?int $id;
 
+    public ?int $company_id;
+
     public ?float $value;
 
     public ?string $description;
@@ -31,6 +33,7 @@ readonly class Vat
         }
 
         $this->id = $parameters['id'] ?? null;
+        $this->company_id = $parameters['company_id'] ?? null;
         $this->value = $parameters['value'] ?? null;
         $this->description = $parameters['description'] ?? null;
         $this->notes = $parameters['notes'] ?? null;

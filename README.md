@@ -14,13 +14,22 @@
 - PHP ^8.4
 - Laravel ^12.0
 
-## Key Changes in Recent Update
+### API Granularization (Breaking Changes)
+The monolithic `Settings` and `Setting` classes have been split into granular resources to improve maintainability and strictly follow the Single Responsibility Principle:
+- `Settings` -> Split into `VatType`, `PaymentAccount`, and `PaymentMethod`.
+- `ArchiveDocument` -> Renamed to `Archive`.
+- `Cashbooks` -> Renamed to `Cashbook`.
+- New classes added: `Email`, `Situation`, `PriceList`, and `Webhook`.
 
 ### Strictly Typed & Readonly Entities
-All entities (e.g., `Client`, `IssuedDocument`) have been refactored to be **readonly** classes with **strict types**.
+All entities (e.g., `Client`, `IssuedDocument`, `PriceList`) have been refactored to be **readonly** classes with **strict types**.
 - Properties are now immutable.
-- Usage of `mixed` types has been minimized in favor of strict `string`, `int`, `bool`, etc.
+- Usage of `mixed` types has been minimized in favor of strict `string`, `int`, `float`, `bool`, etc.
 - Constructors ensure safe data mapping from API responses.
+
+### Modern testing suite
+- Switched from PHPUnit to **Pest PHP** for a more expressive and modern testing experience.
+- Automated code styling with **Laravel Pint**.
 
 ### Architecture
 - The package now utilizes a central `FattureInCloud` connector for better state management.
@@ -124,7 +133,7 @@ We are currently work on this package to implement all endpoints. Enable notific
 
 ✅ Issued Documents
 
-🔜 Issued e-invoices
+✅ Issued e-invoices
 
 ✅ Received Documents
 
@@ -132,13 +141,26 @@ We are currently work on this package to implement all endpoints. Enable notific
 
 ✅ Taxes
 
-🔜 Archive
+✅ Archive
 
-🔜 Cashbook
+✅ Cashbook
 
-🔜 Info
+✅ Info
+✅ Price Lists
 
-🔜 Settings
+✅ Webhooks
+
+✅ Situation
+
+✅ Emails
+
+✅ Stock
+
+✅ Payment Accounts
+
+✅ Payment Methods
+
+✅ VAT Types
 
 ## Testing
 

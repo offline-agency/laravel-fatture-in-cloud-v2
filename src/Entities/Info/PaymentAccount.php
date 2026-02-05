@@ -1,43 +1,44 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Info;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
-
-class PaymentAccount extends AbstractEntity
+readonly class PaymentAccount
 {
-    /**
-     * @var int
-     */
-    public $id;
+    public ?int $id;
 
-    /**
-     * @var string
-     */
-    public $name;
+    public ?int $company_id;
 
-    /**
-     * @var string
-     */
-    public $type;
+    public ?string $name;
 
-    /**
-     * @var string
-     */
-    public $iban;
+    public ?string $type;
 
-    /**
-     * @var string
-     */
-    public $sia;
+    public ?string $iban;
 
-    /**
-     * @var string
-     */
-    public $cuc;
+    public ?string $sia;
 
-    /**
-     * @var bool
-     */
-    public $virtual;
+    public ?string $cuc;
+
+    public ?bool $virtual;
+
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
+
+        if (! is_array($parameters)) {
+            $parameters = [];
+        }
+
+        $this->id = $parameters['id'] ?? null;
+        $this->company_id = $parameters['company_id'] ?? null;
+        $this->name = $parameters['name'] ?? null;
+        $this->type = $parameters['type'] ?? null;
+        $this->iban = $parameters['iban'] ?? null;
+        $this->sia = $parameters['sia'] ?? null;
+        $this->cuc = $parameters['cuc'] ?? null;
+        $this->virtual = $parameters['virtual'] ?? null;
+    }
 }

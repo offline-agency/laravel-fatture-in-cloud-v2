@@ -49,9 +49,7 @@ class ClientFakeResponse extends FakeResponse
     ) {
         return json_encode(
             [
-                'data' => (object) [
-                    (new SingleClient())->getClientFakeDetail($params),
-                ],
+                'data' => (new SingleClient())->getClientFakeDetail($params),
             ]
         );
     }

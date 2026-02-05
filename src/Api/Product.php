@@ -155,4 +155,87 @@ class Product extends Api
 
         return new ProductEntity($product);
     }
+
+    public function listStockMovements(int $productId, array $additionalData = []): \OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovementList|Error
+    {
+        /** @var object $response */
+        $response = $this->get(
+            'c/'.$this->companyId.'/products/'.$productId.'/stock',
+            $additionalData
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $stockMovements = $response->data;
+
+        return new \OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovementList($stockMovements);
+    }
+
+    public function createStockMovement(int $productId, array $body = []): \OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovement|Error|MessageBag
+    {
+        $validator = Validator::make($body, [
+            'data' => 'required',
+            'data.amount' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        /** @var object $response */
+        $response = $this->post(
+            'c/'.$this->companyId.'/products/'.$productId.'/stock',
+            $body
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $stockMovement = $response->data->data;
+
+        return new \OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovement($stockMovement);
+    }
+
+    public function deleteStockMovement(int $productId, int $stockMovementId): string|Error
+    {
+        /** @var object $response */
+        $response = $this->destroy(
+            'c/'.$this->companyId.'/products/'.$productId.'/stock/'.$stockMovementId
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        return 'Stock movement deleted';
+    }
+
+    public function editStockMovement(int $productId, int $stockMovementId, array $body = []): \OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovement|Error|MessageBag
+    {
+        $validator = Validator::make($body, [
+            'data' => 'required',
+            'data.amount' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        /** @var object $response */
+        $response = $this->put(
+            'c/'.$this->companyId.'/products/'.$productId.'/stock/'.$stockMovementId,
+            $body
+        );
+
+        if (! $response->success) {
+            return new Error($response->data);
+        }
+
+        $stockMovement = $response->data->data;
+
+        return new \OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovement($stockMovement);
+    }
 }

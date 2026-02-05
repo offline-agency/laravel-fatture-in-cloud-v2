@@ -1,18 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
-
-class ReceivedDocumentTotals extends AbstractEntity
+readonly class ReceivedDocumentTotals
 {
-    /**
-     * @var float
-     */
-    public $amount_due;
+    public ?float $amount_due;
 
-    /**
-     * @var float
-     */
-    public $payments_sum;
+    public ?float $payments_sum;
+
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
+
+        if (! is_array($parameters)) {
+            $parameters = [];
+        }
+
+        $this->amount_due = isset($parameters['amount_due']) ? (float) $parameters['amount_due'] : null;
+        $this->payments_sum = isset($parameters['payments_sum']) ? (float) $parameters['payments_sum'] : null;
+    }
 }

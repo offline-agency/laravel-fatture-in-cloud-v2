@@ -1,53 +1,47 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Settings;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
-
-class VatType extends AbstractEntity
+readonly class VatType
 {
-    /**
-     * @var int
-     */
-    public $id;
+    public ?int $id;
 
-    /**
-     * @var float
-     */
-    public $value;
+    public ?float $value;
 
-    /**
-     * @var string
-     */
-    public $description;
+    public ?string $description;
 
-    /**
-     * @var string
-     */
-    public $notes;
+    public ?string $notes;
 
-    /**
-     * @var bool
-     */
-    public $e_invoice;
+    public ?bool $eInvoice;
 
-    /**
-     * @var string
-     */
-    public $ei_type;
+    public ?string $eiType;
 
-    /**
-     * @var string
-     */
-    public $ei_description;
+    public ?string $eiDescription;
 
-    /**
-     * @var bool
-     */
-    public $editable;
+    public ?bool $editable;
 
-    /**
-     * @var bool
-     */
-    public $is_disabled;
+    public ?bool $isDisabled;
+
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
+
+        if (! is_array($parameters)) {
+            $parameters = [];
+        }
+
+        $this->id = $parameters['id'] ?? null;
+        $this->value = isset($parameters['value']) ? (float) $parameters['value'] : null;
+        $this->description = $parameters['description'] ?? null;
+        $this->notes = $parameters['notes'] ?? null;
+        $this->eInvoice = $parameters['e_invoice'] ?? null;
+        $this->eiType = $parameters['ei_type'] ?? null;
+        $this->eiDescription = $parameters['ei_description'] ?? null;
+        $this->editable = $parameters['editable'] ?? null;
+        $this->isDisabled = $parameters['is_disabled'] ?? null;
+    }
 }

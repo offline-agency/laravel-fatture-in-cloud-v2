@@ -1,63 +1,69 @@
 <?php
 
-namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
+use Illuminate\Support\Facades\Http;
+use OfflineAgency\LaravelFattureInCloudV2\Api\Cashbook;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\CashBook\CashbookEntry;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\CashBook\CashbookList;
 
-use Illuminate\Http\Request;
-use OfflineAgency\LaravelFattureInCloudV2\Api\Cashbooks;
-use PHPUnit\Framework\TestCase;
-
-class CashBookTest extends TestCase
-{
-    public function test_create_fake_cash_book_entry()
-    {
-        $data = [
-            'id' => 1,
+it('creates a cash book entry', function () {
+    $data = [
+        'data' => [
             'date' => '2024-06-05',
             'description' => 'A description',
             'kind' => 'cashbook',
-            'type' => 'in',
-            'entity_name' => 'John Cena',
-            'document' => [
-                'id' => 123,
-                'type' => 'invoice',
-                'path' => '/path/to/document',
-            ],
             'amount_in' => 100.00,
-            'payment_account_in' => [
+        ],
+    ];
+
+    Http::fake([
+        'c/*/cashbook' => Http::response([
+            'data' => [
                 'id' => 1,
-                'name' => 'Bank Account',
-                'type' => 'bank',
-                'iban' => 'IT60X0542811101000000123456',
-                'sia' => '123456',
-                'cuc' => 'ABCDEF',
-                'virtual' => false,
+                'date' => '2024-06-05',
+                'description' => 'A description',
+                'kind' => 'cashbook',
+                'amount_in' => 100.00,
             ],
-            'amount_out' => 50.00,
-            'payment_account_out' => [
-                'id' => 1,
-                'name' => 'Cash Wallet',
-                'type' => 'standard',
-                'iban' => null,
-                'sia' => null,
-                'cuc' => null,
-                'virtual' => false,
+        ], 200),
+    ]);
+
+    $cashbookApi = new Cashbook();
+    $response = $cashbookApi->create($data);
+
+    expect($response)->toBeInstanceOf(CashbookEntry::class)
+        ->id->toBe(1)
+        ->date->toBe('2024-06-05');
+});
+
+it('lists cashbook entries', function () {
+    Http::fake([
+        'c/*/cashbook*' => Http::response([
+            'data' => [
+                [
+                    'id' => 1,
+                    'date' => '2024-06-05',
+                    'description' => 'A description',
+                    'kind' => 'cashbook',
+                    'amount_in' => 100.00,
+                ],
             ],
-        ];
+            'current_page' => 1,
+            'first_page_url' => 'https://example.com/page=1',
+            'from' => 1,
+            'last_page' => 1,
+            'last_page_url' => 'https://example.com/page=1',
+            'next_page_url' => null,
+            'path' => 'https://example.com',
+            'per_page' => 5,
+            'prev_page_url' => null,
+            'to' => 1,
+            'total' => 1,
+        ], 200),
+    ]);
 
-        $request = Request::create('/api/settings/cashbook-entry', 'POST', $data);
-        dd('kj');
+    $cashbookApi = new Cashbook();
+    $response = $cashbookApi->list();
 
-        $CashBookApi = new Cashbooks();
-
-        $response = $CashBookApi->createCashBookEntry($request);
-
-        $this->assertEquals(201, $response->status());
-
-    }
-
-    public function test_get_fake_cash_book_entry() {}
-
-    public function test_edit_fake_cash_book_entry() {}
-
-    public function test_delete_fake_cash_book_entry() {}
-}
+    expect($response)->toBeInstanceOf(CashbookList::class)
+        ->getItems()->toHaveCount(1);
+});

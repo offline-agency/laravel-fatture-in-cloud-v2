@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\Taxes as TaxesEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\TaxesAttachment;
@@ -13,7 +16,7 @@ class Taxes extends Api
 {
     use ListTrait;
 
-    const DOCUMENT_TYPES = [
+    public const DOCUMENT_TYPES = [
         'expense',
         'passive_credit_note',
         'passive_delivery_note',
@@ -21,60 +24,64 @@ class Taxes extends Api
 
     public function list(
         string $type,
-        ?array $additional_data = []
-    ) {
-        $additional_data = array_merge($additional_data, [
+        array $additionalData = []
+    ): TaxesList|Error {
+        $additionalData = array_merge($additionalData, [
             'type' => $type,
         ]);
 
-        $additional_data = $this->data($additional_data, [
+        $additionalData = $this->data($additionalData, [
             'type', 'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
         ]);
 
+        /** @var object $response */
         $response = $this->get(
-            'c/'.$this->company_id.'taxes',
-            $additional_data
+            'c/'.$this->companyId.'/taxes',
+            $additionalData
         );
 
         if (! $response->success) {
             return new Error($response->data);
         }
 
-        $taxes_response = $response->data;
+        $taxesResponse = $response->data;
 
-        return new TaxesList($taxes_response);
+        return new TaxesList($taxesResponse);
     }
 
     public function all(
         string $type,
-        ?array $additional_data = []
-    ) {
-        $additional_data = array_merge($additional_data, [
+        array $additionalData = []
+    ): array|Error {
+        $additionalData = array_merge($additionalData, [
             'type' => $type,
         ]);
 
-        $all_documents = $this->getAll([
+        $allDocuments = $this->getAll([
             'type', 'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
-        ], 'c/'.$this->company_id.'/taxes', $additional_data);
+        ], 'c/'.$this->companyId.'/taxes', $additionalData);
 
-        return gettype($all_documents) !== 'array'
-            ? $all_documents
-            : array_map(function ($document) {
-                return new TaxesEntity($document);
-            }, $all_documents);
+        if ($allDocuments instanceof Error) {
+            return $allDocuments;
+        }
+
+        return array_map(function ($document) {
+            return new TaxesEntity($document);
+        }, $allDocuments);
     }
 
     public function detail(
-        int $document_id,
-        ?array $additional_data = []
-    ) {
-        $additional_data = $this->data($additional_data, [
+        int $documentId,
+        array $additionalData = []
+    ): TaxesEntity|Error {
+        $additionalData = $this->data($additionalData, [
             'fields', 'fieldset',
         ]);
 
+        /** @var object $response */
         $response = $this->get(
-            'c/'.$this->company_id.'/taxes/'.$document_id,
-            $additional_data
+            'c/'.$this->companyId.'/taxes/'.$documentId,
+            $additionalData
         );
 
         if (! $response->success) {
@@ -87,10 +94,11 @@ class Taxes extends Api
     }
 
     public function bin(
-        int $document_id
-    ) {
+        int $documentId
+    ): TaxesEntity|Error {
+        /** @var object $response */
         $response = $this->get(
-            'c/'.$this->company_id.'/bin/taxes/'.$document_id
+            'c/'.$this->companyId.'/bin/taxes/'.$documentId
         );
 
         if (! $response->success) {
@@ -103,10 +111,11 @@ class Taxes extends Api
     }
 
     public function delete(
-        int $document_id
-    ) {
+        int $documentId
+    ): string|Error {
+        /** @var object $response */
         $response = $this->destroy(
-            'c/'.$this->company_id.'/taxes/'.$document_id
+            'c/'.$this->companyId.'/taxes/'.$documentId
         );
 
         if (! $response->success) {
@@ -118,21 +127,22 @@ class Taxes extends Api
 
     public function create(
         array $body = []
-    ) {
+    ): TaxesEntity|Error|MessageBag {
         $validator = Validator::make($body, [
             'data' => 'required',
-            'data.type' => 'required|in:'.implode(',', Taxes::DOCUMENT_TYPES),
+            'data.type' => 'required|in:'.implode(',', self::DOCUMENT_TYPES),
             'data.entity.name' => 'required',
         ], [
-            'data.type.in' => 'The selected data.type is invalid. Select one between '.implode(', ', Taxes::DOCUMENT_TYPES),
+            'data.type.in' => 'The selected data.type is invalid. Select one between '.implode(', ', self::DOCUMENT_TYPES),
         ]);
 
         if ($validator->fails()) {
             return $validator->errors();
         }
 
+        /** @var object $response */
         $response = $this->post(
-            'c/'.$this->company_id.'/taxes',
+            'c/'.$this->companyId.'/taxes',
             $body
         );
 
@@ -146,9 +156,9 @@ class Taxes extends Api
     }
 
     public function edit(
-        int $document_id,
+        int $documentId,
         array $body = []
-    ) {
+    ): TaxesEntity|Error|MessageBag {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.entity.name' => 'required',
@@ -158,8 +168,9 @@ class Taxes extends Api
             return $validator->errors();
         }
 
+        /** @var object $response */
         $response = $this->put(
-            'c/'.$this->company_id.'/taxes/'.$document_id,
+            'c/'.$this->companyId.'/taxes/'.$documentId,
             $body
         );
 
@@ -173,25 +184,26 @@ class Taxes extends Api
     }
 
     public function binDetail(
-        int $document_id,
-        ?array $additional_data = []
-    ) {
+        int $documentId,
+        array $additionalData = []
+    ): TaxesEntity|Error {
         $document = $this->detail(
-            $document_id,
-            $additional_data
+            $documentId,
+            $additionalData
         );
 
         if ($document instanceof Error) {
-            $document = $this->bin($document_id);
+            $document = $this->bin($documentId);
 
             if (
                 ! $document instanceof Error
                 && $document->type === 'proforma'
+                && isset($document->merged_in)
                 && ! is_null($document->merged_in)
             ) {
                 $document = $this->detail(
                     $document->merged_in->id,
-                    $additional_data
+                    $additionalData
                 );
             }
         }
@@ -201,7 +213,7 @@ class Taxes extends Api
 
     public function attachment(
         array $body = []
-    ) {
+    ): TaxesAttachment|Error|MessageBag {
         $validator = Validator::make($body, [
             'filename' => 'required',
             'attachment' => 'required',
@@ -211,8 +223,9 @@ class Taxes extends Api
             return $validator->errors();
         }
 
+        /** @var object $response */
         $response = $this->post(
-            'c/'.$this->company_id.'/taxes/attachment',
+            'c/'.$this->companyId.'/taxes/attachment',
             $body,
             true
         );
@@ -221,16 +234,17 @@ class Taxes extends Api
             return new Error($response->data);
         }
 
-        $attachment_token = $response->data->data;
+        $attachmentToken = $response->data->data;
 
-        return new TaxesAttachment($attachment_token);
+        return new TaxesAttachment($attachmentToken);
     }
 
     public function deleteAttachment(
-        int $document_id
-    ) {
+        int $documentId
+    ): string|Error {
+        /** @var object $response */
         $response = $this->destroy(
-            'c/'.$this->company_id.'/taxes/'.$document_id.'/attachment'
+            'c/'.$this->companyId.'/taxes/'.$documentId.'/attachment'
         );
 
         if (! $response->success) {

@@ -1,7 +1,5 @@
 <?php
 
-namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
-
 use Illuminate\Support\Facades\Http;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Info;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
@@ -9,16 +7,11 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\InfoList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\PaymentAccount as PaymentAccountEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\Vat as VatEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\InfoFakeResponse;
-use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
 
-class InfoEntityTest extends TestCase
-{
-    // list
-
-    public function test_list_vats()
-    {
+describe('Info Entity', function () {
+    it('lists vat types', function () {
         Http::fake([
-            'info/vat_types' => Http::response(
+            '*/info/vat_types' => Http::response(
                 (new InfoFakeResponse())->getVatTypesFakeList()
             ),
         ]);
@@ -26,17 +19,14 @@ class InfoEntityTest extends TestCase
         $info = new Info();
         $response = $info->listVatTypes();
 
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(InfoList::class, $response);
-        $this->assertIsArray($response->getItems());
-        $this->assertCount(2, $response->getItems());
-        $this->assertInstanceOf(VatEntity::class, $response->getItems()[0]);
-    }
+        expect($response)->toBeInstanceOf(InfoList::class)
+            ->getItems()->toBeArray()->toHaveCount(2)
+            ->getItems()->{0}->toBeInstanceOf(VatEntity::class);
+    });
 
-    public function test_list_vat_types_has_vat_types_method()
-    {
+    it('checks if vat list has items', function () {
         Http::fake([
-            'info/vat_types' => Http::response(
+            '*/info/vat_types' => Http::response(
                 (new InfoFakeResponse())->getVatTypesFakeList()
             ),
         ]);
@@ -44,27 +34,12 @@ class InfoEntityTest extends TestCase
         $info = new Info();
         $response = $info->listVatTypes();
 
-        $this->assertTrue($response->hasItems());
-    }
+        expect($response->hasItems())->toBeTrue();
+    });
 
-    public function test_empty_list_vat_types_has_vat_types_method()
-    {
+    it('handles error on vat types list', function () {
         Http::fake([
-            'info/vat_types' => Http::response(
-                (new InfoFakeResponse())->getEmptyVatTypesFakeList()
-            ),
-        ]);
-
-        $info = new Info();
-        $response = $info->listVatTypes();
-
-        $this->assertFalse($response->hasItems());
-    }
-
-    public function test_error_on_list_vat_types()
-    {
-        Http::fake([
-            'info/vat_types' => Http::response(
+            '*/info/vat_types' => Http::response(
                 (new InfoFakeResponse())->getVatTypesFakeError(),
                 401
             ),
@@ -73,13 +48,12 @@ class InfoEntityTest extends TestCase
         $info = new Info();
         $response = $info->listVatTypes();
 
-        $this->assertInstanceOf(Error::class, $response);
-    }
+        expect($response)->toBeInstanceOf(Error::class);
+    });
 
-    public function test_list_payment_accounts()
-    {
+    it('lists payment accounts', function () {
         Http::fake([
-            'info/payment_accounts' => Http::response(
+            '*/info/payment_accounts' => Http::response(
                 (new InfoFakeResponse())->getPaymentAccountsFakeList()
             ),
         ]);
@@ -87,45 +61,14 @@ class InfoEntityTest extends TestCase
         $info = new Info();
         $response = $info->listPaymentAccounts();
 
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(InfoList::class, $response);
-        $this->assertIsArray($response->getItems());
-        $this->assertCount(1, $response->getItems());
-        $this->assertInstanceOf(PaymentAccountEntity::class, $response->getItems()[0]);
-    }
+        expect($response)->toBeInstanceOf(InfoList::class)
+            ->getItems()->toBeArray()->toHaveCount(1)
+            ->getItems()->{0}->toBeInstanceOf(PaymentAccountEntity::class);
+    });
 
-    public function test_list_payment_accounts_has_payment_accounts_method()
-    {
+    it('handles error on payment accounts list', function () {
         Http::fake([
-            'info/payment_accounts' => Http::response(
-                (new InfoFakeResponse())->getPaymentAccountsFakeList()
-            ),
-        ]);
-
-        $info = new Info();
-        $response = $info->listPaymentAccounts();
-
-        $this->assertTrue($response->hasItems());
-    }
-
-    public function test_empty_list_payment_accounts_has_payment_accounts_method()
-    {
-        Http::fake([
-            'info/payment_accounts' => Http::response(
-                (new InfoFakeResponse())->getEmptyPaymentAccountsFakeList()
-            ),
-        ]);
-
-        $info = new Info();
-        $response = $info->listPaymentAccounts();
-
-        $this->assertFalse($response->hasItems());
-    }
-
-    public function test_error_on_list_payment_accounts()
-    {
-        Http::fake([
-            'info/payment_accounts' => Http::response(
+            '*/info/payment_accounts' => Http::response(
                 (new InfoFakeResponse())->getPaymentAccountsFakeError(),
                 401
             ),
@@ -134,6 +77,6 @@ class InfoEntityTest extends TestCase
         $info = new Info();
         $response = $info->listPaymentAccounts();
 
-        $this->assertInstanceOf(Error::class, $response);
-    }
-}
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+});

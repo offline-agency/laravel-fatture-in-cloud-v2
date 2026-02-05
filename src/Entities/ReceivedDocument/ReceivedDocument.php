@@ -1,163 +1,116 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
-
-class ReceivedDocument extends AbstractEntity
+readonly class ReceivedDocument
 {
-    /**
-     * @var int
-     */
-    public $id;
+    public ?int $id;
 
-    /**
-     * @var string
-     */
-    public $type; // TODO: can be only some values
+    public ?string $type;
 
-    /**
-     * @var null|object
-     */
-    public $merged_in; // TODO: relate another class
+    public ?int $company_id;
 
-    /**
-     * @var object
-     */
-    public $entity; // TODO: relate another class
+    public mixed $merged_in;
 
-    /**
-     * @var string
-     */
-    public $date; // TODO: date format
+    public mixed $entity;
 
-    /**
-     * @var string
-     */
-    public $category;
+    public ?string $date;
 
-    /**
-     * @var string
-     */
-    public $description;
+    public ?string $category;
 
-    /**
-     * @var float
-     */
-    public $amount_net;
+    public ?string $description;
 
-    /**
-     * @var float
-     */
-    public $amount_vat;
+    public ?float $amount_net;
 
-    /**
-     * @var float
-     */
-    public $amount_withholding_tax;
+    public ?float $amount_vat;
 
-    /**
-     * @var float
-     */
-    public $amount_other_withholding_tax;
+    public ?float $amount_withholding_tax;
 
-    /**
-     * @var float
-     */
-    public $amount_gross;
+    public ?float $amount_other_withholding_tax;
 
-    /**
-     * @var float
-     */
-    public $amortization;
+    public ?float $amount_gross;
 
-    /**
-     * @var string
-     */
-    public $rc_center;
+    public ?float $amortization;
 
-    /**
-     * @var string
-     */
-    public $invoice_number;
+    public ?string $rc_center;
 
-    /**
-     * @var bool
-     */
-    public $is_marked;
+    public ?string $invoice_number;
 
-    /**
-     * @var bool
-     */
-    public $is_detailed;
+    public ?bool $is_marked;
 
-    /**
-     * @var bool
-     */
-    public $e_invoice;
+    public ?bool $is_detailed;
 
-    /**
-     * @var string
-     */
-    public $next_due_date;
+    public ?bool $e_invoice;
 
-    /**
-     * @var object
-     */
-    public $currency;
+    public ?string $next_due_date;
 
-    /**
-     * @var float
-     */
-    public $tax_deductibility;
+    public mixed $currency;
 
-    /**
-     * @var float
-     */
-    public $vat_deductibility;
+    public ?float $tax_deductibility;
 
-    /**
-     * @var array
-     */
-    public $item_list;
+    public ?float $vat_deductibility;
 
-    /**
-     * @var array
-     */
-    public $payment_list;
+    public ?array $item_list;
 
-    /**
-     * @var string
-     */
-    public $attachment_url;
+    public ?array $payment_list;
 
-    /**
-     * @var string
-     */
-    public $attachment_preview_url;
+    public ?string $attachment_url;
 
-    /**
-     * @var bool
-     */
-    public $auto_calculate;
+    public ?string $attachment_preview_url;
 
-    /**
-     * @var string
-     */
-    public $attachment_token;
+    public ?bool $auto_calculate;
 
-    /**
-     * @var bool
-     */
-    public $locked;
+    public ?string $attachment_token;
 
-    /**
-     * @var string
-     */
-    public $created_at;
+    public ?bool $locked;
 
-    /**
-     * @var string
-     */
-    public $updated_at;
+    public ?string $created_at;
+
+    public ?string $updated_at;
+
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
+
+        if (! is_array($parameters)) {
+            $parameters = [];
+        }
+
+        $this->id = $parameters['id'] ?? null;
+        $this->type = $parameters['type'] ?? null;
+        $this->company_id = $parameters['company_id'] ?? null;
+        $this->merged_in = $parameters['merged_in'] ?? null;
+        $this->entity = $parameters['entity'] ?? null;
+        $this->date = $parameters['date'] ?? null;
+        $this->category = $parameters['category'] ?? null;
+        $this->description = $parameters['description'] ?? null;
+        $this->amount_net = isset($parameters['amount_net']) ? (float) $parameters['amount_net'] : null;
+        $this->amount_vat = isset($parameters['amount_vat']) ? (float) $parameters['amount_vat'] : null;
+        $this->amount_withholding_tax = isset($parameters['amount_withholding_tax']) ? (float) $parameters['amount_withholding_tax'] : null;
+        $this->amount_other_withholding_tax = isset($parameters['amount_other_withholding_tax']) ? (float) $parameters['amount_other_withholding_tax'] : null;
+        $this->amount_gross = isset($parameters['amount_gross']) ? (float) $parameters['amount_gross'] : null;
+        $this->amortization = isset($parameters['amortization']) ? (float) $parameters['amortization'] : null;
+        $this->rc_center = $parameters['rc_center'] ?? null;
+        $this->invoice_number = $parameters['invoice_number'] ?? null;
+        $this->is_marked = $parameters['is_marked'] ?? null;
+        $this->is_detailed = $parameters['is_detailed'] ?? null;
+        $this->e_invoice = $parameters['e_invoice'] ?? null;
+        $this->next_due_date = $parameters['next_due_date'] ?? null;
+        $this->currency = $parameters['currency'] ?? null;
+        $this->tax_deductibility = isset($parameters['tax_deductibility']) ? (float) $parameters['tax_deductibility'] : null;
+        $this->vat_deductibility = isset($parameters['vat_deductibility']) ? (float) $parameters['vat_deductibility'] : null;
+        $this->item_list = $parameters['item_list'] ?? null;
+        $this->payment_list = $parameters['payment_list'] ?? null;
+        $this->attachment_url = $parameters['attachment_url'] ?? null;
+        $this->attachment_preview_url = $parameters['attachment_preview_url'] ?? null;
+        $this->auto_calculate = $parameters['auto_calculate'] ?? null;
+        $this->attachment_token = $parameters['attachment_token'] ?? null;
+        $this->locked = $parameters['locked'] ?? null;
+        $this->created_at = $parameters['created_at'] ?? null;
+        $this->updated_at = $parameters['updated_at'] ?? null;
+    }
 }

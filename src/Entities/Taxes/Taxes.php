@@ -1,53 +1,50 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
-
-class Taxes extends AbstractEntity
+readonly class Taxes
 {
-    /**
-     * @var int
-     */
-    public $id;
+    public ?int $id;
 
-    /**
-     * @var string
-     */
-    public $type; // TODO: can be only some values
+    public ?string $type;
 
-    /**
-     * @var null|object
-     */
-    public $merged_in; // TODO: relate another class
+    public ?int $company_id;
 
-    /**
-     * @var string
-     */
-    public $due_date; // TODO: date format
+    public ?string $dueDate;
 
-    /**
-     * @var string
-     */
-    public $status; // TODO: can be only some values
+    public ?string $status;
 
-    /**
-     * @var object
-     */
-    public $payment_account;
+    public mixed $paymentAccount;
 
-    /**
-     * @var float
-     */
-    public $amount;
+    public ?float $amount;
 
-    /**
-     * @var string
-     */
-    public $attachment_url;
+    public ?string $attachmentUrl;
 
-    /**
-     * @var string
-     */
-    public $description;
+    public ?string $description;
+
+    public mixed $mergedIn;
+
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
+
+        if (! is_array($parameters)) {
+            $parameters = [];
+        }
+
+        $this->id = $parameters['id'] ?? null;
+        $this->type = $parameters['type'] ?? null;
+        $this->company_id = $parameters['company_id'] ?? null;
+        $this->dueDate = $parameters['due_date'] ?? null;
+        $this->status = $parameters['status'] ?? null;
+        $this->paymentAccount = $parameters['payment_account'] ?? null;
+        $this->amount = isset($parameters['amount']) ? (float) $parameters['amount'] : null;
+        $this->attachmentUrl = $parameters['attachment_url'] ?? null;
+        $this->description = $parameters['description'] ?? null;
+        $this->mergedIn = $parameters['merged_in'] ?? null;
+    }
 }

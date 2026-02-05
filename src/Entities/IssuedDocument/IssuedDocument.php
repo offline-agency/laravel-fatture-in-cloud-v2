@@ -8,6 +8,8 @@ readonly class IssuedDocument
 {
     public ?int $id;
 
+    public ?int $company_id;
+
     public mixed $entity;
 
     public ?string $type;
@@ -195,6 +197,7 @@ readonly class IssuedDocument
         }
 
         $this->id = $parameters['id'] ?? null;
+        $this->company_id = $parameters['company_id'] ?? null;
         $this->entity = $parameters['entity'] ?? null;
         $this->type = $parameters['type'] ?? null;
         $this->number = isset($parameters['number']) ? (int) $parameters['number'] : null;

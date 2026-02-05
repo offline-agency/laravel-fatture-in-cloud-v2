@@ -40,9 +40,9 @@ Before submitting a pull request:
 
 If the project maintainer has any additional requirements, you will find them listed here.
 
-- **[PSR-2 Coding Standard](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)** - The easiest way to apply the conventions is to install [PHP Code Sniffer](https://pear.php.net/package/PHP_CodeSniffer).
+- **[Laravel Pint](https://laravel.com/docs/11.x/pint)** - We use Pint for code styling. You can run it locally using `composer format`.
 
-- **Add tests!** - Your patch won't be accepted if it doesn't have tests.
+- **Add tests with Pest!** - Your patch won't be accepted if it doesn't have tests. We use [Pest PHP](https://pestphp.com/) for our testing suite. Run them with `composer test`.
 
 - **Document any change in behaviour** - Make sure the `README.md` and any other relevant documentation are kept up-to-date.
 

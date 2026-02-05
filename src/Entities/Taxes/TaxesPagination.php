@@ -1,75 +1,59 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes;
 
-use Illuminate\Support\Arr;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Taxes;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Pagination;
 
-class TaxesPagination extends Pagination
+readonly class TaxesPagination extends Pagination
 {
-    public function goToFirstPage()
+    public function goToFirstPage(): TaxesList|Error|null
     {
-        if (is_null($this->first_page_url)) {
-            return;
+        if (is_null($this->firstPageUrl)) {
+            return null;
         }
 
-        return $this->changePage($this->first_page_url);
+        return $this->changePage($this->firstPageUrl);
     }
 
-    public function goToLastPage()
+    public function goToLastPage(): TaxesList|Error|null
     {
-        if (is_null($this->last_page_url)) {
-            return;
+        if (is_null($this->lastPageUrl)) {
+            return null;
         }
 
-        return $this->changePage($this->last_page_url);
+        return $this->changePage($this->lastPageUrl);
     }
 
-    public function goToPrevPage()
+    public function goToPrevPage(): TaxesList|Error|null
     {
         if (! $this->hasPrevPage()) {
-            return;
+            return null;
         }
 
-        return $this->changePage($this->prev_page_url);
+        return $this->changePage($this->prevPageUrl);
     }
 
-    public function goToNextPage()
+    public function goToNextPage(): TaxesList|Error|null
     {
         if (! $this->hasNextPage()) {
-            return;
+            return null;
         }
 
-        return $this->changePage($this->next_page_url);
+        return $this->changePage($this->nextPageUrl);
     }
 
     // helpers
 
-    private function changePage(
-        string $url
-    ) {
-        $query_params = $this->getParsedQueryParams($url);
-
-        $received_document = new Taxes();
-
-        return $received_document->list(
-            $query_params->type,
-            $query_params->additional_data
-        );
-    }
-
-    public function getParsedQueryParams($url): object
+    private function changePage(string $url): TaxesList|Error
     {
-        $query_params = $this->getQueryParams($url);
+        $queryParams = $this->getQueryParams($url);
 
-        $type = Arr::get($query_params, 'type');
+        $taxes = new Taxes();
 
-        unset($query_params['type']);
-
-        return (object) [
-            'type' => $type,
-            'additional_data' => $query_params,
-        ];
+        return $taxes->list($queryParams);
     }
 }

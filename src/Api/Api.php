@@ -15,12 +15,15 @@ class Api
 
     protected string $companyId;
 
+    protected string $company_id;
+
     protected string $accessToken;
 
     public function __construct(?FattureInCloud $connector = null)
     {
         $this->connector = $connector ?? new FattureInCloud();
         $this->companyId = $this->connector->getCompanyId();
+        $this->company_id = $this->companyId;
         $this->accessToken = $this->connector->getAccessToken();
     }
 

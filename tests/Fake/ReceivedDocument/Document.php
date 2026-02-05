@@ -40,7 +40,7 @@ class Document extends FakeResponse
             ],
             'attachment_url' => $this->value($params, 'attachment_url', null),
             'attachment_preview_url' => $this->value($params, 'attachment_preview_url', ''),
-            'auto_calculate' => $this->value($params, 'auto_calculate', ''),
+            'auto_calculate' => $this->value($params, 'auto_calculate', null),
             'attachment_token' => $this->value($params, 'attachment_token', ''),
             'locked' => $this->value($params, 'locked', false),
             'created_at' => $this->value($params, 'created_at', date('Y-m-d H:i:s')),
