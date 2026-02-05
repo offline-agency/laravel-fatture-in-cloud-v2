@@ -2,7 +2,7 @@
 
 All notable changes to `laravel-fatture-in-cloud-v2` will be documented in this file.
 
-## [2.0.0] - 2024-02-05
+## [2.0.0] - 2026-02-05
 
 ### Added
 - New API endpoint classes: `Email`, `Situation`, `PriceList`, and `Webhook`.

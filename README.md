@@ -146,6 +146,7 @@ We are currently work on this package to implement all endpoints. Enable notific
 ✅ Cashbook
 
 ✅ Info
+
 ✅ Price Lists
 
 ✅ Webhooks
