@@ -2,16 +2,13 @@
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Tests;
 
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Config;
 use OfflineAgency\LaravelFattureInCloudV2\LaravelFattureInCloudV2Facade;
 use OfflineAgency\LaravelFattureInCloudV2\LaravelFattureInCloudV2ServiceProvider;
-use Orchestra\Testbench\Concerns\CreatesApplication;
+use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-    use CreatesApplication;
-
     protected function setUp(): void
     {
         parent::setUp();

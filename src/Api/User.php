@@ -23,7 +23,6 @@ class User extends Api
 
         $user = $response->data;
 
-        /** @var object $completeUser */
         $completeUser = (object) array_merge(
             (array) $user->data,
             (array) $user->info,

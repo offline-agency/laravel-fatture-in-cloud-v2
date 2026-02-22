@@ -199,7 +199,6 @@ class Taxes extends Api
                 ! $document instanceof Error
                 && $document->type === 'proforma'
                 && isset($document->merged_in)
-                && ! is_null($document->merged_in)
             ) {
                 $document = $this->detail(
                     $document->merged_in->id,

@@ -52,8 +52,11 @@ readonly class TaxesPagination extends Pagination
     {
         $queryParams = $this->getQueryParams($url);
 
+        $type = (string) ($queryParams['type'] ?? '');
+        unset($queryParams['type']);
+
         $taxes = new Taxes();
 
-        return $taxes->list($queryParams);
+        return $taxes->list($type, $queryParams);
     }
 }

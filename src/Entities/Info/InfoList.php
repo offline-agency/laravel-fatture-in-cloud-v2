@@ -18,7 +18,7 @@ class InfoList
     }
 
     /**
-     * @return array<VatEntity>
+     * @return array<mixed>
      */
     public function getItems(): array
     {
