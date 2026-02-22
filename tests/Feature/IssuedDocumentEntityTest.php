@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentAttachment;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentEmail;
@@ -10,6 +11,7 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPagination;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPreCreateInfo;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentScheduleEmail;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentTotals;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\IssuedDocumentFakeResponse;
 
 describe('Issued Document Entity', function () {
@@ -31,6 +33,20 @@ describe('Issued Document Entity', function () {
             ->getItems()->{0}->toBeInstanceOf(IssuedDocumentEntity::class);
     });
 
+    it('handles error on list issued documents', function () {
+        Http::fake([
+            'c/*/issued_documents*' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->list('invoice');
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
     it('returns all issued documents', function () {
         $type = 'invoice';
 
@@ -45,6 +61,20 @@ describe('Issued Document Entity', function () {
 
         expect($response)->toBeArray()->toHaveCount(2)
             ->{0}->toBeInstanceOf(IssuedDocumentEntity::class);
+    });
+
+    it('handles error on all issued documents', function () {
+        Http::fake([
+            'c/*/issued_documents*' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->all('invoice');
+
+        expect($response)->toBeInstanceOf(Error::class);
     });
 
     it('handles query parameters parsing in pagination', function () {
@@ -72,6 +102,20 @@ describe('Issued Document Entity', function () {
         expect($response)->toBeInstanceOf(IssuedDocumentEntity::class);
     });
 
+    it('handles error on document detail', function () {
+        Http::fake([
+            'c/*/issued_documents/*' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->detail(999);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
     it('deletes a document', function () {
         $documentId = 1;
 
@@ -83,6 +127,20 @@ describe('Issued Document Entity', function () {
         $response = $issuedDocuments->delete($documentId);
 
         expect($response)->toBe('Document deleted');
+    });
+
+    it('handles error on delete document', function () {
+        Http::fake([
+            'c/*/issued_documents/*' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->delete(999);
+
+        expect($response)->toBeInstanceOf(Error::class);
     });
 
     it('creates a document', function () {
@@ -119,6 +177,188 @@ describe('Issued Document Entity', function () {
             ->messages()->toHaveKey('data');
     });
 
+    it('handles error on create document', function () {
+        Http::fake([
+            'c/*/issued_documents' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->create([
+            'data' => [
+                'type' => 'invoice',
+                'entity' => ['name' => 'Test S.R.L'],
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('edits a document', function () {
+        $documentId = 1;
+
+        Http::fake([
+            'c/*/issued_documents/'.$documentId => Http::response([
+                'data' => [
+                    'id' => $documentId,
+                    'type' => 'invoice',
+                    'entity' => ['name' => 'Updated S.R.L'],
+                ],
+            ], 200),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->edit($documentId, [
+            'data' => [
+                'entity' => ['name' => 'Updated S.R.L'],
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(IssuedDocumentEntity::class);
+    });
+
+    it('validates on edit document - missing data', function () {
+        $api = new IssuedDocument();
+        $response = $api->edit(1, []);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data');
+    });
+
+    it('validates data.entity.name on edit document', function () {
+        $api = new IssuedDocument();
+        $response = $api->edit(1, [
+            'data' => ['type' => 'invoice'],
+        ]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.entity.name');
+    });
+
+    it('handles error on edit document', function () {
+        Http::fake([
+            'c/*/issued_documents/*' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->edit(1, [
+            'data' => ['entity' => ['name' => 'Test S.R.L']],
+        ]);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('gets new totals', function () {
+        Http::fake([
+            'c/*/issued_documents/totals' => Http::response([
+                'data' => [
+                    'amount_net' => 100.0,
+                    'amount_vat' => 22.0,
+                    'amount_gross' => 122.0,
+                ],
+            ], 200),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->getNewTotals([
+            'data' => [
+                'type' => 'invoice',
+                'entity' => ['name' => 'Test S.R.L'],
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(IssuedDocumentTotals::class);
+    });
+
+    it('validates on get new totals - missing data', function () {
+        $api = new IssuedDocument();
+        $response = $api->getNewTotals([]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data');
+    });
+
+    it('validates data.entity.name on get new totals', function () {
+        $api = new IssuedDocument();
+        $response = $api->getNewTotals([
+            'data' => ['type' => 'invoice'],
+        ]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.entity.name');
+    });
+
+    it('handles error on get new totals', function () {
+        Http::fake([
+            'c/*/issued_documents/totals' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->getNewTotals([
+            'data' => [
+                'type' => 'invoice',
+                'entity' => ['name' => 'Test S.R.L'],
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('gets existing totals', function () {
+        $documentId = 1;
+
+        Http::fake([
+            'c/*/issued_documents/'.$documentId.'/totals' => Http::response([
+                'data' => [
+                    'amount_net' => 100.0,
+                    'amount_vat' => 22.0,
+                    'amount_gross' => 122.0,
+                ],
+            ], 200),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->getExistingTotals($documentId, [
+            'data' => [
+                'entity' => ['name' => 'Test S.R.L'],
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(IssuedDocumentTotals::class);
+    });
+
+    it('validates on get existing totals - missing data', function () {
+        $api = new IssuedDocument();
+        $response = $api->getExistingTotals(1, []);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data');
+    });
+
+    it('handles error on get existing totals', function () {
+        Http::fake([
+            'c/*/issued_documents/*/totals' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->getExistingTotals(1, [
+            'data' => ['entity' => ['name' => 'Test S.R.L']],
+        ]);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
     it('gets pre-create info', function () {
         $type = 'invoice';
 
@@ -134,6 +374,20 @@ describe('Issued Document Entity', function () {
         expect($response)->toBeInstanceOf(IssuedDocumentPreCreateInfo::class);
     });
 
+    it('handles error on pre-create info', function () {
+        Http::fake([
+            'c/*/issued_documents/info*' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->preCreateInfo('invoice');
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
     it('gets email data', function () {
         $documentId = 1;
 
@@ -147,6 +401,20 @@ describe('Issued Document Entity', function () {
         $response = $api->emailData($documentId);
 
         expect($response)->toBeInstanceOf(IssuedDocumentEmail::class);
+    });
+
+    it('handles error on email data', function () {
+        Http::fake([
+            'c/*/issued_documents/*/email' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->emailData(999);
+
+        expect($response)->toBeInstanceOf(Error::class);
     });
 
     it('schedules an email', function () {
@@ -179,6 +447,43 @@ describe('Issued Document Entity', function () {
         expect($response)->toBeInstanceOf(IssuedDocumentScheduleEmail::class);
     });
 
+    it('validates on schedule email - missing data', function () {
+        $api = new IssuedDocument();
+        $response = $api->scheduleEmail(1, []);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data');
+    });
+
+    it('handles error on schedule email', function () {
+        Http::fake([
+            'c/*/issued_documents/*/email' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->scheduleEmail(1, [
+            'data' => [
+                'sender_email' => 'fake_sender@gmail.com',
+                'recipient_email' => 'fake_recipient@gmail.com',
+                'subject' => 'Subject',
+                'body' => 'Body',
+                'include' => [
+                    'document' => true,
+                    'delivery_note' => false,
+                    'attachment' => false,
+                    'accompanying_invoice' => false,
+                ],
+                'attach_pdf' => false,
+                'send_copy' => true,
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
     it('uploads an attachment', function () {
         Http::fake([
             '*/issued_documents/attachment' => Http::response(
@@ -195,6 +500,33 @@ describe('Issued Document Entity', function () {
         expect($response)->toBeInstanceOf(IssuedDocumentAttachment::class);
     });
 
+    it('validates on attachment upload - missing filename', function () {
+        $api = new IssuedDocument();
+        $response = $api->attachment([
+            'attachment' => 'content',
+        ]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('filename');
+    });
+
+    it('handles error on attachment upload', function () {
+        Http::fake([
+            'c/*/issued_documents/attachment' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->attachment([
+            'filename' => 'test.pdf',
+            'attachment' => 'content',
+        ]);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
     it('deletes an attachment', function () {
         $documentId = 1;
 
@@ -206,5 +538,101 @@ describe('Issued Document Entity', function () {
         $response = $api->deleteAttachment($documentId);
 
         expect($response)->toBe('Attachment deleted');
+    });
+
+    it('handles error on delete attachment', function () {
+        Http::fake([
+            'c/*/issued_documents/*/attachment' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->deleteAttachment(999);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('gets bin document', function () {
+        $documentId = 1;
+
+        Http::fake([
+            'c/*/bin/issued_documents/'.$documentId => Http::response([
+                'data' => ['id' => $documentId, 'type' => 'invoice', 'entity' => ['name' => 'Test S.R.L']],
+            ], 200),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->bin($documentId);
+
+        expect($response)->toBeInstanceOf(IssuedDocumentEntity::class)
+            ->and($response->id)->toBe($documentId);
+    });
+
+    it('handles error on bin document', function () {
+        Http::fake([
+            'c/*/bin/issued_documents/*' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->bin(999);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('handles binDetail when document is found directly', function () {
+        $documentId = 1;
+
+        Http::fake([
+            'c/*/issued_documents/'.$documentId => Http::response([
+                'data' => ['id' => $documentId, 'type' => 'invoice', 'entity' => ['name' => 'Test S.R.L']],
+            ], 200),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->binDetail($documentId);
+
+        expect($response)->toBeInstanceOf(IssuedDocumentEntity::class);
+    });
+
+    it('handles binDetail falling back to bin', function () {
+        $documentId = 1;
+
+        Http::fake([
+            'c/*/bin/issued_documents/'.$documentId => Http::response([
+                'data' => ['id' => $documentId, 'type' => 'invoice', 'entity' => ['name' => 'Test S.R.L']],
+            ], 200),
+            'c/*/issued_documents/'.$documentId => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->binDetail($documentId);
+
+        expect($response)->toBeInstanceOf(IssuedDocumentEntity::class);
+    });
+
+    it('handles binDetail when both detail and bin fail', function () {
+        Http::fake([
+            'c/*/issued_documents/*' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+            'c/*/bin/issued_documents/*' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->binDetail(999);
+
+        expect($response)->toBeInstanceOf(Error::class);
     });
 });

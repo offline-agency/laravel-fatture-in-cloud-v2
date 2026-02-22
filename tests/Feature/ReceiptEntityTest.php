@@ -4,10 +4,12 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Receipt;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\Receipt as ReceiptEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\ReceiptList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\ReceiptMonthlyTotals;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\ReceiptPagination;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\ReceiptPreCreateInfo;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ReceiptFakeResponse;
 
 describe('Receipt Entity', function () {
@@ -27,6 +29,20 @@ describe('Receipt Entity', function () {
             ->getItems()->{0}->toBeInstanceOf(ReceiptEntity::class);
     });
 
+    it('handles error on list receipts', function () {
+        Http::fake([
+            'c/*/receipts' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->list();
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
     it('returns all receipts', function () {
         Http::fake([
             '*/receipts' => Http::response(
@@ -39,6 +55,20 @@ describe('Receipt Entity', function () {
 
         expect($response)->toBeArray()->toHaveCount(2)
             ->{0}->toBeInstanceOf(ReceiptEntity::class);
+    });
+
+    it('handles error on all receipts', function () {
+        Http::fake([
+            'c/*/receipts*' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->all();
+
+        expect($response)->toBeInstanceOf(Error::class);
     });
 
     it('gets receipt detail', function () {
@@ -56,6 +86,20 @@ describe('Receipt Entity', function () {
         expect($response)->toBeInstanceOf(ReceiptEntity::class);
     });
 
+    it('handles error on receipt detail', function () {
+        Http::fake([
+            'c/*/receipts/*' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->detail(999);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
     it('deletes a receipt', function () {
         $receiptId = 1;
 
@@ -67,6 +111,20 @@ describe('Receipt Entity', function () {
         $response = $api->delete($receiptId);
 
         expect($response)->toBe('Receipt deleted');
+    });
+
+    it('handles error on delete receipt', function () {
+        Http::fake([
+            'c/*/receipts/*' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->delete(999);
+
+        expect($response)->toBeInstanceOf(Error::class);
     });
 
     it('creates a receipt', function () {
@@ -98,6 +156,112 @@ describe('Receipt Entity', function () {
             ->messages()->toHaveKey('data');
     });
 
+    it('handles error on create receipt', function () {
+        Http::fake([
+            'c/*/receipts' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->create([
+            'data' => [
+                'date' => Carbon::now()->format('Y-m-d'),
+                'type' => 'sales_receipt',
+                'payment_account' => ['name' => 'Bank'],
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('edits a receipt', function () {
+        $receiptId = 1;
+
+        Http::fake([
+            'c/*/receipts/'.$receiptId => Http::response([
+                'data' => [
+                    'id' => $receiptId,
+                    'date' => '2024-06-05',
+                    'type' => 'sales_receipt',
+                    'payment_account' => ['name' => 'Bank'],
+                ],
+            ], 200),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->edit($receiptId, [
+            'data' => [
+                'date' => '2024-06-05',
+                'type' => 'sales_receipt',
+                'payment_account' => ['name' => 'Bank'],
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(ReceiptEntity::class);
+    });
+
+    it('validates on edit receipt - missing data', function () {
+        $api = new Receipt();
+        $response = $api->edit(1, []);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data');
+    });
+
+    it('handles error on edit receipt', function () {
+        Http::fake([
+            'c/*/receipts/*' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->edit(1, [
+            'data' => [
+                'date' => '2024-06-05',
+                'type' => 'sales_receipt',
+                'payment_account' => ['name' => 'Bank'],
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('gets pre-create info', function () {
+        Http::fake([
+            'c/*/receipts/info' => Http::response([
+                'data' => [
+                    'numerations_list' => [],
+                    'payment_accounts_list' => [],
+                    'categories_list' => [],
+                    'rc_centers_list' => [],
+                ],
+            ], 200),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->preCreateInfo();
+
+        expect($response)->toBeInstanceOf(ReceiptPreCreateInfo::class);
+    });
+
+    it('handles error on pre-create info', function () {
+        Http::fake([
+            'c/*/receipts/info' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->preCreateInfo();
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
     it('gets monthly totals', function () {
         $type = 'till_receipt';
         $year = 2022;
@@ -113,5 +277,27 @@ describe('Receipt Entity', function () {
 
         expect($response)->toBeArray()->toHaveCount(2)
             ->{0}->toBeInstanceOf(ReceiptMonthlyTotals::class);
+    });
+
+    it('handles error on monthly totals', function () {
+        Http::fake([
+            'c/*/receipts/monthly_totals*' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->monthlyTotals('till_receipt', 2022);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('validates invalid type on monthly totals', function () {
+        $api = new Receipt();
+        $response = $api->monthlyTotals('invalid_type', 2022);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('type');
     });
 });
