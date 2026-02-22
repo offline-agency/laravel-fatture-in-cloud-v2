@@ -5,7 +5,6 @@ use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\PriceList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\PriceList\PriceList as PriceListEntity;
-use OfflineAgency\LaravelFattureInCloudV2\Entities\PriceList\PriceListList;
 
 describe('PriceList', function () {
     it('lists price lists', function () {
