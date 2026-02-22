@@ -14,12 +14,12 @@
 ## Requirements
 
 - PHP ^8.4 (includes 8.5)
-- Laravel ^11.0|^12.0|^13.0
+- Laravel ^11.0|^12.0
 
-| PHP | Laravel 11 | Laravel 12 | Laravel 13 |
-|-----|:----------:|:----------:|:----------:|
-| 8.4 | ✅ | ✅ | ✅ |
-| 8.5 | ✅ | ✅ | ✅ |
+| PHP | Laravel 11 | Laravel 12 |
+|-----|:----------:|:----------:|
+| 8.4 | ✅ | ✅ |
+| 8.5 | ✅ | ✅ |
 
 ### API Granularization (Breaking Changes)
 The monolithic `Settings` and `Setting` classes have been split into granular resources to improve maintainability and strictly follow the Single Responsibility Principle:
