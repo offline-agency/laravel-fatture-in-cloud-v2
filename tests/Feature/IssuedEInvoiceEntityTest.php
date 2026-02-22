@@ -84,4 +84,46 @@ describe('Issued E-Invoice Entity', function () {
 
         expect($response)->toBeInstanceOf(IssuedEInvoiceRejectionReason::class);
     });
+
+    it('handles error on verifyXML', function () {
+        Http::fake([
+            'c/*/issued_documents/*/e_invoice/xml_verify' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new IssuedEInvoice();
+        $response = $api->verifyXML(999);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('handles error on getXML', function () {
+        Http::fake([
+            'c/*/issued_documents/*/e_invoice/xml' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new IssuedEInvoice();
+        $response = $api->getXML(999);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('handles error on getRejectionReason', function () {
+        Http::fake([
+            'c/*/issued_documents/*/e_invoice/error_reason' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new IssuedEInvoice();
+        $response = $api->getRejectionReason(999);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
 });

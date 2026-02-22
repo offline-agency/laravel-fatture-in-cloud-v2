@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Supplier;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\Supplier as SupplierEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\SupplierList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\SupplierPagination;
@@ -118,5 +119,117 @@ describe('Supplier Entity', function () {
 
         expect($response)->toBeInstanceOf(SupplierEntity::class)
             ->name->toBe($newName);
+    });
+
+    it('handles error on list suppliers', function () {
+        Http::fake([
+            'c/*/entities/suppliers' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Supplier();
+        $response = $api->list();
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('handles error on all suppliers', function () {
+        Http::fake([
+            'c/*/entities/suppliers' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Supplier();
+        $response = $api->all();
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('handles error on supplier detail', function () {
+        Http::fake([
+            'c/*/entities/suppliers/*' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+        ]);
+
+        $api = new Supplier();
+        $response = $api->detail(999);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('handles error on delete supplier', function () {
+        Http::fake([
+            'c/*/entities/suppliers/*' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+        ]);
+
+        $api = new Supplier();
+        $response = $api->delete(999);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('validates data.name on supplier creation', function () {
+        $api = new Supplier();
+        $response = $api->create(['data' => []]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.name');
+    });
+
+    it('handles error on create supplier', function () {
+        Http::fake([
+            'c/*/entities/suppliers' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Supplier();
+        $response = $api->create([
+            'data' => ['name' => 'Test Supplier'],
+        ]);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('validates supplier edit - missing data', function () {
+        $api = new Supplier();
+        $response = $api->edit(1, []);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data');
+    });
+
+    it('validates data.name on supplier edit', function () {
+        $api = new Supplier();
+        $response = $api->edit(1, ['data' => []]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.name');
+    });
+
+    it('handles error on edit supplier', function () {
+        Http::fake([
+            'c/*/entities/suppliers/*' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Supplier();
+        $response = $api->edit(1, [
+            'data' => ['name' => 'Test Supplier'],
+        ]);
+
+        expect($response)->toBeInstanceOf(Error::class);
     });
 });

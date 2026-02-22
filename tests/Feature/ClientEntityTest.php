@@ -170,7 +170,7 @@ describe('Client Entity', function () {
         $clientName = 'Test Updated';
 
         Http::fake([
-            '*/c/*/entities/clients/'.$clientId => Http::response(
+            'c/*/entities/clients/'.$clientId => Http::response(
                 (new ClientFakeResponse())->getClientFakeDetail([
                     'name' => $clientName,
                 ])
@@ -187,5 +187,89 @@ describe('Client Entity', function () {
 
         expect($response)->toBeInstanceOf(ClientEntity::class);
         expect($response->name)->toBe($clientName);
+    });
+
+    it('handles error on client detail', function () {
+        Http::fake([
+            'c/*/entities/clients/*' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+        ]);
+
+        $client = new Client();
+        $response = $client->detail(999);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('handles error on delete client', function () {
+        Http::fake([
+            'c/*/entities/clients/*' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+        ]);
+
+        $client = new Client();
+        $response = $client->delete(999);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('validates data.name on client creation', function () {
+        $client = new Client();
+        $response = $client->create(['data' => []]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.name');
+    });
+
+    it('handles error on create client', function () {
+        Http::fake([
+            'c/*/entities/clients' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $client = new Client();
+        $response = $client->create([
+            'data' => ['name' => 'Test Client'],
+        ]);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('validates client edit - missing data', function () {
+        $client = new Client();
+        $response = $client->edit(1, []);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data');
+    });
+
+    it('validates data.name on client edit', function () {
+        $client = new Client();
+        $response = $client->edit(1, ['data' => []]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.name');
+    });
+
+    it('handles error on edit client', function () {
+        Http::fake([
+            'c/*/entities/clients/*' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $client = new Client();
+        $response = $client->edit(1, [
+            'data' => ['name' => 'Test Client'],
+        ]);
+
+        expect($response)->toBeInstanceOf(Error::class);
     });
 });
