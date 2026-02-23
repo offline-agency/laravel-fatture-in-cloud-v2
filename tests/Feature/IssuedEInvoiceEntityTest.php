@@ -126,4 +126,24 @@ describe('Issued E-Invoice Entity', function () {
 
         expect($response)->toBeInstanceOf(Error::class);
     });
+
+    it('handles null constructor for IssuedEInvoiceSend', function () {
+        $entity = new IssuedEInvoiceSend(null);
+
+        expect($entity->name)->toBeNull()
+            ->and($entity->date)->toBeNull();
+    });
+
+    it('handles null constructor for IssuedEInvoiceVerifyXML', function () {
+        $entity = new IssuedEInvoiceVerifyXML(null);
+
+        expect($entity->success)->toBeNull();
+    });
+
+    it('handles null constructor for IssuedEInvoiceRejectionReason', function () {
+        $entity = new IssuedEInvoiceRejectionReason(null);
+
+        expect($entity->reason)->toBeNull()
+            ->and($entity->code)->toBeNull();
+    });
 });

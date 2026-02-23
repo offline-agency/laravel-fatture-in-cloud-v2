@@ -332,4 +332,11 @@ describe('Supplier Entity', function () {
 
         expect($supplierList->getPagination()->goToLastPage())->toBeNull();
     });
+
+    it('handles null constructor parameter', function () {
+        $entity = new SupplierEntity(null);
+
+        expect($entity->id)->toBeNull()
+            ->and($entity->name)->toBeNull();
+    });
 });

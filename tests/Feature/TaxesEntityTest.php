@@ -518,4 +518,10 @@ describe('Taxes Entity', function () {
 
         expect($taxesList->getPagination()->goToLastPage())->toBeNull();
     });
+
+    it('handles null constructor parameter for TaxesAttachment', function () {
+        $entity = new TaxesAttachment(null);
+
+        expect($entity->attachment_token)->toBe('');
+    });
 });

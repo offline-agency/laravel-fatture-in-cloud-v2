@@ -113,4 +113,11 @@ describe('Email', function () {
             ->and($email->toEmail)->toBe('recipient@example.com')
             ->and($email->subject)->toBe('Invoice #1');
     });
+
+    it('handles null constructor parameter', function () {
+        $entity = new EmailEntity(null);
+
+        expect($entity->id)->toBeNull()
+            ->and($entity->status)->toBeNull();
+    });
 });

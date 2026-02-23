@@ -90,4 +90,11 @@ describe('User Entity', function () {
 
         expect($response->hasItems())->toBeFalse();
     });
+
+    it('handles null constructor parameter', function () {
+        $entity = new CompanyEntity(null);
+
+        expect($entity->id)->toBeNull()
+            ->and($entity->name)->toBeNull();
+    });
 });

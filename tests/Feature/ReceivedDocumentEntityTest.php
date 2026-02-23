@@ -679,4 +679,24 @@ describe('Received Document Entity', function () {
 
         expect($list->getPagination()->goToLastPage())->toBeNull();
     });
+
+    it('handles null constructor for ReceivedDocumentAttachment', function () {
+        $entity = new ReceivedDocumentAttachment(null);
+
+        expect($entity->attachment_token)->toBe('');
+    });
+
+    it('handles null constructor for ReceivedDocumentPreCreateInfo', function () {
+        $entity = new ReceivedDocumentPreCreateInfo(null);
+
+        expect($entity->default_values)->toBeNull()
+            ->and($entity->countries_list)->toBeNull();
+    });
+
+    it('handles null constructor for ReceivedDocumentTotals', function () {
+        $entity = new ReceivedDocumentTotals(null);
+
+        expect($entity->amount_due)->toBeNull()
+            ->and($entity->payments_sum)->toBeNull();
+    });
 });

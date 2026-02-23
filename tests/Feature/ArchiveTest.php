@@ -394,4 +394,11 @@ describe('Archive', function () {
 
         expect($list->hasItems())->toBeFalse();
     });
+
+    it('handles null constructor for Archive entity', function () {
+        $entity = new ArchiveEntity(null);
+
+        expect($entity->id)->toBeNull()
+            ->and($entity->description)->toBeNull();
+    });
 });

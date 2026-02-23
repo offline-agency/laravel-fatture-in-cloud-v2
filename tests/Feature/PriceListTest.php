@@ -198,4 +198,11 @@ describe('PriceList', function () {
 
         expect($list->hasItems())->toBeFalse();
     });
+
+    it('handles null constructor parameter', function () {
+        $entity = new PriceListEntity(null);
+
+        expect($entity->id)->toBeNull()
+            ->and($entity->name)->toBeNull();
+    });
 });

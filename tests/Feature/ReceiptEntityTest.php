@@ -402,4 +402,11 @@ describe('Receipt Entity', function () {
 
         expect($receiptList->getPagination()->goToLastPage())->toBeNull();
     });
+
+    it('handles null constructor parameter', function () {
+        $entity = new ReceiptEntity(null);
+
+        expect($entity->id)->toBeNull()
+            ->and($entity->date)->toBeNull();
+    });
 });

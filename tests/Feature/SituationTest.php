@@ -106,4 +106,11 @@ describe('Situation', function () use ($situationData) {
 
         expect($response)->toBeInstanceOf(Error::class);
     });
+
+    it('handles null constructor parameter', function () {
+        $entity = new SituationEntity(null);
+
+        expect($entity->quoteNumber)->toBe(0.0)
+            ->and($entity->invoiceNumber)->toBe(0.0);
+    });
 });

@@ -342,4 +342,11 @@ describe('Client Entity', function () {
 
         expect($response)->toBeInstanceOf(Error::class);
     });
+
+    it('handles null constructor parameter', function () {
+        $entity = new ClientEntity(null);
+
+        expect($entity->id)->toBeNull()
+            ->and($entity->name)->toBeNull();
+    });
 });

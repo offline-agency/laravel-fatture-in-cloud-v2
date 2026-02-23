@@ -250,4 +250,11 @@ describe('Webhook', function () {
 
         expect($response)->toBeInstanceOf(Error::class);
     });
+
+    it('handles null constructor parameter', function () {
+        $entity = new WebhookEntity(null);
+
+        expect($entity->id)->toBeNull()
+            ->and($entity->sink)->toBeNull();
+    });
 });

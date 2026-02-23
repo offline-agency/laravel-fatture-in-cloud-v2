@@ -118,4 +118,11 @@ describe('Info Entity', function () {
 
         expect($response->hasItems())->toBeFalse();
     });
+
+    it('handles null constructor parameter for Info PaymentAccount', function () {
+        $entity = new PaymentAccountEntity(null);
+
+        expect($entity->id)->toBeNull()
+            ->and($entity->name)->toBeNull();
+    });
 });

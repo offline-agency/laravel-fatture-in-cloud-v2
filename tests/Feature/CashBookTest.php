@@ -379,4 +379,11 @@ describe('Cashbook', function () {
 
         expect($list->hasItems())->toBeFalse();
     });
+
+    it('handles null constructor parameter', function () {
+        $entity = new CashbookEntry(null);
+
+        expect($entity->id)->toBeNull()
+            ->and($entity->kind)->toBeNull();
+    });
 });

@@ -503,4 +503,18 @@ describe('Product Entity', function () {
 
         expect($list->hasItems())->toBeFalse();
     });
+
+    it('handles null constructor parameter for Product', function () {
+        $entity = new ProductEntity(null);
+
+        expect($entity->id)->toBeNull()
+            ->and($entity->name)->toBeNull();
+    });
+
+    it('handles null constructor parameter for StockMovement', function () {
+        $entity = new StockMovement(null);
+
+        expect($entity->id)->toBeNull()
+            ->and($entity->date)->toBeNull();
+    });
 });
