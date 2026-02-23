@@ -9,9 +9,6 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 
 trait ListTrait
 {
-    /** @var array<mixed> */
-    private array $all = [];
-
     public function hasItems(): bool
     {
         return count($this->getItems()) > 0;
@@ -28,12 +25,14 @@ trait ListTrait
     }
 
     /**
+     * @param  array<mixed>  $accumulated
      * @return array<mixed>|Error
      */
     private function getAll(
         array $validateAdditionalData = [],
         ?string $url = null,
-        array $additionalData = []
+        array $additionalData = [],
+        array $accumulated = []
     ): array|Error {
         $additionalData = $this->data($additionalData, $validateAdditionalData);
 
@@ -46,14 +45,14 @@ trait ListTrait
 
         $responseData = $response->data;
 
-        $this->all = array_merge($this->all, (array) $responseData->data);
+        $accumulated = array_merge($accumulated, (array) $responseData->data);
 
         if (! isset($responseData->next_page_url)) {
-            return $this->all;
+            return $accumulated;
         }
 
         $queryParams = $this->getQueryParams($responseData->next_page_url);
 
-        return $this->getAll($validateAdditionalData, $url, $queryParams);
+        return $this->getAll($validateAdditionalData, $url, $queryParams, $accumulated);
     }
 }
