@@ -17,7 +17,7 @@ class Receipt extends Api
 {
     use ListTrait;
 
-    const RECEIPT_TYPES = [
+    public const RECEIPT_TYPES = [
         'sales_receipt',
         'till_receipt',
     ];

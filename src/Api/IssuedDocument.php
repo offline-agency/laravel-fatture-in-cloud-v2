@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
 use Illuminate\Support\Facades\Validator;
@@ -17,7 +19,7 @@ class IssuedDocument extends Api
 {
     use ListTrait;
 
-    const DOCUMENT_TYPES = [
+    public const DOCUMENT_TYPES = [
         'invoice',
         'quote',
         'proforma',
@@ -44,7 +46,7 @@ class IssuedDocument extends Api
         ]);
 
         $response = $this->get(
-            'c/'.$this->company_id.'/issued_documents',
+            'c/'.$this->companyId.'/issued_documents',
             $additional_data
         );
 
@@ -67,9 +69,9 @@ class IssuedDocument extends Api
 
         $all_documents = $this->getAll([
             'type', 'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
-        ], 'c/'.$this->company_id.'/issued_documents', $additional_data);
+        ], 'c/'.$this->companyId.'/issued_documents', $additional_data);
 
-        return gettype($all_documents) !== 'array'
+        return ! is_array($all_documents)
             ? $all_documents
             : array_map(function ($document) {
                 return new IssuedDocumentEntity($document);
@@ -85,7 +87,7 @@ class IssuedDocument extends Api
         ]);
 
         $response = $this->get(
-            'c/'.$this->company_id.'/issued_documents/'.$document_id,
+            'c/'.$this->companyId.'/issued_documents/'.$document_id,
             $additional_data
         );
 
@@ -102,7 +104,7 @@ class IssuedDocument extends Api
         int $document_id
     ) {
         $response = $this->get(
-            'c/'.$this->company_id.'/bin/issued_documents/'.$document_id
+            'c/'.$this->companyId.'/bin/issued_documents/'.$document_id
         );
 
         if (! $response->success) {
@@ -118,7 +120,7 @@ class IssuedDocument extends Api
         int $document_id
     ) {
         $response = $this->destroy(
-            'c/'.$this->company_id.'/issued_documents/'.$document_id
+            'c/'.$this->companyId.'/issued_documents/'.$document_id
         );
 
         if (! $response->success) {
@@ -144,7 +146,7 @@ class IssuedDocument extends Api
         }
 
         $response = $this->post(
-            'c/'.$this->company_id.'/issued_documents',
+            'c/'.$this->companyId.'/issued_documents',
             $body
         );
 
@@ -171,7 +173,7 @@ class IssuedDocument extends Api
         }
 
         $response = $this->put(
-            'c/'.$this->company_id.'/issued_documents/'.$document_id,
+            'c/'.$this->companyId.'/issued_documents/'.$document_id,
             $body
         );
 
@@ -200,7 +202,7 @@ class IssuedDocument extends Api
         }
 
         $response = $this->post(
-            'c/'.$this->company_id.'/issued_documents/totals',
+            'c/'.$this->companyId.'/issued_documents/totals',
             $body
         );
 
@@ -227,7 +229,7 @@ class IssuedDocument extends Api
         }
 
         $response = $this->post(
-            'c/'.$this->company_id.'/issued_documents/'.$document_id.'/totals',
+            'c/'.$this->companyId.'/issued_documents/'.$document_id.'/totals',
             $body
         );
 
@@ -244,7 +246,7 @@ class IssuedDocument extends Api
         string $type
     ) {
         $response = $this->get(
-            'c/'.$this->company_id.'/issued_documents/info',
+            'c/'.$this->companyId.'/issued_documents/info',
             [
                 'type' => $type,
             ]
@@ -263,7 +265,7 @@ class IssuedDocument extends Api
         int $document_id
     ) {
         $response = $this->get(
-            'c/'.$this->company_id.'/issued_documents/'.$document_id.'/email'
+            'c/'.$this->companyId.'/issued_documents/'.$document_id.'/email'
         );
 
         if (! $response->success) {
@@ -288,7 +290,7 @@ class IssuedDocument extends Api
         }
 
         $response = $this->post(
-            'c/'.$this->company_id.'/issued_documents/attachment',
+            'c/'.$this->companyId.'/issued_documents/attachment',
             $body,
             true
         );
@@ -306,7 +308,7 @@ class IssuedDocument extends Api
         int $document_id
     ) {
         $response = $this->destroy(
-            'c/'.$this->company_id.'/issued_documents/'.$document_id.'/attachment'
+            'c/'.$this->companyId.'/issued_documents/'.$document_id.'/attachment'
         );
 
         if (! $response->success) {
@@ -341,7 +343,7 @@ class IssuedDocument extends Api
         }
 
         $response = $this->post(
-            'c/'.$this->company_id.'/issued_documents/'.$document_id.'/email',
+            'c/'.$this->companyId.'/issued_documents/'.$document_id.'/email',
             $body
         );
 
