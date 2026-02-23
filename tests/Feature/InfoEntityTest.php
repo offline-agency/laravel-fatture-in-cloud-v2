@@ -79,4 +79,43 @@ describe('Info Entity', function () {
 
         expect($response)->toBeInstanceOf(Error::class);
     });
+
+    it('checks if vat types list is empty', function () {
+        Http::fake([
+            '*/info/vat_types' => Http::response(
+                (new InfoFakeResponse())->getEmptyVatTypesFakeList()
+            ),
+        ]);
+
+        $info = new Info();
+        $response = $info->listVatTypes();
+
+        expect($response->hasItems())->toBeFalse();
+    });
+
+    it('checks if payment accounts list has items', function () {
+        Http::fake([
+            '*/info/payment_accounts' => Http::response(
+                (new InfoFakeResponse())->getPaymentAccountsFakeList()
+            ),
+        ]);
+
+        $info = new Info();
+        $response = $info->listPaymentAccounts();
+
+        expect($response->hasItems())->toBeTrue();
+    });
+
+    it('checks if payment accounts list is empty', function () {
+        Http::fake([
+            '*/info/payment_accounts' => Http::response(
+                (new InfoFakeResponse())->getEmptyPaymentAccountsFakeList()
+            ),
+        ]);
+
+        $info = new Info();
+        $response = $info->listPaymentAccounts();
+
+        expect($response->hasItems())->toBeFalse();
+    });
 });

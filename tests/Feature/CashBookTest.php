@@ -244,6 +244,30 @@ describe('Cashbook', function () {
             ->messages()->toHaveKey('data');
     });
 
+    it('validates data.date on edit cashbook entry', function () {
+        $api = new Cashbook();
+        $response = $api->edit(1, ['data' => ['description' => 'Desc', 'kind' => 'cashbook']]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.date');
+    });
+
+    it('validates data.description on edit cashbook entry', function () {
+        $api = new Cashbook();
+        $response = $api->edit(1, ['data' => ['date' => '2024-06-05', 'kind' => 'cashbook']]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.description');
+    });
+
+    it('validates data.kind on edit cashbook entry', function () {
+        $api = new Cashbook();
+        $response = $api->edit(1, ['data' => ['date' => '2024-06-05', 'description' => 'Desc', 'kind' => 'invalid_kind']]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.kind');
+    });
+
     it('handles error on edit cashbook entry', function () {
         Http::fake([
             'c/*/cashbook/*' => Http::response([

@@ -214,6 +214,30 @@ describe('Archive', function () {
             ->messages()->toHaveKey('data');
     });
 
+    it('validates data.date on edit archive document', function () {
+        $api = new Archive();
+        $response = $api->edit(1, ['data' => ['description' => 'Doc', 'category' => 'cat']]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.date');
+    });
+
+    it('validates data.description on edit archive document', function () {
+        $api = new Archive();
+        $response = $api->edit(1, ['data' => ['date' => '2024-01-01', 'category' => 'cat']]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.description');
+    });
+
+    it('validates data.category on edit archive document', function () {
+        $api = new Archive();
+        $response = $api->edit(1, ['data' => ['date' => '2024-01-01', 'description' => 'Doc']]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.category');
+    });
+
     it('handles error on edit archive document', function () {
         Http::fake([
             'c/*/archive/*' => Http::response([
