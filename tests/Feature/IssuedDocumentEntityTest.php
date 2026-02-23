@@ -764,4 +764,27 @@ describe('Issued Document Entity', function () {
 
         expect($list->hasItems())->toBeFalse();
     });
+
+    it('handles binDetail when bin returns proforma with merged_in', function () {
+        $documentId = 1;
+        $mergedId = 2;
+
+        Http::fake([
+            'c/*/bin/issued_documents/'.$documentId => Http::response([
+                'data' => ['id' => $documentId, 'type' => 'proforma', 'entity' => ['name' => 'Test S.R.L'], 'merged_in' => ['id' => $mergedId]],
+            ], 200),
+            'c/*/issued_documents/'.$documentId => Http::response([
+                'code' => 'NOT_FOUND', 'message' => 'Not found',
+            ], 404),
+            'c/*/issued_documents/'.$mergedId => Http::response([
+                'data' => ['id' => $mergedId, 'type' => 'invoice', 'entity' => ['name' => 'Test S.R.L']],
+            ], 200),
+        ]);
+
+        $api = new IssuedDocument();
+        $response = $api->binDetail($documentId);
+
+        expect($response)->toBeInstanceOf(IssuedDocumentEntity::class)
+            ->and($response->id)->toBe($mergedId);
+    });
 });

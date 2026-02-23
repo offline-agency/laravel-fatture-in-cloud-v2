@@ -70,7 +70,7 @@ readonly class IssuedDocument
 
     public ?bool $useSplitPayment;
 
-    public mixed $mergedIn;
+    public mixed $merged_in;
 
     public mixed $originalDocument;
 
@@ -228,7 +228,7 @@ readonly class IssuedDocument
         $this->stampDuty = $parameters['stamp_duty'] ?? null;
         $this->paymentMethod = $parameters['payment_method'] ?? null;
         $this->useSplitPayment = $parameters['use_split_payment'] ?? null;
-        $this->mergedIn = $parameters['merged_in'] ?? null;
+        $this->merged_in = $parameters['merged_in'] ?? null;
         $this->originalDocument = $parameters['original_document'] ?? null;
         $this->useGrossPrices = $parameters['use_gross_prices'] ?? null;
         $this->eInvoice = $parameters['e_invoice'] ?? null;

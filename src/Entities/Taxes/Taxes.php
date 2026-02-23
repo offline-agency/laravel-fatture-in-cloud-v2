@@ -24,7 +24,7 @@ readonly class Taxes
 
     public ?string $description;
 
-    public mixed $mergedIn;
+    public mixed $merged_in;
 
     public function __construct(mixed $parameters = null)
     {
@@ -45,6 +45,6 @@ readonly class Taxes
         $this->amount = isset($parameters['amount']) ? (float) $parameters['amount'] : null;
         $this->attachmentUrl = $parameters['attachment_url'] ?? null;
         $this->description = $parameters['description'] ?? null;
-        $this->mergedIn = $parameters['merged_in'] ?? null;
+        $this->merged_in = $parameters['merged_in'] ?? null;
     }
 }
