@@ -256,4 +256,80 @@ describe('Supplier Entity', function () {
 
         expect($response->hasItems())->toBeFalse();
     });
+
+    it('navigates supplier list to next page', function () {
+        $supplierList = new SupplierList(json_decode(
+            (new SupplierFakeResponse())->getSupplierFakeList([
+                'next_page_url' => 'https://fake_url/entities/suppliers?per_page=10&page=2',
+            ])
+        ));
+
+        Http::fake(['c/*/entities/suppliers*' => Http::response((new SupplierFakeResponse())->getSupplierFakeList())]);
+
+        expect($supplierList->getPagination()->goToNextPage())->toBeInstanceOf(SupplierList::class);
+    });
+
+    it('returns null navigating supplier list to next page when no next page url', function () {
+        $supplierList = new SupplierList(json_decode(
+            (new SupplierFakeResponse())->getSupplierFakeList(['next_page_url' => null])
+        ));
+
+        expect($supplierList->getPagination()->goToNextPage())->toBeNull();
+    });
+
+    it('navigates supplier list to previous page', function () {
+        $supplierList = new SupplierList(json_decode(
+            (new SupplierFakeResponse())->getSupplierFakeList([
+                'prev_page_url' => 'https://fake_url/entities/suppliers?per_page=10&page=1',
+            ])
+        ));
+
+        Http::fake(['c/*/entities/suppliers*' => Http::response((new SupplierFakeResponse())->getSupplierFakeList())]);
+
+        expect($supplierList->getPagination()->goToPrevPage())->toBeInstanceOf(SupplierList::class);
+    });
+
+    it('returns null navigating supplier list to previous page when no prev page url', function () {
+        $supplierList = new SupplierList(json_decode(
+            (new SupplierFakeResponse())->getSupplierFakeList(['prev_page_url' => null])
+        ));
+
+        expect($supplierList->getPagination()->goToPrevPage())->toBeNull();
+    });
+
+    it('navigates supplier list to first page', function () {
+        $supplierList = new SupplierList(json_decode(
+            (new SupplierFakeResponse())->getSupplierFakeList()
+        ));
+
+        Http::fake(['c/*/entities/suppliers*' => Http::response((new SupplierFakeResponse())->getSupplierFakeList())]);
+
+        expect($supplierList->getPagination()->goToFirstPage())->toBeInstanceOf(SupplierList::class);
+    });
+
+    it('returns null navigating supplier list to first page when no first page url', function () {
+        $supplierList = new SupplierList(json_decode(
+            (new SupplierFakeResponse())->getSupplierFakeList(['first_page_url' => null])
+        ));
+
+        expect($supplierList->getPagination()->goToFirstPage())->toBeNull();
+    });
+
+    it('navigates supplier list to last page', function () {
+        $supplierList = new SupplierList(json_decode(
+            (new SupplierFakeResponse())->getSupplierFakeList()
+        ));
+
+        Http::fake(['c/*/entities/suppliers*' => Http::response((new SupplierFakeResponse())->getSupplierFakeList())]);
+
+        expect($supplierList->getPagination()->goToLastPage())->toBeInstanceOf(SupplierList::class);
+    });
+
+    it('returns null navigating supplier list to last page when no last page url', function () {
+        $supplierList = new SupplierList(json_decode(
+            (new SupplierFakeResponse())->getSupplierFakeList(['last_page_url' => null])
+        ));
+
+        expect($supplierList->getPagination()->goToLastPage())->toBeNull();
+    });
 });

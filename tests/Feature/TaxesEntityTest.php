@@ -442,4 +442,80 @@ describe('Taxes Entity', function () {
         expect($entity->id)->toBeNull()
             ->and($entity->type)->toBeNull();
     });
+
+    it('navigates taxes list to next page', function () {
+        $taxesList = new TaxesList(json_decode(
+            (new TaxesFakeResponse())->getTaxesFakeList([
+                'next_page_url' => 'https://fake_url/taxes?type=expense&per_page=10&page=2',
+            ])
+        ));
+
+        Http::fake(['c/*/taxes*' => Http::response((new TaxesFakeResponse())->getTaxesFakeList())]);
+
+        expect($taxesList->getPagination()->goToNextPage())->toBeInstanceOf(TaxesList::class);
+    });
+
+    it('returns null navigating taxes list to next page when no next page url', function () {
+        $taxesList = new TaxesList(json_decode(
+            (new TaxesFakeResponse())->getTaxesFakeList(['next_page_url' => null])
+        ));
+
+        expect($taxesList->getPagination()->goToNextPage())->toBeNull();
+    });
+
+    it('navigates taxes list to previous page', function () {
+        $taxesList = new TaxesList(json_decode(
+            (new TaxesFakeResponse())->getTaxesFakeList([
+                'prev_page_url' => 'https://fake_url/taxes?type=expense&per_page=10&page=1',
+            ])
+        ));
+
+        Http::fake(['c/*/taxes*' => Http::response((new TaxesFakeResponse())->getTaxesFakeList())]);
+
+        expect($taxesList->getPagination()->goToPrevPage())->toBeInstanceOf(TaxesList::class);
+    });
+
+    it('returns null navigating taxes list to previous page when no prev page url', function () {
+        $taxesList = new TaxesList(json_decode(
+            (new TaxesFakeResponse())->getTaxesFakeList(['prev_page_url' => null])
+        ));
+
+        expect($taxesList->getPagination()->goToPrevPage())->toBeNull();
+    });
+
+    it('navigates taxes list to first page', function () {
+        $taxesList = new TaxesList(json_decode(
+            (new TaxesFakeResponse())->getTaxesFakeList()
+        ));
+
+        Http::fake(['c/*/taxes*' => Http::response((new TaxesFakeResponse())->getTaxesFakeList())]);
+
+        expect($taxesList->getPagination()->goToFirstPage())->toBeInstanceOf(TaxesList::class);
+    });
+
+    it('returns null navigating taxes list to first page when no first page url', function () {
+        $taxesList = new TaxesList(json_decode(
+            (new TaxesFakeResponse())->getTaxesFakeList(['first_page_url' => null])
+        ));
+
+        expect($taxesList->getPagination()->goToFirstPage())->toBeNull();
+    });
+
+    it('navigates taxes list to last page', function () {
+        $taxesList = new TaxesList(json_decode(
+            (new TaxesFakeResponse())->getTaxesFakeList()
+        ));
+
+        Http::fake(['c/*/taxes*' => Http::response((new TaxesFakeResponse())->getTaxesFakeList())]);
+
+        expect($taxesList->getPagination()->goToLastPage())->toBeInstanceOf(TaxesList::class);
+    });
+
+    it('returns null navigating taxes list to last page when no last page url', function () {
+        $taxesList = new TaxesList(json_decode(
+            (new TaxesFakeResponse())->getTaxesFakeList(['last_page_url' => null])
+        ));
+
+        expect($taxesList->getPagination()->goToLastPage())->toBeNull();
+    });
 });

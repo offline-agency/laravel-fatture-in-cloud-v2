@@ -326,4 +326,80 @@ describe('Receipt Entity', function () {
 
         expect($response->hasItems())->toBeFalse();
     });
+
+    it('navigates receipt list to next page', function () {
+        $receiptList = new ReceiptList(json_decode(
+            (new ReceiptFakeResponse())->getReceiptsFakeList([
+                'next_page_url' => 'https://fake_url/receipts?per_page=10&page=2',
+            ])
+        ));
+
+        Http::fake(['c/*/receipts*' => Http::response((new ReceiptFakeResponse())->getReceiptsFakeList())]);
+
+        expect($receiptList->getPagination()->goToNextPage())->toBeInstanceOf(ReceiptList::class);
+    });
+
+    it('returns null navigating receipt list to next page when no next page url', function () {
+        $receiptList = new ReceiptList(json_decode(
+            (new ReceiptFakeResponse())->getReceiptsFakeList(['next_page_url' => null])
+        ));
+
+        expect($receiptList->getPagination()->goToNextPage())->toBeNull();
+    });
+
+    it('navigates receipt list to previous page', function () {
+        $receiptList = new ReceiptList(json_decode(
+            (new ReceiptFakeResponse())->getReceiptsFakeList([
+                'prev_page_url' => 'https://fake_url/receipts?per_page=10&page=1',
+            ])
+        ));
+
+        Http::fake(['c/*/receipts*' => Http::response((new ReceiptFakeResponse())->getReceiptsFakeList())]);
+
+        expect($receiptList->getPagination()->goToPrevPage())->toBeInstanceOf(ReceiptList::class);
+    });
+
+    it('returns null navigating receipt list to previous page when no prev page url', function () {
+        $receiptList = new ReceiptList(json_decode(
+            (new ReceiptFakeResponse())->getReceiptsFakeList(['prev_page_url' => null])
+        ));
+
+        expect($receiptList->getPagination()->goToPrevPage())->toBeNull();
+    });
+
+    it('navigates receipt list to first page', function () {
+        $receiptList = new ReceiptList(json_decode(
+            (new ReceiptFakeResponse())->getReceiptsFakeList()
+        ));
+
+        Http::fake(['c/*/receipts*' => Http::response((new ReceiptFakeResponse())->getReceiptsFakeList())]);
+
+        expect($receiptList->getPagination()->goToFirstPage())->toBeInstanceOf(ReceiptList::class);
+    });
+
+    it('returns null navigating receipt list to first page when no first page url', function () {
+        $receiptList = new ReceiptList(json_decode(
+            (new ReceiptFakeResponse())->getReceiptsFakeList(['first_page_url' => null])
+        ));
+
+        expect($receiptList->getPagination()->goToFirstPage())->toBeNull();
+    });
+
+    it('navigates receipt list to last page', function () {
+        $receiptList = new ReceiptList(json_decode(
+            (new ReceiptFakeResponse())->getReceiptsFakeList()
+        ));
+
+        Http::fake(['c/*/receipts*' => Http::response((new ReceiptFakeResponse())->getReceiptsFakeList())]);
+
+        expect($receiptList->getPagination()->goToLastPage())->toBeInstanceOf(ReceiptList::class);
+    });
+
+    it('returns null navigating receipt list to last page when no last page url', function () {
+        $receiptList = new ReceiptList(json_decode(
+            (new ReceiptFakeResponse())->getReceiptsFakeList(['last_page_url' => null])
+        ));
+
+        expect($receiptList->getPagination()->goToLastPage())->toBeNull();
+    });
 });
