@@ -15,8 +15,6 @@ abstract class TestCase extends BaseTestCase
 
         Config::set('fatture-in-cloud-v2.companies.default.id', 'fake_id');
         Config::set('fatture-in-cloud-v2.companies.default.bearer', 'fake_bearer');
-        Config::set('fatture-in-cloud-v2.companies.takeathome.id', 'fake_id');
-        Config::set('fatture-in-cloud-v2.companies.takeathome.bearer', 'fake_bearer');
     }
 
     public function getPackageProviders(
