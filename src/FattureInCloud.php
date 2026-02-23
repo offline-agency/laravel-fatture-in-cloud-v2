@@ -35,6 +35,7 @@ class FattureInCloud
      */
     private function resolveCompany(?string $companyName): ?array
     {
+        /** @var array<string, array<string, mixed>> $companies */
         $companies = Config::get('fatture-in-cloud-v2.companies', []);
         if ($companyName !== null && $companyName !== '') {
             return Arr::get($companies, $companyName);
