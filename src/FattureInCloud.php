@@ -19,10 +19,13 @@ class FattureInCloud
 
     public function __construct(?string $companyId = null, ?string $accessToken = null, ?string $companyName = null)
     {
+        // Resolution order: explicit param → named company → default company → first company in list
         $company = $this->resolveCompany($companyName);
         $this->companyId = $companyId ?? (string) Arr::get($company ?? [], 'id', '');
         $this->accessToken = $accessToken ?? (string) Arr::get($company ?? [], 'bearer', '');
         $this->baseUrl = (string) Config::get('fatture-in-cloud-v2.baseUrl', 'https://api-v2.fattureincloud.it/');
+        // TODO: Consider throwing an InvalidArgumentException (or logging a warning) when both
+        // companyId and accessToken remain empty after resolution, to surface misconfiguration early.
     }
 
     /**
@@ -37,12 +40,19 @@ class FattureInCloud
             return Arr::get($companies, $companyName);
         }
         $default = Arr::get($companies, 'default');
-        if (is_array($default) && (Arr::get($default, 'id') !== '' || Arr::get($default, 'bearer') !== '')) {
+        if (is_array($default) && $this->isValidCompany($default)) {
             return $default;
         }
-        $first = reset($companies);
 
-        return $first !== false ? $first : null;
+        return Arr::first($companies);
+    }
+
+    /**
+     * @param  array<string, mixed>  $company
+     */
+    private function isValidCompany(array $company): bool
+    {
+        return Arr::get($company, 'id') !== '' || Arr::get($company, 'bearer') !== '';
     }
 
     public function getCompanyId(): string
