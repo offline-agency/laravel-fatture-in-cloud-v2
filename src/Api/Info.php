@@ -13,7 +13,7 @@ class Info extends Api
 {
     public function listVatTypes(
         ?array $additional_data = []
-    ) {
+    ): InfoList|Error {
         $additional_data = $this->data($additional_data, [
             'fieldset',
         ]);
@@ -34,7 +34,7 @@ class Info extends Api
 
     public function listPaymentAccounts(
         ?array $additional_data = []
-    ) {
+    ): InfoList|Error {
         $additional_data = $this->data($additional_data, [
             'fields',
             'fieldset',

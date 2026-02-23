@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument as IssuedDocumentEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentAttachment;
@@ -36,7 +37,7 @@ class IssuedDocument extends Api
     public function list(
         string $type,
         ?array $additional_data = []
-    ) {
+    ): IssuedDocumentList|Error {
         $additional_data = array_merge($additional_data, [
             'type' => $type,
         ]);
@@ -59,10 +60,13 @@ class IssuedDocument extends Api
         return new IssuedDocumentList($issued_document_response);
     }
 
+    /**
+     * @return array<IssuedDocumentEntity>|Error
+     */
     public function all(
         string $type,
         ?array $additional_data = []
-    ) {
+    ): array|Error {
         $additional_data = array_merge($additional_data, [
             'type' => $type,
         ]);
@@ -81,7 +85,7 @@ class IssuedDocument extends Api
     public function detail(
         int $document_id,
         ?array $additional_data = []
-    ) {
+    ): IssuedDocumentEntity|Error {
         $additional_data = $this->data($additional_data, [
             'fields', 'fieldset',
         ]);
@@ -102,7 +106,7 @@ class IssuedDocument extends Api
 
     public function bin(
         int $document_id
-    ) {
+    ): IssuedDocumentEntity|Error {
         $response = $this->get(
             'c/'.$this->companyId.'/bin/issued_documents/'.$document_id
         );
@@ -118,7 +122,7 @@ class IssuedDocument extends Api
 
     public function delete(
         int $document_id
-    ) {
+    ): string|Error {
         $response = $this->destroy(
             'c/'.$this->companyId.'/issued_documents/'.$document_id
         );
@@ -132,7 +136,7 @@ class IssuedDocument extends Api
 
     public function create(
         array $body = []
-    ) {
+    ): IssuedDocumentEntity|Error|MessageBag {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.type' => 'required|in:'.implode(',', IssuedDocument::DOCUMENT_TYPES),
@@ -162,7 +166,7 @@ class IssuedDocument extends Api
     public function edit(
         int $document_id,
         array $body = []
-    ) {
+    ): IssuedDocumentEntity|Error|MessageBag {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.entity.name' => 'required',
@@ -188,7 +192,7 @@ class IssuedDocument extends Api
 
     public function getNewTotals(
         array $body
-    ) {
+    ): IssuedDocumentTotals|Error|MessageBag {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.type' => 'required|in:'.implode(',', IssuedDocument::DOCUMENT_TYPES),
@@ -218,7 +222,7 @@ class IssuedDocument extends Api
     public function getExistingTotals(
         int $document_id,
         array $body = []
-    ) {
+    ): IssuedDocumentTotals|Error|MessageBag {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.entity.name' => 'required',
@@ -244,7 +248,7 @@ class IssuedDocument extends Api
 
     public function preCreateInfo(
         string $type
-    ) {
+    ): IssuedDocumentPreCreateInfo|Error {
         $response = $this->get(
             'c/'.$this->companyId.'/issued_documents/info',
             [
@@ -263,7 +267,7 @@ class IssuedDocument extends Api
 
     public function emailData(
         int $document_id
-    ) {
+    ): IssuedDocumentEmail|Error {
         $response = $this->get(
             'c/'.$this->companyId.'/issued_documents/'.$document_id.'/email'
         );
@@ -279,7 +283,7 @@ class IssuedDocument extends Api
 
     public function attachment(
         array $body = []
-    ) {
+    ): IssuedDocumentAttachment|Error|MessageBag {
         $validator = Validator::make($body, [
             'filename' => 'required',
             'attachment' => 'required',
@@ -306,7 +310,7 @@ class IssuedDocument extends Api
 
     public function deleteAttachment(
         int $document_id
-    ) {
+    ): string|Error {
         $response = $this->destroy(
             'c/'.$this->companyId.'/issued_documents/'.$document_id.'/attachment'
         );
@@ -321,7 +325,7 @@ class IssuedDocument extends Api
     public function scheduleEmail(
         int $document_id,
         array $body = []
-    ) {
+    ): IssuedDocumentScheduleEmail|Error|MessageBag {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.sender_id' => 'required_without:data.sender_email',
@@ -359,7 +363,7 @@ class IssuedDocument extends Api
     public function binDetail(
         int $document_id,
         ?array $additional_data = []
-    ) {
+    ): IssuedDocumentEntity|Error {
         $document = $this->detail(
             $document_id,
             $additional_data
