@@ -163,6 +163,14 @@ describe('PaymentAccount', function () {
             ->messages()->toHaveKey('data');
     });
 
+    it('validates data.name on edit payment account', function () {
+        $api = new PaymentAccount();
+        $response = $api->edit(1, ['data' => ['type' => 'bank']]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.name');
+    });
+
     it('handles error on edit payment account', function () {
         Http::fake([
             'c/*/settings/payment_accounts/*' => Http::response([

@@ -163,6 +163,14 @@ describe('PaymentMethod', function () {
             ->messages()->toHaveKey('data');
     });
 
+    it('validates data.name on edit payment method', function () {
+        $api = new PaymentMethod();
+        $response = $api->edit(1, ['data' => ['type' => 'standard']]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.name');
+    });
+
     it('handles error on edit payment method', function () {
         Http::fake([
             'c/*/settings/payment_methods/*' => Http::response([

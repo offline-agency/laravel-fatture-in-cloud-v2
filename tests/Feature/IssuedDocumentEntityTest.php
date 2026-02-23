@@ -635,4 +635,24 @@ describe('Issued Document Entity', function () {
 
         expect($response)->toBeInstanceOf(Error::class);
     });
+
+    it('validates data.type on create document', function () {
+        $api = new IssuedDocument();
+        $response = $api->create([
+            'data' => ['type' => 'invalid_type', 'entity' => ['name' => 'Test']],
+        ]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.type');
+    });
+
+    it('validates data.type on get new totals', function () {
+        $api = new IssuedDocument();
+        $response = $api->getNewTotals([
+            'data' => ['type' => 'invalid_type', 'entity' => ['name' => 'Test']],
+        ]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.type');
+    });
 });

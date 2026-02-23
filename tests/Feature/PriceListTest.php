@@ -162,6 +162,14 @@ describe('PriceList', function () {
             ->messages()->toHaveKey('data');
     });
 
+    it('validates data.name on edit price list', function () {
+        $api = new PriceList();
+        $response = $api->edit(1, ['data' => []]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.name');
+    });
+
     it('handles error on edit price list', function () {
         Http::fake([
             'c/*/settings/pricelists/*' => Http::response([

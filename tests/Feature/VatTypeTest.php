@@ -163,6 +163,14 @@ describe('VatType', function () {
             ->messages()->toHaveKey('data');
     });
 
+    it('validates data.value on edit vat type', function () {
+        $api = new VatType();
+        $response = $api->edit(1, ['data' => ['description' => 'No value']]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.value');
+    });
+
     it('handles error on edit vat type', function () {
         Http::fake([
             'c/*/settings/vat_types/*' => Http::response([
