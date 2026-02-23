@@ -56,6 +56,20 @@ describe('Archive', function () {
             ->{0}->toBeInstanceOf(ArchiveEntity::class);
     });
 
+    it('handles error on all archive documents', function () {
+        Http::fake([
+            'c/*/archive*' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Archive();
+        $response = $api->all();
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
     it('gets archive document detail', function () {
         $archiveId = 1;
 
