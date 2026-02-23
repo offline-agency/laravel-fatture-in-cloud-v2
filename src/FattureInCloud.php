@@ -20,7 +20,7 @@ class FattureInCloud
     {
         $this->companyId = $companyId ?? (string) Config::get('fatture-in-cloud-v2.companies.default.id');
         $this->accessToken = $accessToken ?? (string) Config::get('fatture-in-cloud-v2.companies.default.bearer');
-        $this->baseUrl = (string) Config::get('fatture-in-cloud-v2.baseUrl', 'https://api-v2.fattureincloud.it/c/');
+        $this->baseUrl = (string) Config::get('fatture-in-cloud-v2.baseUrl', 'https://api-v2.fattureincloud.it/');
     }
 
     public function getCompanyId(): string
