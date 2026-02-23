@@ -572,4 +572,11 @@ describe('Received Document Entity', function () {
         expect($response)->toBeInstanceOf(MessageBag::class)
             ->messages()->toHaveKey('data.type');
     });
+
+    it('handles null constructor parameter', function () {
+        $entity = new ReceivedDocumentEntity(null);
+
+        expect($entity->id)->toBeNull()
+            ->and($entity->type)->toBeNull();
+    });
 });

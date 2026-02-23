@@ -435,4 +435,11 @@ describe('Taxes Entity', function () {
 
         expect($response)->toBeInstanceOf(Error::class);
     });
+
+    it('handles null constructor parameter', function () {
+        $entity = new TaxesEntity(null);
+
+        expect($entity->id)->toBeNull()
+            ->and($entity->type)->toBeNull();
+    });
 });
