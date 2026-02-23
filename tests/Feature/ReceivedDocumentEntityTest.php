@@ -538,4 +538,38 @@ describe('Received Document Entity', function () {
 
         expect($response)->toBeInstanceOf(Error::class);
     });
+
+    it('handles binDetail when bin returns proforma with merged_in', function () {
+        $documentId = 1;
+        $mergedId = 2;
+
+        Http::fake([
+            'c/*/bin/received_documents/'.$documentId => Http::response([
+                'data' => ['id' => $documentId, 'type' => 'proforma', 'merged_in' => ['id' => $mergedId]],
+            ], 200),
+            'c/*/received_documents/'.$documentId => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+            'c/*/received_documents/'.$mergedId => Http::response([
+                'data' => ['id' => $mergedId, 'type' => 'expense', 'entity' => ['name' => 'Test']],
+            ], 200),
+        ]);
+
+        $api = new ReceivedDocument();
+        $response = $api->binDetail($documentId);
+
+        expect($response)->toBeInstanceOf(ReceivedDocumentEntity::class)
+            ->and($response->id)->toBe($mergedId);
+    });
+
+    it('validates data.type on create document', function () {
+        $api = new ReceivedDocument();
+        $response = $api->create([
+            'data' => ['type' => 'invalid_type', 'entity' => ['name' => 'Test']],
+        ]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.type');
+    });
 });

@@ -232,4 +232,28 @@ describe('Supplier Entity', function () {
 
         expect($response)->toBeInstanceOf(Error::class);
     });
+
+    it('checks if supplier list has items', function () {
+        Http::fake([
+            '*/entities/suppliers' => Http::response(
+                (new SupplierFakeResponse())->getSupplierFakeList()
+            ),
+        ]);
+
+        $api = new Supplier();
+        $response = $api->list();
+
+        expect($response->hasItems())->toBeTrue();
+    });
+
+    it('checks if supplier list is empty', function () {
+        Http::fake([
+            '*/entities/suppliers' => Http::response(json_encode(['data' => []])),
+        ]);
+
+        $api = new Supplier();
+        $response = $api->list();
+
+        expect($response->hasItems())->toBeFalse();
+    });
 });

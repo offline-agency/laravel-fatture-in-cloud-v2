@@ -387,4 +387,30 @@ describe('Product Entity', function () {
 
         expect($response)->toBeInstanceOf(Error::class);
     });
+
+    it('checks if product list has items', function () {
+        Http::fake([
+            '*/products' => Http::response(
+                (new ProductFakeResponse())->getProductsFakeList()
+            ),
+        ]);
+
+        $api = new Product();
+        $response = $api->list();
+
+        expect($response->hasItems())->toBeTrue();
+    });
+
+    it('checks if product list is empty', function () {
+        Http::fake([
+            '*/products' => Http::response(
+                (new ProductFakeResponse())->getEmptyProductFakeList()
+            ),
+        ]);
+
+        $api = new Product();
+        $response = $api->list();
+
+        expect($response->hasItems())->toBeFalse();
+    });
 });

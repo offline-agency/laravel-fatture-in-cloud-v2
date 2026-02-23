@@ -300,4 +300,30 @@ describe('Receipt Entity', function () {
         expect($response)->toBeInstanceOf(MessageBag::class)
             ->messages()->toHaveKey('type');
     });
+
+    it('checks if receipt list has items', function () {
+        Http::fake([
+            '*/receipts' => Http::response(
+                (new ReceiptFakeResponse())->getReceiptsFakeList()
+            ),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->list();
+
+        expect($response->hasItems())->toBeTrue();
+    });
+
+    it('checks if receipt list is empty', function () {
+        Http::fake([
+            '*/receipts' => Http::response(
+                (new ReceiptFakeResponse())->getEmptyReceiptFakeList()
+            ),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->list();
+
+        expect($response->hasItems())->toBeFalse();
+    });
 });
