@@ -47,7 +47,7 @@ describe('FattureInCloud', function () {
 
     it('resolves explicit company name from config', function () {
         Config::set('fatture-in-cloud-v2.companies', [
-            'default'    => ['id' => 'default_id', 'bearer' => 'default_bearer'],
+            'default' => ['id' => 'default_id', 'bearer' => 'default_bearer'],
             'my-company' => ['id' => 'company_id', 'bearer' => 'company_bearer'],
         ]);
 
@@ -59,7 +59,7 @@ describe('FattureInCloud', function () {
 
     it('falls back to first company when no valid default is configured', function () {
         Config::set('fatture-in-cloud-v2.companies', [
-            'first-company'  => ['id' => 'first_id',  'bearer' => 'first_bearer'],
+            'first-company' => ['id' => 'first_id',  'bearer' => 'first_bearer'],
             'second-company' => ['id' => 'second_id', 'bearer' => 'second_bearer'],
         ]);
 
