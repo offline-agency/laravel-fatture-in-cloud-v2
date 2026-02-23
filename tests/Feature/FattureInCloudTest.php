@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Support\Facades\Config;
 use OfflineAgency\LaravelFattureInCloudV2\FattureInCloud;
 
 describe('FattureInCloud', function () {
@@ -42,5 +43,38 @@ describe('FattureInCloud', function () {
 
         expect($fatture->getCompanyId())->toBe('fake_id')
             ->and($fatture->getAccessToken())->toBe('override_token');
+    });
+
+    it('resolves explicit company name from config', function () {
+        Config::set('fatture-in-cloud-v2.companies', [
+            'default'    => ['id' => 'default_id', 'bearer' => 'default_bearer'],
+            'my-company' => ['id' => 'company_id', 'bearer' => 'company_bearer'],
+        ]);
+
+        $fatture = new FattureInCloud(null, null, 'my-company');
+
+        expect($fatture->getCompanyId())->toBe('company_id')
+            ->and($fatture->getAccessToken())->toBe('company_bearer');
+    });
+
+    it('falls back to first company when no valid default is configured', function () {
+        Config::set('fatture-in-cloud-v2.companies', [
+            'first-company'  => ['id' => 'first_id',  'bearer' => 'first_bearer'],
+            'second-company' => ['id' => 'second_id', 'bearer' => 'second_bearer'],
+        ]);
+
+        $fatture = new FattureInCloud();
+
+        expect($fatture->getCompanyId())->toBe('first_id')
+            ->and($fatture->getAccessToken())->toBe('first_bearer');
+    });
+
+    it('handles empty companies array gracefully', function () {
+        Config::set('fatture-in-cloud-v2.companies', []);
+
+        $fatture = new FattureInCloud();
+
+        expect($fatture->getCompanyId())->toBe('')
+            ->and($fatture->getAccessToken())->toBe('');
     });
 });
