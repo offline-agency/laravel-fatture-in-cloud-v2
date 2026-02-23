@@ -302,4 +302,84 @@ describe('Archive', function () {
 
         expect($response)->toBeInstanceOf(Error::class);
     });
+
+    it('navigates archive to next page', function () {
+        $archiveList = new ArchiveList(json_decode(json_encode([
+            'data' => [['id' => 1, 'description' => 'Doc']],
+            'next_page_url' => 'https://fake_url/archive?per_page=10&page=2',
+        ])));
+
+        Http::fake(['c/*/archive*' => Http::response(['data' => [['id' => 2, 'description' => 'Doc 2']], 'next_page_url' => null], 200)]);
+
+        expect($archiveList->getPagination()->goToNextPage())->toBeInstanceOf(ArchiveList::class);
+    });
+
+    it('returns null navigating archive to next page when no next page url', function () {
+        $archiveList = new ArchiveList(json_decode(json_encode([
+            'data' => [['id' => 1]],
+            'next_page_url' => null,
+        ])));
+
+        expect($archiveList->getPagination()->goToNextPage())->toBeNull();
+    });
+
+    it('navigates archive to previous page', function () {
+        $archiveList = new ArchiveList(json_decode(json_encode([
+            'data' => [['id' => 2, 'description' => 'Doc 2']],
+            'prev_page_url' => 'https://fake_url/archive?per_page=10&page=1',
+        ])));
+
+        Http::fake(['c/*/archive*' => Http::response(['data' => [['id' => 1, 'description' => 'Doc']], 'next_page_url' => null], 200)]);
+
+        expect($archiveList->getPagination()->goToPrevPage())->toBeInstanceOf(ArchiveList::class);
+    });
+
+    it('returns null navigating archive to previous page when no prev page url', function () {
+        $archiveList = new ArchiveList(json_decode(json_encode([
+            'data' => [['id' => 1]],
+            'prev_page_url' => null,
+        ])));
+
+        expect($archiveList->getPagination()->goToPrevPage())->toBeNull();
+    });
+
+    it('navigates archive to first page', function () {
+        $archiveList = new ArchiveList(json_decode(json_encode([
+            'data' => [['id' => 3, 'description' => 'Doc 3']],
+            'first_page_url' => 'https://fake_url/archive?per_page=10&page=1',
+        ])));
+
+        Http::fake(['c/*/archive*' => Http::response(['data' => [['id' => 1, 'description' => 'Doc']], 'next_page_url' => null], 200)]);
+
+        expect($archiveList->getPagination()->goToFirstPage())->toBeInstanceOf(ArchiveList::class);
+    });
+
+    it('returns null navigating archive to first page when no first page url', function () {
+        $archiveList = new ArchiveList(json_decode(json_encode([
+            'data' => [['id' => 1]],
+            'first_page_url' => null,
+        ])));
+
+        expect($archiveList->getPagination()->goToFirstPage())->toBeNull();
+    });
+
+    it('navigates archive to last page', function () {
+        $archiveList = new ArchiveList(json_decode(json_encode([
+            'data' => [['id' => 1, 'description' => 'Doc']],
+            'last_page_url' => 'https://fake_url/archive?per_page=10&page=5',
+        ])));
+
+        Http::fake(['c/*/archive*' => Http::response(['data' => [['id' => 5, 'description' => 'Doc 5']], 'next_page_url' => null], 200)]);
+
+        expect($archiveList->getPagination()->goToLastPage())->toBeInstanceOf(ArchiveList::class);
+    });
+
+    it('returns null navigating archive to last page when no last page url', function () {
+        $archiveList = new ArchiveList(json_decode(json_encode([
+            'data' => [['id' => 1]],
+            'last_page_url' => null,
+        ])));
+
+        expect($archiveList->getPagination()->goToLastPage())->toBeNull();
+    });
 });

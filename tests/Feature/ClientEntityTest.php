@@ -112,6 +112,76 @@ describe('Client Entity', function () {
         expect($nextPageResponse)->toBeInstanceOf(ClientList::class);
     });
 
+    it('returns null navigating to next page when no next page url', function () {
+        $clientList = new ClientList(json_decode(
+            (new ClientFakeResponse())->getClientsFakeList(['next_page_url' => null])
+        ));
+
+        expect($clientList->getPagination()->goToNextPage())->toBeNull();
+    });
+
+    it('navigates to previous page', function () {
+        $clientList = new ClientList(json_decode(
+            (new ClientFakeResponse())->getClientsFakeList([
+                'prev_page_url' => 'https://fake_url/entities/clients?per_page=10&page=1',
+            ])
+        ));
+
+        Http::fake([
+            '*/entities/clients*' => Http::response((new ClientFakeResponse())->getClientsFakeList()),
+        ]);
+
+        expect($clientList->getPagination()->goToPrevPage())->toBeInstanceOf(ClientList::class);
+    });
+
+    it('returns null navigating to previous page when no prev page url', function () {
+        $clientList = new ClientList(json_decode(
+            (new ClientFakeResponse())->getClientsFakeList()
+        ));
+
+        expect($clientList->getPagination()->goToPrevPage())->toBeNull();
+    });
+
+    it('navigates to first page', function () {
+        $clientList = new ClientList(json_decode(
+            (new ClientFakeResponse())->getClientsFakeList()
+        ));
+
+        Http::fake([
+            '*/entities/clients*' => Http::response((new ClientFakeResponse())->getClientsFakeList()),
+        ]);
+
+        expect($clientList->getPagination()->goToFirstPage())->toBeInstanceOf(ClientList::class);
+    });
+
+    it('returns null navigating to first page when no first page url', function () {
+        $clientList = new ClientList(json_decode(
+            (new ClientFakeResponse())->getClientsFakeList(['first_page_url' => null])
+        ));
+
+        expect($clientList->getPagination()->goToFirstPage())->toBeNull();
+    });
+
+    it('navigates to last page', function () {
+        $clientList = new ClientList(json_decode(
+            (new ClientFakeResponse())->getClientsFakeList()
+        ));
+
+        Http::fake([
+            '*/entities/clients*' => Http::response((new ClientFakeResponse())->getClientsFakeList()),
+        ]);
+
+        expect($clientList->getPagination()->goToLastPage())->toBeInstanceOf(ClientList::class);
+    });
+
+    it('returns null navigating to last page when no last page url', function () {
+        $clientList = new ClientList(json_decode(
+            (new ClientFakeResponse())->getClientsFakeList(['last_page_url' => null])
+        ));
+
+        expect($clientList->getPagination()->goToLastPage())->toBeNull();
+    });
+
     it('gets client detail', function () {
         $clientId = 1;
 
