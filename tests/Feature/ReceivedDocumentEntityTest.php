@@ -579,4 +579,104 @@ describe('Received Document Entity', function () {
         expect($entity->id)->toBeNull()
             ->and($entity->type)->toBeNull();
     });
+
+    it('parses query params from received document pagination url', function () {
+        $pagination = new ReceivedDocumentPagination([
+            'next_page_url' => 'https://fake_url/received_documents?type=expense&per_page=10&page=2',
+        ]);
+        $parsed = $pagination->getParsedQueryParams(
+            'https://fake_url/received_documents?type=expense&per_page=10&page=2'
+        );
+
+        expect($parsed->type)->toBe('expense')
+            ->and((array) $parsed->additional_data)->toHaveKey('per_page', '10');
+    });
+
+    it('navigates received document list to next page', function () {
+        $list = new ReceivedDocumentList(json_decode(
+            (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList([
+                'next_page_url' => 'https://fake_url/received_documents?type=expense&per_page=10&page=2',
+            ])
+        ));
+
+        Http::fake(['c/*/received_documents*' => Http::response(
+            (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList()
+        )]);
+
+        expect($list->getPagination()->goToNextPage())->toBeInstanceOf(ReceivedDocumentList::class);
+    });
+
+    it('returns null navigating received document list to next page when no next page url', function () {
+        $list = new ReceivedDocumentList(json_decode(
+            (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList(['next_page_url' => null])
+        ));
+
+        expect($list->getPagination()->goToNextPage())->toBeNull();
+    });
+
+    it('navigates received document list to previous page', function () {
+        $list = new ReceivedDocumentList(json_decode(
+            (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList([
+                'prev_page_url' => 'https://fake_url/received_documents?type=expense&per_page=10&page=1',
+            ])
+        ));
+
+        Http::fake(['c/*/received_documents*' => Http::response(
+            (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList()
+        )]);
+
+        expect($list->getPagination()->goToPrevPage())->toBeInstanceOf(ReceivedDocumentList::class);
+    });
+
+    it('returns null navigating received document list to previous page when no prev page url', function () {
+        $list = new ReceivedDocumentList(json_decode(
+            (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList()
+        ));
+
+        expect($list->getPagination()->goToPrevPage())->toBeNull();
+    });
+
+    it('navigates received document list to first page', function () {
+        $list = new ReceivedDocumentList(json_decode(
+            (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList([
+                'first_page_url' => 'https://fake_url/received_documents?type=expense&per_page=10&page=1',
+            ])
+        ));
+
+        Http::fake(['c/*/received_documents*' => Http::response(
+            (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList()
+        )]);
+
+        expect($list->getPagination()->goToFirstPage())->toBeInstanceOf(ReceivedDocumentList::class);
+    });
+
+    it('returns null navigating received document list to first page when no first page url', function () {
+        $list = new ReceivedDocumentList(json_decode(
+            (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList(['first_page_url' => null])
+        ));
+
+        expect($list->getPagination()->goToFirstPage())->toBeNull();
+    });
+
+    it('navigates received document list to last page', function () {
+        $list = new ReceivedDocumentList(json_decode(
+            (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList([
+                'last_page_url' => 'https://fake_url/received_documents?type=expense&per_page=10&page=5',
+            ])
+        ));
+
+        Http::fake(['c/*/received_documents*' => Http::response(
+            (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList()
+        )]);
+
+        expect($list->getPagination()->goToLastPage())->toBeInstanceOf(ReceivedDocumentList::class);
+    });
+
+    it('returns null navigating received document list to last page when no last page url', function () {
+        $list = new ReceivedDocumentList(json_decode(
+            (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList(['last_page_url' => null])
+        ));
+
+        expect($list->getPagination()->goToLastPage())->toBeNull();
+    });
 });

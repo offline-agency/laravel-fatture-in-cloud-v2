@@ -662,4 +662,92 @@ describe('Issued Document Entity', function () {
         expect($entity->id)->toBeNull()
             ->and($entity->type)->toBeNull();
     });
+
+    it('navigates issued document list to next page', function () {
+        $list = new IssuedDocumentList(json_decode(
+            (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList([
+                'next_page_url' => 'https://fake_url/issued_documents?type=invoice&per_page=10&page=2',
+            ])
+        ));
+
+        Http::fake(['c/*/issued_documents*' => Http::response(
+            (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList()
+        )]);
+
+        expect($list->getPagination()->goToNextPage())->toBeInstanceOf(IssuedDocumentList::class);
+    });
+
+    it('returns null navigating issued document list to next page when no next page url', function () {
+        $list = new IssuedDocumentList(json_decode(
+            (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList(['next_page_url' => null])
+        ));
+
+        expect($list->getPagination()->goToNextPage())->toBeNull();
+    });
+
+    it('navigates issued document list to previous page', function () {
+        $list = new IssuedDocumentList(json_decode(
+            (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList([
+                'prev_page_url' => 'https://fake_url/issued_documents?type=invoice&per_page=10&page=1',
+            ])
+        ));
+
+        Http::fake(['c/*/issued_documents*' => Http::response(
+            (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList()
+        )]);
+
+        expect($list->getPagination()->goToPrevPage())->toBeInstanceOf(IssuedDocumentList::class);
+    });
+
+    it('returns null navigating issued document list to previous page when no prev page url', function () {
+        $list = new IssuedDocumentList(json_decode(
+            (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList()
+        ));
+
+        expect($list->getPagination()->goToPrevPage())->toBeNull();
+    });
+
+    it('navigates issued document list to first page', function () {
+        $list = new IssuedDocumentList(json_decode(
+            (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList([
+                'first_page_url' => 'https://fake_url/issued_documents?type=invoice&per_page=10&page=1',
+            ])
+        ));
+
+        Http::fake(['c/*/issued_documents*' => Http::response(
+            (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList()
+        )]);
+
+        expect($list->getPagination()->goToFirstPage())->toBeInstanceOf(IssuedDocumentList::class);
+    });
+
+    it('returns null navigating issued document list to first page when no first page url', function () {
+        $list = new IssuedDocumentList(json_decode(
+            (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList(['first_page_url' => null])
+        ));
+
+        expect($list->getPagination()->goToFirstPage())->toBeNull();
+    });
+
+    it('navigates issued document list to last page', function () {
+        $list = new IssuedDocumentList(json_decode(
+            (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList([
+                'last_page_url' => 'https://fake_url/issued_documents?type=invoice&per_page=10&page=5',
+            ])
+        ));
+
+        Http::fake(['c/*/issued_documents*' => Http::response(
+            (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList()
+        )]);
+
+        expect($list->getPagination()->goToLastPage())->toBeInstanceOf(IssuedDocumentList::class);
+    });
+
+    it('returns null navigating issued document list to last page when no last page url', function () {
+        $list = new IssuedDocumentList(json_decode(
+            (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList(['last_page_url' => null])
+        ));
+
+        expect($list->getPagination()->goToLastPage())->toBeNull();
+    });
 });
