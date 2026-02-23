@@ -413,4 +413,80 @@ describe('Product Entity', function () {
 
         expect($response->hasItems())->toBeFalse();
     });
+
+    it('navigates product list to next page', function () {
+        $productList = new ProductList(json_decode(
+            (new ProductFakeResponse())->getProductsFakeList([
+                'next_page_url' => 'https://fake_url/products?per_page=10&page=2',
+            ])
+        ));
+
+        Http::fake(['*/products*' => Http::response((new ProductFakeResponse())->getProductsFakeList())]);
+
+        expect($productList->getPagination()->goToNextPage())->toBeInstanceOf(ProductList::class);
+    });
+
+    it('returns null navigating product list to next page when no next page url', function () {
+        $productList = new ProductList(json_decode(
+            (new ProductFakeResponse())->getProductsFakeList(['next_page_url' => null])
+        ));
+
+        expect($productList->getPagination()->goToNextPage())->toBeNull();
+    });
+
+    it('navigates product list to previous page', function () {
+        $productList = new ProductList(json_decode(
+            (new ProductFakeResponse())->getProductsFakeList([
+                'prev_page_url' => 'https://fake_url/products?per_page=10&page=1',
+            ])
+        ));
+
+        Http::fake(['*/products*' => Http::response((new ProductFakeResponse())->getProductsFakeList())]);
+
+        expect($productList->getPagination()->goToPrevPage())->toBeInstanceOf(ProductList::class);
+    });
+
+    it('returns null navigating product list to previous page when no prev page url', function () {
+        $productList = new ProductList(json_decode(
+            (new ProductFakeResponse())->getProductsFakeList(['prev_page_url' => null])
+        ));
+
+        expect($productList->getPagination()->goToPrevPage())->toBeNull();
+    });
+
+    it('navigates product list to first page', function () {
+        $productList = new ProductList(json_decode(
+            (new ProductFakeResponse())->getProductsFakeList()
+        ));
+
+        Http::fake(['*/products*' => Http::response((new ProductFakeResponse())->getProductsFakeList())]);
+
+        expect($productList->getPagination()->goToFirstPage())->toBeInstanceOf(ProductList::class);
+    });
+
+    it('returns null navigating product list to first page when no first page url', function () {
+        $productList = new ProductList(json_decode(
+            (new ProductFakeResponse())->getProductsFakeList(['first_page_url' => null])
+        ));
+
+        expect($productList->getPagination()->goToFirstPage())->toBeNull();
+    });
+
+    it('navigates product list to last page', function () {
+        $productList = new ProductList(json_decode(
+            (new ProductFakeResponse())->getProductsFakeList()
+        ));
+
+        Http::fake(['*/products*' => Http::response((new ProductFakeResponse())->getProductsFakeList())]);
+
+        expect($productList->getPagination()->goToLastPage())->toBeInstanceOf(ProductList::class);
+    });
+
+    it('returns null navigating product list to last page when no last page url', function () {
+        $productList = new ProductList(json_decode(
+            (new ProductFakeResponse())->getProductsFakeList(['last_page_url' => null])
+        ));
+
+        expect($productList->getPagination()->goToLastPage())->toBeNull();
+    });
 });

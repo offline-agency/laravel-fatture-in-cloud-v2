@@ -287,4 +287,84 @@ describe('Cashbook', function () {
 
         expect($response)->toBeInstanceOf(Error::class);
     });
+
+    it('navigates cashbook to next page', function () {
+        $cashbookList = new CashbookList(json_decode(json_encode([
+            'data' => [['id' => 1, 'kind' => 'cashbook']],
+            'next_page_url' => 'https://fake_url/cashbook?per_page=10&page=2',
+        ])));
+
+        Http::fake(['c/*/cashbook*' => Http::response(['data' => [['id' => 2, 'kind' => 'cashbook']], 'next_page_url' => null], 200)]);
+
+        expect($cashbookList->getPagination()->goToNextPage())->toBeInstanceOf(CashbookList::class);
+    });
+
+    it('returns null navigating cashbook to next page when no next page url', function () {
+        $cashbookList = new CashbookList(json_decode(json_encode([
+            'data' => [['id' => 1]],
+            'next_page_url' => null,
+        ])));
+
+        expect($cashbookList->getPagination()->goToNextPage())->toBeNull();
+    });
+
+    it('navigates cashbook to previous page', function () {
+        $cashbookList = new CashbookList(json_decode(json_encode([
+            'data' => [['id' => 2, 'kind' => 'cashbook']],
+            'prev_page_url' => 'https://fake_url/cashbook?per_page=10&page=1',
+        ])));
+
+        Http::fake(['c/*/cashbook*' => Http::response(['data' => [['id' => 1, 'kind' => 'cashbook']], 'next_page_url' => null], 200)]);
+
+        expect($cashbookList->getPagination()->goToPrevPage())->toBeInstanceOf(CashbookList::class);
+    });
+
+    it('returns null navigating cashbook to previous page when no prev page url', function () {
+        $cashbookList = new CashbookList(json_decode(json_encode([
+            'data' => [['id' => 1]],
+            'prev_page_url' => null,
+        ])));
+
+        expect($cashbookList->getPagination()->goToPrevPage())->toBeNull();
+    });
+
+    it('navigates cashbook to first page', function () {
+        $cashbookList = new CashbookList(json_decode(json_encode([
+            'data' => [['id' => 3, 'kind' => 'cashbook']],
+            'first_page_url' => 'https://fake_url/cashbook?per_page=10&page=1',
+        ])));
+
+        Http::fake(['c/*/cashbook*' => Http::response(['data' => [['id' => 1, 'kind' => 'cashbook']], 'next_page_url' => null], 200)]);
+
+        expect($cashbookList->getPagination()->goToFirstPage())->toBeInstanceOf(CashbookList::class);
+    });
+
+    it('returns null navigating cashbook to first page when no first page url', function () {
+        $cashbookList = new CashbookList(json_decode(json_encode([
+            'data' => [['id' => 1]],
+            'first_page_url' => null,
+        ])));
+
+        expect($cashbookList->getPagination()->goToFirstPage())->toBeNull();
+    });
+
+    it('navigates cashbook to last page', function () {
+        $cashbookList = new CashbookList(json_decode(json_encode([
+            'data' => [['id' => 1, 'kind' => 'cashbook']],
+            'last_page_url' => 'https://fake_url/cashbook?per_page=10&page=5',
+        ])));
+
+        Http::fake(['c/*/cashbook*' => Http::response(['data' => [['id' => 5, 'kind' => 'cashbook']], 'next_page_url' => null], 200)]);
+
+        expect($cashbookList->getPagination()->goToLastPage())->toBeInstanceOf(CashbookList::class);
+    });
+
+    it('returns null navigating cashbook to last page when no last page url', function () {
+        $cashbookList = new CashbookList(json_decode(json_encode([
+            'data' => [['id' => 1]],
+            'last_page_url' => null,
+        ])));
+
+        expect($cashbookList->getPagination()->goToLastPage())->toBeNull();
+    });
 });
