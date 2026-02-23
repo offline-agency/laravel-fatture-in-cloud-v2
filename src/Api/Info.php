@@ -17,7 +17,7 @@ class Info extends Api
         ]);
 
         $response = $this->get(
-            $this->company_id.'/info/vat_types',
+            'c/'.$this->companyId.'/info/vat_types',
             $additional_data
         );
 
@@ -40,7 +40,7 @@ class Info extends Api
         ]);
 
         $response = $this->get(
-            $this->company_id.'/info/payment_accounts',
+            'c/'.$this->companyId.'/info/payment_accounts',
             $additional_data
         );
 

@@ -47,6 +47,7 @@ class IssuedEInvoice extends Api
         return new IssuedEInvoiceVerifyXML($receipts);
     }
 
+    /** @return object|Error */
     public function getXML(int $documentId, array $additionalData = []): object
     {
         $additionalData = $this->data($additionalData, [
