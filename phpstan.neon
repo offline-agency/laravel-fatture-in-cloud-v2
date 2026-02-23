@@ -26,10 +26,6 @@ parameters:
         - identifier: missingType.property
         - identifier: missingType.parameter
 
-        # IssuedDocument and related legacy API methods are missing return types.
-        # Adding proper union return types is tracked in a follow-up refactor.
-        - identifier: missingType.return
-
         # Unused properties in legacy list entity classes (pagination property
         # declared but superseded by ListTrait-based pagination).
         - identifier: property.unused
