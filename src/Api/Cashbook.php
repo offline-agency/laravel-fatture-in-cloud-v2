@@ -24,6 +24,8 @@ class Cashbook extends Api
             'page',
             'per_page',
             'q',
+            'date_from',
+            'date_to',
         ]);
 
         /** @var object $response */

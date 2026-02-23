@@ -39,7 +39,7 @@ readonly class VatType
         $this->description = $parameters['description'] ?? null;
         $this->notes = $parameters['notes'] ?? null;
         $this->eInvoice = $parameters['e_invoice'] ?? null;
-        $this->eiType = $parameters['ei_type'] ?? null;
+        $this->eiType = isset($parameters['ei_type']) ? (string) $parameters['ei_type'] : null;
         $this->eiDescription = $parameters['ei_description'] ?? null;
         $this->editable = $parameters['editable'] ?? null;
         $this->isDisabled = $parameters['is_disabled'] ?? null;
