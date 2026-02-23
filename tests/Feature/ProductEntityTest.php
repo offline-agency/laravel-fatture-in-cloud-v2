@@ -489,4 +489,18 @@ describe('Product Entity', function () {
 
         expect($productList->getPagination()->goToLastPage())->toBeNull();
     });
+
+    it('checks if stock movement list has items', function () {
+        $list = new StockMovementList((object) ['data' => [
+            (object) ['id' => 1, 'quantity' => 10],
+        ]]);
+
+        expect($list->hasItems())->toBeTrue();
+    });
+
+    it('checks if stock movement list is empty', function () {
+        $list = new StockMovementList((object) ['data' => []]);
+
+        expect($list->hasItems())->toBeFalse();
+    });
 });

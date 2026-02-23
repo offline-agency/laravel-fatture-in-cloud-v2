@@ -184,4 +184,18 @@ describe('VatType', function () {
 
         expect($response)->toBeInstanceOf(Error::class);
     });
+
+    it('checks if vat type list has items', function () {
+        $list = new VatTypeList((object) ['data' => [
+            (object) ['id' => 1, 'value' => 22],
+        ]]);
+
+        expect($list->hasItems())->toBeTrue();
+    });
+
+    it('checks if vat type list is empty', function () {
+        $list = new VatTypeList((object) ['data' => []]);
+
+        expect($list->hasItems())->toBeFalse();
+    });
 });

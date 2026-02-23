@@ -367,4 +367,16 @@ describe('Cashbook', function () {
 
         expect($cashbookList->getPagination()->goToLastPage())->toBeNull();
     });
+
+    it('checks if cashbook list has items', function () {
+        $list = new CashbookList(json_decode(json_encode(['data' => [['id' => 1, 'kind' => 'cashbook']]])));
+
+        expect($list->hasItems())->toBeTrue();
+    });
+
+    it('checks if cashbook list is empty', function () {
+        $list = new CashbookList(json_decode(json_encode(['data' => []])));
+
+        expect($list->hasItems())->toBeFalse();
+    });
 });

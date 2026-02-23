@@ -382,4 +382,16 @@ describe('Archive', function () {
 
         expect($archiveList->getPagination()->goToLastPage())->toBeNull();
     });
+
+    it('checks if archive list has items', function () {
+        $list = new ArchiveList(json_decode(json_encode(['data' => [['id' => 1, 'description' => 'Doc']]])));
+
+        expect($list->hasItems())->toBeTrue();
+    });
+
+    it('checks if archive list is empty', function () {
+        $list = new ArchiveList(json_decode(json_encode(['data' => []])));
+
+        expect($list->hasItems())->toBeFalse();
+    });
 });

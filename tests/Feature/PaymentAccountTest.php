@@ -184,4 +184,18 @@ describe('PaymentAccount', function () {
 
         expect($response)->toBeInstanceOf(Error::class);
     });
+
+    it('checks if payment account list has items', function () {
+        $list = new PaymentAccountList((object) ['data' => [
+            (object) ['id' => 1, 'name' => 'Bank'],
+        ]]);
+
+        expect($list->hasItems())->toBeTrue();
+    });
+
+    it('checks if payment account list is empty', function () {
+        $list = new PaymentAccountList((object) ['data' => []]);
+
+        expect($list->hasItems())->toBeFalse();
+    });
 });

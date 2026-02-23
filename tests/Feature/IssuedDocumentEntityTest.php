@@ -750,4 +750,18 @@ describe('Issued Document Entity', function () {
 
         expect($list->getPagination()->goToLastPage())->toBeNull();
     });
+
+    it('checks if issued document list has items', function () {
+        $list = new IssuedDocumentList(json_decode(
+            (new IssuedDocumentFakeResponse())->getIssuedDocumentsFakeList()
+        ));
+
+        expect($list->hasItems())->toBeTrue();
+    });
+
+    it('checks if issued document list is empty', function () {
+        $list = new IssuedDocumentList(json_decode(json_encode(['data' => []])));
+
+        expect($list->hasItems())->toBeFalse();
+    });
 });

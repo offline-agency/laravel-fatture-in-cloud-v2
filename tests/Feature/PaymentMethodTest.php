@@ -184,4 +184,18 @@ describe('PaymentMethod', function () {
 
         expect($response)->toBeInstanceOf(Error::class);
     });
+
+    it('checks if payment method list has items', function () {
+        $list = new PaymentMethodList((object) ['data' => [
+            (object) ['id' => 1, 'name' => 'Credit Card'],
+        ]]);
+
+        expect($list->hasItems())->toBeTrue();
+    });
+
+    it('checks if payment method list is empty', function () {
+        $list = new PaymentMethodList((object) ['data' => []]);
+
+        expect($list->hasItems())->toBeFalse();
+    });
 });

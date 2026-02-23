@@ -5,6 +5,7 @@ use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\PriceList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\PriceList\PriceList as PriceListEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\PriceList\PriceListList;
 
 describe('PriceList', function () {
     it('lists price lists', function () {
@@ -182,5 +183,19 @@ describe('PriceList', function () {
         $response = $api->edit(1, ['data' => ['name' => 'Updated']]);
 
         expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('checks if price list has items', function () {
+        $list = new PriceListList((object) ['data' => [
+            (object) ['id' => 1, 'name' => 'Default'],
+        ]]);
+
+        expect($list->hasItems())->toBeTrue();
+    });
+
+    it('checks if price list is empty', function () {
+        $list = new PriceListList((object) ['data' => []]);
+
+        expect($list->hasItems())->toBeFalse();
     });
 });
