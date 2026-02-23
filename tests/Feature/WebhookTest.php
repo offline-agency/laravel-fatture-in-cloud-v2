@@ -217,4 +217,37 @@ describe('Webhook', function () {
 
         expect($response)->toBeInstanceOf(Error::class);
     });
+
+    it('handles error on delete webhook subscription', function () {
+        Http::fake([
+            'c/*/webhooks/subscriptions/*' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+        ]);
+
+        $api = new Webhook();
+        $response = $api->delete('nonexistent');
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('handles error on edit webhook subscription', function () {
+        Http::fake([
+            'c/*/webhooks/subscriptions/*' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Webhook();
+        $response = $api->edit('sub_abc123', [
+            'data' => [
+                'sink' => 'https://example.com/hook',
+                'types' => ['it.fattureincloud.api.v2.client.created'],
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
 });

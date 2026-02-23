@@ -56,4 +56,12 @@ describe('Pagination', function () {
             ->toHaveKey('first', 'Lorem')
             ->toHaveKey('second', 'Ipsum');
     });
+
+    it('returns empty array for url without query string', function () {
+        $pagination = new Pagination();
+
+        $queryParams = $pagination->getQueryParams('https://fake_url.com/entity');
+
+        expect($queryParams)->toBeArray()->toBeEmpty();
+    });
 });

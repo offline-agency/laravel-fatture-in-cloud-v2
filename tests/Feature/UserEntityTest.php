@@ -77,4 +77,17 @@ describe('User Entity', function () {
 
         expect($response)->toBeInstanceOf(Error::class);
     });
+
+    it('checks if companies list is empty', function () {
+        Http::fake([
+            '*/user/companies' => Http::response(
+                (new UserFakeResponse())->getEmptyCompaniesFakeList()
+            ),
+        ]);
+
+        $api = new User();
+        $response = $api->listCompanies();
+
+        expect($response->hasItems())->toBeFalse();
+    });
 });
