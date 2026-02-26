@@ -11,6 +11,12 @@
 
 🔙 This is the documentation for the API v2. You can find the package for the API v1 [here](https://docs.offlineagency.com/laravel-fatture-in-cloud/#laravel-fatture-in-cloud).
 
+### Warning for integrators
+
+- **Keep your copy up to date:** Check the [official laravel-fatture-in-cloud-v2](https://github.com/offline-agency/laravel-fatture-in-cloud-v2) package and update your local dependency (e.g. run `composer update offline-agency/laravel-fatture-in-cloud-v2` or pull the latest from the repository).
+- **Response variables are camelCase:** Entity properties use **camelCase** (e.g. `amountGross`, `amountNet`, `amountVat`), not snake_case (`amount_gross`, `amount_net`, `amount_vat`). If you have existing code that reads response data, update it to use the new property names. Use the entity classes in this package as the reference—for example, [`IssuedDocument`](src/Entities/IssuedDocument/IssuedDocument.php) for issued documents. Examples: `amount_gross` → `amountGross`, `amount_net` → `amountNet`, `created_at` → `createdAt`.
+- **Config:** Check the package config [`config/fatture-in-cloud-v2.php`](config/fatture-in-cloud-v2.php) and update your project’s config to match, especially **`baseUrl`**. Use the root API URL only (no extra path segments).
+
 ## Requirements
 
 - PHP ^8.4 (includes 8.5)
