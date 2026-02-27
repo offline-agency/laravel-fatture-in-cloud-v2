@@ -15,6 +15,11 @@ class Client extends Api
 {
     use ListTrait;
 
+    /**
+     * List clients. OPTIONAL query: fields, fieldset, sort, page, per_page, q.
+     *
+     * @param  array{fields?: string, fieldset?: string, sort?: string, page?: int, per_page?: int, q?: string}  $additionalData
+     */
     public function list(array $additionalData = []): ClientList|Error
     {
         $additionalData = $this->data($additionalData, [
@@ -42,6 +47,9 @@ class Client extends Api
     }
 
     /**
+     * Get all clients. OPTIONAL query: fields, fieldset, sort, page, per_page, q.
+     *
+     * @param  array{fields?: string, fieldset?: string, sort?: string, page?: int, per_page?: int, q?: string}  $additionalData
      * @return array<ClientEntity>|Error
      */
     public function all(array $additionalData = []): array|Error
@@ -64,6 +72,11 @@ class Client extends Api
         }, $allClients);
     }
 
+    /**
+     * Get single client. OPTIONAL query: fields, fieldset.
+     *
+     * @param  array{fields?: string, fieldset?: string}  $additionalData
+     */
     public function detail(int $clientId, array $additionalData = []): ClientEntity|Error
     {
         $additionalData = $this->data($additionalData, [
@@ -86,6 +99,9 @@ class Client extends Api
         return new ClientEntity($client);
     }
 
+    /**
+     * Delete client.
+     */
     public function delete(int $clientId): string|Error
     {
         /** @var object $response */
@@ -100,6 +116,11 @@ class Client extends Api
         return 'Client deleted';
     }
 
+    /**
+     * Create client. Body REQUIRED: data.name (and often type).
+     *
+     * @param  array{data: array{name: string}}  $body
+     */
     public function create(array $body = []): ClientEntity|Error|MessageBag
     {
         $validator = Validator::make($body, [
@@ -126,6 +147,11 @@ class Client extends Api
         return new ClientEntity($client);
     }
 
+    /**
+     * Edit client. Body REQUIRED: data.name.
+     *
+     * @param  array{data: array{name: string}}  $body
+     */
     public function edit(int $clientId, array $body = []): ClientEntity|Error|MessageBag
     {
         $validator = Validator::make($body, [

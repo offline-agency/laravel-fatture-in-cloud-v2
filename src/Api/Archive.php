@@ -15,6 +15,11 @@ class Archive extends Api
 {
     use ListTrait;
 
+    /**
+     * List archive documents. OPTIONAL query: fields, fieldset, sort, page, per_page, q.
+     *
+     * @param  array{fields?: string, fieldset?: string, sort?: string, page?: int, per_page?: int, q?: string}  $additionalData
+     */
     public function list(array $additionalData = []): ArchiveList|Error
     {
         $additionalData = $this->data($additionalData, [
@@ -42,6 +47,9 @@ class Archive extends Api
     }
 
     /**
+     * Get all archive documents (paginated). OPTIONAL query: fields, fieldset, sort, page, per_page, q.
+     *
+     * @param  array{fields?: string, fieldset?: string, sort?: string, page?: int, per_page?: int, q?: string}  $additionalData
      * @return array<ArchiveEntity>|Error
      */
     public function all(array $additionalData = []): array|Error
@@ -64,6 +72,11 @@ class Archive extends Api
         }, $allArchive);
     }
 
+    /**
+     * Get a single archive document. OPTIONAL query: fields, fieldset.
+     *
+     * @param  array{fields?: string, fieldset?: string}  $additionalData
+     */
     public function detail(int $archiveId, array $additionalData = []): ArchiveEntity|Error
     {
         $additionalData = $this->data($additionalData, [
@@ -100,11 +113,16 @@ class Archive extends Api
         return 'Archive document deleted';
     }
 
+    /**
+     * Create archive document. Body REQUIRED: data.date (Y-m-d), data.description, data.category.
+     *
+     * @param  array{data: array{date: string, description: string, category: string}}  $body
+     */
     public function create(array $body = []): ArchiveEntity|Error|MessageBag
     {
         $validator = Validator::make($body, [
             'data' => 'required',
-            'data.date' => 'required',
+            'data.date' => 'required|date_format:'.self::DATE_FORMAT_YMD,
             'data.description' => 'required',
             'data.category' => 'required',
         ]);
@@ -112,6 +130,8 @@ class Archive extends Api
         if ($validator->fails()) {
             return $validator->errors();
         }
+
+        $body = $this->normalizeBodyDate($body, 'data.date');
 
         /** @var object $response */
         $response = $this->post(
@@ -128,11 +148,16 @@ class Archive extends Api
         return new ArchiveEntity($archive);
     }
 
+    /**
+     * Edit archive document. Body REQUIRED: data.date (Y-m-d), data.description, data.category.
+     *
+     * @param  array{data: array{date: string, description: string, category: string}}  $body
+     */
     public function edit(int $archiveId, array $body = []): ArchiveEntity|Error|MessageBag
     {
         $validator = Validator::make($body, [
             'data' => 'required',
-            'data.date' => 'required',
+            'data.date' => 'required|date_format:'.self::DATE_FORMAT_YMD,
             'data.description' => 'required',
             'data.category' => 'required',
         ]);
@@ -140,6 +165,8 @@ class Archive extends Api
         if ($validator->fails()) {
             return $validator->errors();
         }
+
+        $body = $this->normalizeBodyDate($body, 'data.date');
 
         /** @var object $response */
         $response = $this->put(
@@ -156,6 +183,11 @@ class Archive extends Api
         return new ArchiveEntity($archiveResponse);
     }
 
+    /**
+     * Upload archive attachment. Body REQUIRED: filename, attachment (file).
+     *
+     * @param  array{filename: string, attachment: mixed}  $body
+     */
     public function upload(array $body = []): \stdClass|Error|MessageBag
     {
         $validator = Validator::make($body, [

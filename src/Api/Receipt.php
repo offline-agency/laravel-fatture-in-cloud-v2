@@ -22,6 +22,11 @@ class Receipt extends Api
         'till_receipt',
     ];
 
+    /**
+     * List receipts. OPTIONAL query: fields, fieldset, sort, page, per_page, q.
+     *
+     * @param  array{fields?: string, fieldset?: string, sort?: string, page?: int, per_page?: int, q?: string}  $additionalData
+     */
     public function list(array $additionalData = []): ReceiptList|Error
     {
         $additionalData = $this->data($additionalData, [
@@ -107,11 +112,16 @@ class Receipt extends Api
         return 'Receipt deleted';
     }
 
+    /**
+     * Create receipt. Body REQUIRED (depending on flow): data.date (Y-m-d when present), data.type, data.payment_account.name.
+     *
+     * @param  array{data: array{date?: string, type?: string, payment_account?: array{name?: string}}}  $body
+     */
     public function create(array $body = []): ReceiptEntity|Error|MessageBag
     {
         $validator = Validator::make($body, [
             'data' => 'required',
-            'data.date' => 'required_without_all:data.code,data.description',
+            'data.date' => 'required_without_all:data.code,data.description|nullable|date_format:'.self::DATE_FORMAT_YMD,
             'data.type' => 'required_without_all:data.name,data.description',
             'data.payment_account' => 'required_without_all:data.name,data.code',
             'data.payment_account.name' => 'required_without_all:data.name,data.code',
@@ -120,6 +130,8 @@ class Receipt extends Api
         if ($validator->fails()) {
             return $validator->errors();
         }
+
+        $body = $this->normalizeBodyDate($body, 'data.date');
 
         /** @var object $response */
         $response = $this->post(
@@ -140,7 +152,7 @@ class Receipt extends Api
     {
         $validator = Validator::make($body, [
             'data' => 'required',
-            'data.date' => 'required_without_all:data.code,data.description',
+            'data.date' => 'required_without_all:data.code,data.description|nullable|date_format:'.self::DATE_FORMAT_YMD,
             'data.type' => 'required_without_all:data.name,data.description',
             'data.payment_account' => 'required_without_all:data.name,data.code',
             'data.payment_account.name' => 'required_without_all:data.name,data.code',
@@ -149,6 +161,8 @@ class Receipt extends Api
         if ($validator->fails()) {
             return $validator->errors();
         }
+
+        $body = $this->normalizeBodyDate($body, 'data.date');
 
         /** @var object $response */
         $response = $this->put(
@@ -182,12 +196,15 @@ class Receipt extends Api
     }
 
     /**
+     * Receipt monthly totals. REQUIRED: type (sales_receipt|till_receipt), year (integer).
+     *
      * @return array<ReceiptMonthlyTotals>|Error|MessageBag
      */
     public function monthlyTotals(string $type, string $year): array|Error|MessageBag
     {
-        $validator = Validator::make(['type' => $type], [
+        $validator = Validator::make(['type' => $type, 'year' => $year], [
             'type' => 'required|in:'.implode(',', self::RECEIPT_TYPES),
+            'year' => 'required|integer|min:2000|max:2100',
         ], [
             'type.in' => 'The selected type is invalid. Select one between '.implode(', ', self::RECEIPT_TYPES),
         ]);

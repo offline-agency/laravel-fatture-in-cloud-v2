@@ -114,7 +114,7 @@ describe('Received Document Entity', function () {
         $api = new ReceivedDocument();
         $response = $api->delete($documentId);
 
-        expect($response)->toBe('Document deleted');
+        expect($response)->toBe('Received document deleted');
     });
 
     it('handles error on delete document', function () {

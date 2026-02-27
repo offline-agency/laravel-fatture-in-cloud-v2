@@ -9,6 +9,11 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Situation\Situation as Situat
 
 class Situation extends Api
 {
+    /**
+     * Get situation. OPTIONAL query: year.
+     *
+     * @param  array{year?: int}  $additionalData
+     */
     public function getSituation(array $additionalData = []): SituationEntity|Error
     {
         $additionalData = $this->data($additionalData, [

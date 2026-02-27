@@ -8,9 +8,11 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use OfflineAgency\LaravelFattureInCloudV2\FattureInCloud;
+use OfflineAgency\LaravelFattureInCloudV2\Traits\NormalizesDatesTrait;
 
 class Api
 {
+    use NormalizesDatesTrait;
     protected FattureInCloud $connector;
 
     protected string $companyId;

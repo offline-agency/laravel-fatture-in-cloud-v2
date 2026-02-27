@@ -9,6 +9,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 
 class Email extends Api
 {
+    /**
+     * List emails (no query params).
+     */
     public function list(): EmailList|Error
     {
         /** @var object $response */

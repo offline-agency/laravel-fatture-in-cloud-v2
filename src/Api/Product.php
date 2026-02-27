@@ -177,7 +177,7 @@ class Product extends Api
     {
         $validator = Validator::make($body, [
             'data' => 'required',
-            'data.amount' => 'required',
+            'data.qty' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -217,7 +217,7 @@ class Product extends Api
     {
         $validator = Validator::make($body, [
             'data' => 'required',
-            'data.amount' => 'required',
+            'data.qty' => 'required',
         ]);
 
         if ($validator->fails()) {

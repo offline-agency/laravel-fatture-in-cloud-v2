@@ -182,6 +182,19 @@ We are currently work on this package to implement all endpoints. Enable notific
 composer test
 ```
 
+Unit and Feature tests use mocked HTTP. To run **integration tests** (real HTTP calls to Fatture in Cloud), set in `.env`:
+
+- `FCV2_DEFAULT_ID` – company ID
+- `FCV2_DEFAULT_BEARER` – API bearer token
+
+Then run:
+
+```bash
+php vendor/bin/pest tests/Integration
+```
+
+If these env vars are not set, integration tests are skipped.
+
 ## Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.

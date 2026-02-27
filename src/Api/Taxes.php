@@ -122,9 +122,14 @@ class Taxes extends Api
             return new Error($response->data);
         }
 
-        return 'Taxes deleted';
+        return 'Tax document deleted';
     }
 
+    /**
+     * Create tax document. Body REQUIRED: data.type, data.entity.name, data.due_date (Y-m-d), data.amount, data.description.
+     *
+     * @param  array{data: array{type: string, entity: array{name: string}, due_date: string, amount: float, description: string}}  $body
+     */
     public function create(
         array $body = []
     ): TaxesEntity|Error|MessageBag {
@@ -132,6 +137,9 @@ class Taxes extends Api
             'data' => 'required',
             'data.type' => 'required|in:'.implode(',', self::DOCUMENT_TYPES),
             'data.entity.name' => 'required',
+            'data.due_date' => 'required|date_format:'.self::DATE_FORMAT_YMD,
+            'data.amount' => 'required|numeric',
+            'data.description' => 'required',
         ], [
             'data.type.in' => 'The selected data.type is invalid. Select one between '.implode(', ', self::DOCUMENT_TYPES),
         ]);
@@ -139,6 +147,8 @@ class Taxes extends Api
         if ($validator->fails()) {
             return $validator->errors();
         }
+
+        $body = $this->normalizeBodyDate($body, 'data.due_date');
 
         /** @var object $response */
         $response = $this->post(
@@ -166,6 +176,10 @@ class Taxes extends Api
 
         if ($validator->fails()) {
             return $validator->errors();
+        }
+
+        if (isset($body['data']['due_date'])) {
+            $body = $this->normalizeBodyDate($body, 'data.due_date');
         }
 
         /** @var object $response */

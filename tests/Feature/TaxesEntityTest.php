@@ -112,7 +112,7 @@ describe('Taxes Entity', function () {
         $api = new Taxes();
         $response = $api->delete($documentId);
 
-        expect($response)->toBe('Taxes deleted');
+        expect($response)->toBe('Tax document deleted');
     });
 
     it('handles error on delete tax entry', function () {
@@ -149,7 +149,9 @@ describe('Taxes Entity', function () {
                 'entity' => [
                     'name' => $entityName,
                 ],
-                'date' => '2024-01-01',
+                'due_date' => '2024-01-01',
+                'amount' => 100.00,
+                'description' => 'Tax payment',
             ],
         ]);
 
@@ -170,6 +172,9 @@ describe('Taxes Entity', function () {
             'data' => [
                 'type' => 'invalid_type',
                 'entity' => ['name' => 'Test S.R.L'],
+                'due_date' => '2024-01-01',
+                'amount' => 100,
+                'description' => 'Desc',
             ],
         ]);
 
@@ -182,11 +187,29 @@ describe('Taxes Entity', function () {
         $response = $api->create([
             'data' => [
                 'type' => 'expense',
+                'due_date' => '2024-01-01',
+                'amount' => 100,
+                'description' => 'Desc',
             ],
         ]);
 
         expect($response)->toBeInstanceOf(MessageBag::class)
             ->messages()->toHaveKey('data.entity.name');
+    });
+
+    it('validates data.due_date and data.amount and data.description on create tax entry', function () {
+        $api = new Taxes();
+        $response = $api->create([
+            'data' => [
+                'type' => 'expense',
+                'entity' => ['name' => 'Test S.R.L'],
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.due_date')
+            ->messages()->toHaveKey('data.amount')
+            ->messages()->toHaveKey('data.description');
     });
 
     it('handles error on create tax entry', function () {
@@ -202,6 +225,9 @@ describe('Taxes Entity', function () {
             'data' => [
                 'type' => 'expense',
                 'entity' => ['name' => 'Test S.R.L'],
+                'due_date' => '2024-01-01',
+                'amount' => 100.00,
+                'description' => 'Tax payment',
             ],
         ]);
 

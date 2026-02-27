@@ -134,6 +134,11 @@ class IssuedDocument extends Api
         return 'Document deleted';
     }
 
+    /**
+     * Create issued document. Body REQUIRED: data.type, data.entity.name. Optional date fields (data.date, data.due_date) normalized to Y-m-d.
+     *
+     * @param  array{data: array{type: string, entity: array{name: string}, date?: string, due_date?: string}}  $body
+     */
     public function create(
         array $body = []
     ): IssuedDocumentEntity|Error|MessageBag {
@@ -149,6 +154,8 @@ class IssuedDocument extends Api
             return $validator->errors();
         }
 
+        $body = $this->normalizeBodyDate($body, 'data.date');
+        $body = $this->normalizeBodyDate($body, 'data.due_date');
         $response = $this->post(
             'c/'.$this->companyId.'/issued_documents',
             $body
@@ -176,6 +183,8 @@ class IssuedDocument extends Api
             return $validator->errors();
         }
 
+        $body = $this->normalizeBodyDate($body, 'data.date');
+        $body = $this->normalizeBodyDate($body, 'data.due_date');
         $response = $this->put(
             'c/'.$this->companyId.'/issued_documents/'.$document_id,
             $body

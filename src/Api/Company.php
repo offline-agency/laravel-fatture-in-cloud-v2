@@ -9,6 +9,11 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 
 class Company extends Api
 {
+    /**
+     * Get company info. OPTIONAL query: fields, fieldset.
+     *
+     * @param  array{fields?: string, fieldset?: string}  $additionalData
+     */
     public function detail(int $companyId, array $additionalData = []): CompanyEntity|Error
     {
         $additionalData = $this->data($additionalData, [

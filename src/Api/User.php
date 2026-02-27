@@ -10,6 +10,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\User\User as UserEntity;
 
 class User extends Api
 {
+    /**
+     * Get current user info.
+     */
     public function userInfo(): UserEntity|Error
     {
         /** @var object $response */
@@ -32,6 +35,11 @@ class User extends Api
         return new UserEntity($completeUser);
     }
 
+    /**
+     * List user companies. OPTIONAL query: fields, fieldset.
+     *
+     * @param  array{fields?: string, fieldset?: string}  $additionalData
+     */
     public function listCompanies(array $additionalData = []): CompanyList|Error
     {
         $additionalData = $this->data($additionalData, [

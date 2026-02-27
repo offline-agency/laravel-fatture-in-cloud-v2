@@ -28,6 +28,7 @@ describe('Cashbook', function () {
                 'description' => 'A description',
                 'kind' => 'cashbook',
                 'amount_in' => 100.00,
+                'payment_account_in' => ['id' => 1],
             ],
         ]);
 
@@ -63,10 +64,27 @@ describe('Cashbook', function () {
         ]);
 
         $cashbookApi = new Cashbook();
-        $response = $cashbookApi->list();
+        $response = $cashbookApi->list(['date_from' => '2024-01-01', 'date_to' => '2024-12-31']);
 
         expect($response)->toBeInstanceOf(CashbookList::class)
             ->getItems()->toHaveCount(1);
+    });
+
+    it('validates list requires date_from and date_to', function () {
+        $api = new Cashbook();
+        $response = $api->list([]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('date_from')
+            ->messages()->toHaveKey('date_to');
+    });
+
+    it('validates list requires Y-m-d date format', function () {
+        $api = new Cashbook();
+        $response = $api->list(['date_from' => '01/01/2024', 'date_to' => '2024-12-31']);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('date_from');
     });
 
     it('handles error on list cashbook entries', function () {
@@ -78,7 +96,7 @@ describe('Cashbook', function () {
         ]);
 
         $api = new Cashbook();
-        $response = $api->list();
+        $response = $api->list(['date_from' => '2024-01-01', 'date_to' => '2024-12-31']);
 
         expect($response)->toBeInstanceOf(Error::class);
     });
@@ -95,10 +113,19 @@ describe('Cashbook', function () {
         ]);
 
         $api = new Cashbook();
-        $response = $api->all();
+        $response = $api->all(['date_from' => '2024-01-01', 'date_to' => '2024-12-31']);
 
         expect($response)->toBeArray()->toHaveCount(2)
             ->{0}->toBeInstanceOf(CashbookEntry::class);
+    });
+
+    it('validates all requires date_from and date_to', function () {
+        $api = new Cashbook();
+        $response = $api->all([]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('date_from')
+            ->messages()->toHaveKey('date_to');
     });
 
     it('handles error on all cashbook entries', function () {
@@ -110,7 +137,7 @@ describe('Cashbook', function () {
         ]);
 
         $api = new Cashbook();
-        $response = $api->all();
+        $response = $api->all(['date_from' => '2024-01-01', 'date_to' => '2024-12-31']);
 
         expect($response)->toBeInstanceOf(Error::class);
     });
@@ -208,6 +235,7 @@ describe('Cashbook', function () {
                 'date' => '2024-06-05',
                 'description' => 'A description',
                 'kind' => 'cashbook',
+                'payment_account_in' => ['id' => 1],
             ],
         ]);
 
@@ -229,6 +257,7 @@ describe('Cashbook', function () {
                 'date' => '2024-06-05',
                 'description' => 'Updated',
                 'kind' => 'cashbook',
+                'payment_account_in' => ['id' => 1],
             ],
         ]);
 
@@ -246,7 +275,7 @@ describe('Cashbook', function () {
 
     it('validates data.date on edit cashbook entry', function () {
         $api = new Cashbook();
-        $response = $api->edit(1, ['data' => ['description' => 'Desc', 'kind' => 'cashbook']]);
+        $response = $api->edit(1, ['data' => ['description' => 'Desc', 'kind' => 'cashbook', 'payment_account_in' => ['id' => 1]]]);
 
         expect($response)->toBeInstanceOf(MessageBag::class)
             ->messages()->toHaveKey('data.date');
@@ -254,10 +283,26 @@ describe('Cashbook', function () {
 
     it('validates data.description on edit cashbook entry', function () {
         $api = new Cashbook();
-        $response = $api->edit(1, ['data' => ['date' => '2024-06-05', 'kind' => 'cashbook']]);
+        $response = $api->edit(1, ['data' => ['date' => '2024-06-05', 'kind' => 'cashbook', 'payment_account_in' => ['id' => 1]]]);
 
         expect($response)->toBeInstanceOf(MessageBag::class)
             ->messages()->toHaveKey('data.description');
+    });
+
+    it('validates data.payment_account_in on create cashbook entry', function () {
+        $api = new Cashbook();
+        $response = $api->create(['data' => ['date' => '2024-06-05', 'description' => 'Desc', 'kind' => 'cashbook']]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.payment_account_in');
+    });
+
+    it('validates data.payment_account_in on edit cashbook entry', function () {
+        $api = new Cashbook();
+        $response = $api->edit(1, ['data' => ['date' => '2024-06-05', 'description' => 'Desc', 'kind' => 'cashbook']]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.payment_account_in');
     });
 
     it('validates data.kind on edit cashbook entry', function () {
@@ -282,6 +327,7 @@ describe('Cashbook', function () {
                 'date' => '2024-06-05',
                 'description' => 'Updated',
                 'kind' => 'cashbook',
+                'payment_account_in' => ['id' => 1],
             ],
         ]);
 
@@ -291,7 +337,7 @@ describe('Cashbook', function () {
     it('navigates cashbook to next page', function () {
         $cashbookList = new CashbookList(json_decode(json_encode([
             'data' => [['id' => 1, 'kind' => 'cashbook']],
-            'next_page_url' => 'https://fake_url/cashbook?per_page=10&page=2',
+            'next_page_url' => 'https://fake_url/cashbook?per_page=10&page=2&date_from=2024-01-01&date_to=2024-12-31',
         ])));
 
         Http::fake(['c/*/cashbook*' => Http::response(['data' => [['id' => 2, 'kind' => 'cashbook']], 'next_page_url' => null], 200)]);
@@ -311,7 +357,7 @@ describe('Cashbook', function () {
     it('navigates cashbook to previous page', function () {
         $cashbookList = new CashbookList(json_decode(json_encode([
             'data' => [['id' => 2, 'kind' => 'cashbook']],
-            'prev_page_url' => 'https://fake_url/cashbook?per_page=10&page=1',
+            'prev_page_url' => 'https://fake_url/cashbook?per_page=10&page=1&date_from=2024-01-01&date_to=2024-12-31',
         ])));
 
         Http::fake(['c/*/cashbook*' => Http::response(['data' => [['id' => 1, 'kind' => 'cashbook']], 'next_page_url' => null], 200)]);
@@ -331,7 +377,7 @@ describe('Cashbook', function () {
     it('navigates cashbook to first page', function () {
         $cashbookList = new CashbookList(json_decode(json_encode([
             'data' => [['id' => 3, 'kind' => 'cashbook']],
-            'first_page_url' => 'https://fake_url/cashbook?per_page=10&page=1',
+            'first_page_url' => 'https://fake_url/cashbook?per_page=10&page=1&date_from=2024-01-01&date_to=2024-12-31',
         ])));
 
         Http::fake(['c/*/cashbook*' => Http::response(['data' => [['id' => 1, 'kind' => 'cashbook']], 'next_page_url' => null], 200)]);
@@ -351,7 +397,7 @@ describe('Cashbook', function () {
     it('navigates cashbook to last page', function () {
         $cashbookList = new CashbookList(json_decode(json_encode([
             'data' => [['id' => 1, 'kind' => 'cashbook']],
-            'last_page_url' => 'https://fake_url/cashbook?per_page=10&page=5',
+            'last_page_url' => 'https://fake_url/cashbook?per_page=10&page=5&date_from=2024-01-01&date_to=2024-12-31',
         ])));
 
         Http::fake(['c/*/cashbook*' => Http::response(['data' => [['id' => 5, 'kind' => 'cashbook']], 'next_page_url' => null], 200)]);

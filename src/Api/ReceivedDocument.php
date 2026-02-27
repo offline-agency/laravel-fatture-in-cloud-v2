@@ -124,9 +124,14 @@ class ReceivedDocument extends Api
             return new Error($response->data);
         }
 
-        return 'Document deleted';
+        return 'Received document deleted';
     }
 
+    /**
+     * Create received document. Body REQUIRED: data.type, data.entity.name. Optional date fields (data.date, data.due_date) normalized to Y-m-d.
+     *
+     * @param  array{data: array{type: string, entity: array{name: string}, date?: string, due_date?: string}}  $body
+     */
     public function create(
         array $body = []
     ): ReceivedDocumentEntity|Error|MessageBag {
@@ -141,6 +146,9 @@ class ReceivedDocument extends Api
         if ($validator->fails()) {
             return $validator->errors();
         }
+
+        $body = $this->normalizeBodyDate($body, 'data.date');
+        $body = $this->normalizeBodyDate($body, 'data.due_date');
 
         /** @var object $response */
         $response = $this->post(
@@ -169,6 +177,9 @@ class ReceivedDocument extends Api
         if ($validator->fails()) {
             return $validator->errors();
         }
+
+        $body = $this->normalizeBodyDate($body, 'data.date');
+        $body = $this->normalizeBodyDate($body, 'data.due_date');
 
         /** @var object $response */
         $response = $this->put(

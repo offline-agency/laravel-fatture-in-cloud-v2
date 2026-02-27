@@ -1,5 +1,6 @@
 <?php
 
+use Faker\Factory as FakerFactory;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Product;
@@ -158,6 +159,31 @@ describe('Product Entity', function () {
             ->messages()->toHaveKey('data');
     });
 
+    it('creates a product with Faker it_IT payload', function () {
+        $faker = FakerFactory::create('it_IT');
+        $payload = [
+            'data' => [
+                'code' => $faker->bothify('PROD-####'),
+                'name' => $faker->words(3, true),
+                'description' => $faker->sentence(),
+                'net_price' => $faker->randomFloat(2, 10, 1000),
+                'category' => $faker->word(),
+            ],
+        ];
+
+        Http::fake([
+            '*/products' => Http::response(
+                (new ProductFakeResponse())->getProductsFakeDetail(array_merge($payload['data'], ['id' => 1]))
+            ),
+        ]);
+
+        $api = new Product();
+        $response = $api->create($payload);
+
+        expect($response)->toBeInstanceOf(ProductEntity::class)
+            ->name->toBe($payload['data']['name']);
+    });
+
     it('handles error on create product', function () {
         Http::fake([
             'c/*/products' => Http::response([
@@ -271,7 +297,7 @@ describe('Product Entity', function () {
         $response = $api->createStockMovement($productId, [
             'data' => [
                 'date' => '2024-06-05',
-                'amount' => 10.0,
+                'qty' => 10.0,
                 'description' => 'New stock',
             ],
         ]);
@@ -288,14 +314,14 @@ describe('Product Entity', function () {
             ->messages()->toHaveKey('data');
     });
 
-    it('validates on create stock movement - missing data.amount', function () {
+    it('validates on create stock movement - missing data.qty', function () {
         $api = new Product();
         $response = $api->createStockMovement(1, [
             'data' => ['description' => 'Test'],
         ]);
 
         expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data.amount');
+            ->messages()->toHaveKey('data.qty');
     });
 
     it('handles error on create stock movement', function () {
@@ -308,7 +334,7 @@ describe('Product Entity', function () {
 
         $api = new Product();
         $response = $api->createStockMovement(1, [
-            'data' => ['amount' => 5.0],
+            'data' => ['qty' => 5.0],
         ]);
 
         expect($response)->toBeInstanceOf(Error::class);
@@ -355,7 +381,7 @@ describe('Product Entity', function () {
         $api = new Product();
         $response = $api->editStockMovement($productId, $stockMovementId, [
             'data' => [
-                'amount' => 20.0,
+                'qty' => 20.0,
                 'description' => 'Updated',
             ],
         ]);
@@ -382,7 +408,7 @@ describe('Product Entity', function () {
 
         $api = new Product();
         $response = $api->editStockMovement(1, 1, [
-            'data' => ['amount' => 5.0],
+            'data' => ['qty' => 5.0],
         ]);
 
         expect($response)->toBeInstanceOf(Error::class);
