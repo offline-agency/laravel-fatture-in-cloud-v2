@@ -13,6 +13,7 @@ use OfflineAgency\LaravelFattureInCloudV2\Traits\NormalizesDatesTrait;
 class Api
 {
     use NormalizesDatesTrait;
+
     protected FattureInCloud $connector;
 
     protected string $companyId;
