@@ -115,7 +115,7 @@ class Receipt extends Api
     /**
      * Create receipt. Body REQUIRED (depending on flow): data.date (Y-m-d when present), data.type, data.payment_account.name.
      *
-     * @param  array{data: array{date?: string, type?: string, payment_account?: array{name?: string}}}  $body
+     * @param  array{data?: array{date?: string, type?: string, payment_account?: array{name?: string}}}  $body
      */
     public function create(array $body = []): ReceiptEntity|Error|MessageBag
     {

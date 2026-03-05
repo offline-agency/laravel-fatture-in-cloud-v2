@@ -128,7 +128,7 @@ class Taxes extends Api
     /**
      * Create tax document. Body REQUIRED: data.type, data.entity.name, data.due_date (Y-m-d), data.amount, data.description.
      *
-     * @param  array{data: array{type: string, entity: array{name: string}, due_date: string, amount: float, description: string}}  $body
+     * @param  array{data?: array{type?: string, entity?: array{name?: string}, due_date?: string, amount?: float, description?: string}}  $body
      */
     public function create(
         array $body = []

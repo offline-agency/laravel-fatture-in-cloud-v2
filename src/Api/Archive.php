@@ -116,7 +116,7 @@ class Archive extends Api
     /**
      * Create archive document. Body REQUIRED: data.date (Y-m-d), data.description, data.category.
      *
-     * @param  array{data: array{date: string, description: string, category: string}}  $body
+     * @param  array{data?: array{date?: string, description?: string, category?: string}}  $body
      */
     public function create(array $body = []): ArchiveEntity|Error|MessageBag
     {
@@ -151,7 +151,7 @@ class Archive extends Api
     /**
      * Edit archive document. Body REQUIRED: data.date (Y-m-d), data.description, data.category.
      *
-     * @param  array{data: array{date: string, description: string, category: string}}  $body
+     * @param  array{data?: array{date?: string, description?: string, category?: string}}  $body
      */
     public function edit(int $archiveId, array $body = []): ArchiveEntity|Error|MessageBag
     {
@@ -186,7 +186,7 @@ class Archive extends Api
     /**
      * Upload archive attachment. Body REQUIRED: filename, attachment (file).
      *
-     * @param  array{filename: string, attachment: mixed}  $body
+     * @param  array{filename?: string, attachment?: mixed}  $body
      */
     public function upload(array $body = []): \stdClass|Error|MessageBag
     {

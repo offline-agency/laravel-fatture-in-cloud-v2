@@ -18,7 +18,7 @@ class Cashbook extends Api
     /**
      * List cashbook entries. REQUIRED query: date_from, date_to (Y-m-d). OPTIONAL: fields, fieldset, sort, page, per_page, q.
      *
-     * @param  array{date_from: string, date_to: string, fields?: string, fieldset?: string, sort?: string, page?: int, per_page?: int, q?: string}  $additionalData
+     * @param  array{date_from?: string, date_to?: string, fields?: string, fieldset?: string, sort?: string, page?: int, per_page?: int, q?: string}  $additionalData
      */
     public function list(array $additionalData = []): CashbookList|Error|MessageBag
     {
@@ -69,7 +69,7 @@ class Cashbook extends Api
     /**
      * Get all cashbook entries. REQUIRED query: date_from, date_to (Y-m-d). OPTIONAL: fields, fieldset, sort, page, per_page, q.
      *
-     * @param  array{date_from: string, date_to: string, fields?: string, fieldset?: string, sort?: string, page?: int, per_page?: int, q?: string}  $additionalData
+     * @param  array{date_from?: string, date_to?: string, fields?: string, fieldset?: string, sort?: string, page?: int, per_page?: int, q?: string}  $additionalData
      * @return array<CashbookEntity>|Error|MessageBag
      */
     public function all(array $additionalData = []): array|Error|MessageBag
@@ -156,7 +156,7 @@ class Cashbook extends Api
     /**
      * Create cashbook entry. Body REQUIRED: data.date (Y-m-d), data.description, data.kind, data.payment_account_in.
      *
-     * @param  array{data: array{date: string, description: string, kind: string, payment_account_in: mixed}}  $body
+     * @param  array{data?: array{date?: string, description?: string, kind?: string, payment_account_in?: mixed}}  $body
      */
     public function create(array $body = []): CashbookEntity|Error|MessageBag
     {
@@ -192,7 +192,7 @@ class Cashbook extends Api
     /**
      * Edit cashbook entry. Body REQUIRED: data.date (Y-m-d), data.description, data.kind, data.payment_account_in.
      *
-     * @param  array{data: array{date: string, description: string, kind: string, payment_account_in: mixed}}  $body
+     * @param  array{data?: array{date?: string, description?: string, kind?: string, payment_account_in?: mixed}}  $body
      */
     public function edit(int $entryId, array $body = []): CashbookEntity|Error|MessageBag
     {

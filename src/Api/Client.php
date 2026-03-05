@@ -119,7 +119,7 @@ class Client extends Api
     /**
      * Create client. Body REQUIRED: data.name (and often type).
      *
-     * @param  array{data: array{name: string}}  $body
+     * @param  array{data?: array{name?: string}}  $body
      */
     public function create(array $body = []): ClientEntity|Error|MessageBag
     {
@@ -150,7 +150,7 @@ class Client extends Api
     /**
      * Edit client. Body REQUIRED: data.name.
      *
-     * @param  array{data: array{name: string}}  $body
+     * @param  array{data?: array{name?: string}}  $body
      */
     public function edit(int $clientId, array $body = []): ClientEntity|Error|MessageBag
     {
