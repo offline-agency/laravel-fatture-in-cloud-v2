@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OfflineAgency\LaravelFattureInCloudV2\Traits;
 
 use DateTimeInterface;
+use Illuminate\Support\Arr;
 
 trait NormalizesDatesTrait
 {
@@ -74,10 +75,10 @@ trait NormalizesDatesTrait
      */
     protected function normalizeBodyDate(array $body, string $dotPath): array
     {
-        $value = \Illuminate\Support\Arr::get($body, $dotPath);
+        $value = Arr::get($body, $dotPath);
         $normalized = $this->normalizeDateToYmd($value);
         if ($normalized !== null) {
-            \Illuminate\Support\Arr::set($body, $dotPath, $normalized);
+            Arr::set($body, $dotPath, $normalized);
         }
 
         return $body;

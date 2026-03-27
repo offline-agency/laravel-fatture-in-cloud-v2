@@ -7,7 +7,7 @@ namespace OfflineAgency\LaravelFattureInCloudV2;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \OfflineAgency\LaravelFattureInCloudV2\FattureInCloud
+ * @see FattureInCloud
  */
 class LaravelFattureInCloudV2Facade extends Facade
 {

@@ -9,6 +9,8 @@ use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\Product as ProductEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\ProductList;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovement;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovementList;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class Product extends Api
@@ -156,7 +158,7 @@ class Product extends Api
         return new ProductEntity($product);
     }
 
-    public function listStockMovements(int $productId, array $additionalData = []): \OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovementList|Error
+    public function listStockMovements(int $productId, array $additionalData = []): StockMovementList|Error
     {
         /** @var object $response */
         $response = $this->get(
@@ -170,10 +172,10 @@ class Product extends Api
 
         $stockMovements = $response->data;
 
-        return new \OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovementList($stockMovements);
+        return new StockMovementList($stockMovements);
     }
 
-    public function createStockMovement(int $productId, array $body = []): \OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovement|Error|MessageBag
+    public function createStockMovement(int $productId, array $body = []): StockMovement|Error|MessageBag
     {
         $validator = Validator::make($body, [
             'data' => 'required',
@@ -196,7 +198,7 @@ class Product extends Api
 
         $stockMovement = $response->data->data;
 
-        return new \OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovement($stockMovement);
+        return new StockMovement($stockMovement);
     }
 
     public function deleteStockMovement(int $productId, int $stockMovementId): string|Error
@@ -213,7 +215,7 @@ class Product extends Api
         return 'Stock movement deleted';
     }
 
-    public function editStockMovement(int $productId, int $stockMovementId, array $body = []): \OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovement|Error|MessageBag
+    public function editStockMovement(int $productId, int $stockMovementId, array $body = []): StockMovement|Error|MessageBag
     {
         $validator = Validator::make($body, [
             'data' => 'required',
@@ -236,6 +238,6 @@ class Product extends Api
 
         $stockMovement = $response->data->data;
 
-        return new \OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovement($stockMovement);
+        return new StockMovement($stockMovement);
     }
 }

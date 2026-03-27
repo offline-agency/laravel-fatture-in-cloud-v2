@@ -6,11 +6,12 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument;
 
 use Illuminate\Support\Arr;
 use OfflineAgency\LaravelFattureInCloudV2\Api\ReceivedDocument;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Pagination;
 
 readonly class ReceivedDocumentPagination extends Pagination
 {
-    public function goToFirstPage(): ReceivedDocumentList|\OfflineAgency\LaravelFattureInCloudV2\Entities\Error|null
+    public function goToFirstPage(): ReceivedDocumentList|Error|null
     {
         if (is_null($this->firstPageUrl)) {
             return null;
@@ -19,7 +20,7 @@ readonly class ReceivedDocumentPagination extends Pagination
         return $this->changePage($this->firstPageUrl);
     }
 
-    public function goToLastPage(): ReceivedDocumentList|\OfflineAgency\LaravelFattureInCloudV2\Entities\Error|null
+    public function goToLastPage(): ReceivedDocumentList|Error|null
     {
         if (is_null($this->lastPageUrl)) {
             return null;
@@ -28,7 +29,7 @@ readonly class ReceivedDocumentPagination extends Pagination
         return $this->changePage($this->lastPageUrl);
     }
 
-    public function goToPrevPage(): ReceivedDocumentList|\OfflineAgency\LaravelFattureInCloudV2\Entities\Error|null
+    public function goToPrevPage(): ReceivedDocumentList|Error|null
     {
         if (! $this->hasPrevPage()) {
             return null;
@@ -37,7 +38,7 @@ readonly class ReceivedDocumentPagination extends Pagination
         return $this->changePage($this->prevPageUrl);
     }
 
-    public function goToNextPage(): ReceivedDocumentList|\OfflineAgency\LaravelFattureInCloudV2\Entities\Error|null
+    public function goToNextPage(): ReceivedDocumentList|Error|null
     {
         if (! $this->hasNextPage()) {
             return null;
@@ -48,7 +49,7 @@ readonly class ReceivedDocumentPagination extends Pagination
 
     // helpers
 
-    private function changePage(string $url): ReceivedDocumentList|\OfflineAgency\LaravelFattureInCloudV2\Entities\Error
+    private function changePage(string $url): ReceivedDocumentList|Error
     {
         $queryParams = $this->getParsedQueryParams($url);
 
