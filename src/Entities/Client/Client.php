@@ -1,193 +1,131 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Client;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
-
-class Client extends AbstractEntity
+readonly class Client
 {
-    /**
-     * @var int
-     */
-    public $id;
+    public ?int $id;
 
-    /**
-     * @var string
-     */
-    public $code;
+    public ?string $code;
 
-    /**
-     * @var string
-     */
-    public $name;
+    public ?string $name;
 
-    /**
-     * @var string
-     */
-    public $type; //TODO: can be only some values
+    public ?string $type;
 
-    /**
-     * @var string
-     */
-    public $first_name;
+    public ?string $firstName;
 
-    /**
-     * @var string
-     */
-    public $last_name;
+    public ?string $lastName;
 
-    /**
-     * @var string
-     */
-    public $contact_person;
+    public ?string $contactPerson;
 
-    /**
-     * @var string
-     */
-    public $vat_number;
+    public ?string $vatNumber;
 
-    /**
-     * @var string
-     */
-    public $tax_code;
+    public ?string $taxCode;
 
-    /**
-     * @var string
-     */
-    public $address_street;
+    public ?string $addressStreet;
 
-    /**
-     * @var string
-     */
-    public $address_postal_code;
+    public ?string $addressPostalCode;
 
-    /**
-     * @var string
-     */
-    public $address_city;
+    public ?string $addressCity;
 
-    /**
-     * @var string
-     */
-    public $address_province;
+    public ?string $addressProvince;
 
-    /**
-     * @var string
-     */
-    public $address_extra;
+    public ?string $addressExtra;
 
-    /**
-     * @var string
-     */
-    public $country;
+    public ?string $country;
 
-    /**
-     * @var string
-     */
-    public $email;
+    public ?string $email;
 
-    /**
-     * @var string
-     */
-    public $certified_email;
+    public ?string $certifiedEmail;
 
-    /**
-     * @var string
-     */
-    public $phone;
+    public ?string $phone;
 
-    /**
-     * @var string
-     */
-    public $fax;
+    public ?string $fax;
 
-    /**
-     * @var string
-     */
-    public $notes;
+    public ?string $notes;
 
-    /**
-     * @var object
-     */
-    public $default_vat; //TODO: relate another class
+    public mixed $defaultVat;
 
-    /**
-     * @var int
-     */
-    public $default_payment_terms;
+    public ?int $defaultPaymentTerms;
 
-    /**
-     * @var string
-     */
-    public $default_payment_terms_type; //TODO: can be only some values
+    public ?string $defaultPaymentTermsType;
 
-    /**
-     * @var object
-     */
-    public $default_payment_method; //TODO: relate another class
+    public mixed $defaultPaymentMethod;
 
-    /**
-     * @var string
-     */
-    public $bank_name;
+    public ?string $bankName;
 
-    /**
-     * @var string
-     */
-    public $bank_iban;
+    public ?string $bankIban;
 
-    /**
-     * @var string
-     */
-    public $bank_swift_code;
+    public ?string $bankSwiftCode;
 
-    /**
-     * @var string
-     */
-    public $shipping_address;
+    public ?string $shippingAddress;
 
-    /**
-     * @var bool
-     */
-    public $e_invoice;
+    public ?bool $eInvoice;
 
-    /**
-     * @var string
-     */
-    public $ei_code;
+    public ?string $eiCode;
 
-    /**
-     * @var bool
-     */
-    public $discount_highlight;
+    public ?bool $discountHighlight;
 
-    /**
-     * @var float
-     */
-    public $default_discount;
+    public ?float $defaultDiscount;
 
-    /**
-     * @var bool
-     */
-    public $has_intent_declaration;
+    public ?bool $hasIntentDeclaration;
 
-    /**
-     * @var string
-     */
-    public $intent_declaration_protocol_number;
+    public ?string $intentDeclarationProtocolNumber;
 
-    /**
-     * @var string
-     */
-    public $intent_declaration_protocol_date; //TODO: date format
+    public ?string $intentDeclarationProtocolDate;
 
-    /**
-     * @var string
-     */
-    public $created_at;
+    public ?string $createdAt;
 
-    /**
-     * @var string
-     */
-    public $updated_at;
+    public ?string $updatedAt;
+
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
+
+        if (! is_array($parameters)) {
+            $parameters = [];
+        }
+
+        $this->id = $parameters['id'] ?? null;
+        $this->code = $parameters['code'] ?? null;
+        $this->name = $parameters['name'] ?? null;
+        $this->type = $parameters['type'] ?? null;
+        $this->firstName = $parameters['first_name'] ?? null;
+        $this->lastName = $parameters['last_name'] ?? null;
+        $this->contactPerson = $parameters['contact_person'] ?? null;
+        $this->vatNumber = $parameters['vat_number'] ?? null;
+        $this->taxCode = $parameters['tax_code'] ?? null;
+        $this->addressStreet = $parameters['address_street'] ?? null;
+        $this->addressPostalCode = $parameters['address_postal_code'] ?? null;
+        $this->addressCity = $parameters['address_city'] ?? null;
+        $this->addressProvince = $parameters['address_province'] ?? null;
+        $this->addressExtra = $parameters['address_extra'] ?? null;
+        $this->country = $parameters['country'] ?? null;
+        $this->email = $parameters['email'] ?? null;
+        $this->certifiedEmail = $parameters['certified_email'] ?? null;
+        $this->phone = $parameters['phone'] ?? null;
+        $this->fax = $parameters['fax'] ?? null;
+        $this->notes = $parameters['notes'] ?? null;
+        $this->defaultVat = $parameters['default_vat'] ?? null;
+        $this->defaultPaymentTerms = $parameters['default_payment_terms'] ?? null;
+        $this->defaultPaymentTermsType = $parameters['default_payment_terms_type'] ?? null;
+        $this->defaultPaymentMethod = $parameters['default_payment_method'] ?? null;
+        $this->bankName = $parameters['bank_name'] ?? null;
+        $this->bankIban = $parameters['bank_iban'] ?? null;
+        $this->bankSwiftCode = $parameters['bank_swift_code'] ?? null;
+        $this->shippingAddress = $parameters['shipping_address'] ?? null;
+        $this->eInvoice = $parameters['e_invoice'] ?? null;
+        $this->eiCode = $parameters['ei_code'] ?? null;
+        $this->discountHighlight = $parameters['discount_highlight'] ?? null;
+        $this->defaultDiscount = $parameters['default_discount'] ?? null;
+        $this->hasIntentDeclaration = $parameters['has_intent_declaration'] ?? null;
+        $this->intentDeclarationProtocolNumber = $parameters['intent_declaration_protocol_number'] ?? null;
+        $this->intentDeclarationProtocolDate = $parameters['intent_declaration_protocol_date'] ?? null;
+        $this->createdAt = $parameters['created_at'] ?? null;
+        $this->updatedAt = $parameters['updated_at'] ?? null;
+    }
 }

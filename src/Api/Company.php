@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Company\Company as CompanyEntity;
@@ -7,17 +9,22 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 
 class Company extends Api
 {
-    public function detail(
-        int $company_id,
-        ?array $additional_data = []
-    ) {
-        $additional_data = $this->data($additional_data, [
-            'fields', 'fieldset',
+    /**
+     * Get company info. OPTIONAL query: fields, fieldset.
+     *
+     * @param  array{fields?: string, fieldset?: string}  $additionalData
+     */
+    public function detail(int $companyId, array $additionalData = []): CompanyEntity|Error
+    {
+        $additionalData = $this->data($additionalData, [
+            'fields',
+            'fieldset',
         ]);
 
+        /** @var object $response */
         $response = $this->get(
-            'c/'.$company_id.'/company/info',
-            $additional_data
+            'c/'.$companyId.'/company/info',
+            $additionalData
         );
 
         if (! $response->success) {

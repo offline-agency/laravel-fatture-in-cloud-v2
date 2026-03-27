@@ -1,38 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
-
-class ReceiptPreCreateInfo extends AbstractEntity
+readonly class ReceiptPreCreateInfo
 {
-    /**
-     * @var object
-     */
-    public $numerations;
+    public mixed $numerations;
 
-    /**
-     * @var array
-     */
-    public $numerations_list;
+    public mixed $numerationsList;
 
-    /**
-     * @var array
-     */
-    public $rc_centers_list;
+    public mixed $rcCentersList;
 
-    /**
-     * @var array
-     */
-    public $payment_accounts_list;
+    public mixed $paymentAccountsList;
 
-    /**
-     * @var array
-     */
-    public $categories_list;
+    public mixed $categoriesList;
 
-    /**
-     * @var array
-     */
-    public $vat_types_list;
+    public mixed $vatTypesList;
+
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
+
+        $this->numerations = $parameters['numerations'] ?? null;
+        $this->numerationsList = $parameters['numerations_list'] ?? null;
+        $this->rcCentersList = $parameters['rc_centers_list'] ?? null;
+        $this->paymentAccountsList = $parameters['payment_accounts_list'] ?? null;
+        $this->categoriesList = $parameters['categories_list'] ?? null;
+        $this->vatTypesList = $parameters['vat_types_list'] ?? null;
+    }
 }

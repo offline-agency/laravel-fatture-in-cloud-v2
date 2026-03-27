@@ -1,0 +1,47 @@
+<?php
+
+declare(strict_types=1);
+
+namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Settings;
+
+readonly class VatType
+{
+    public ?int $id;
+
+    public ?float $value;
+
+    public ?string $description;
+
+    public ?string $notes;
+
+    public ?bool $eInvoice;
+
+    public ?string $eiType;
+
+    public ?string $eiDescription;
+
+    public ?bool $editable;
+
+    public ?bool $isDisabled;
+
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
+
+        if (! is_array($parameters)) {
+            $parameters = [];
+        }
+
+        $this->id = $parameters['id'] ?? null;
+        $this->value = isset($parameters['value']) ? (float) $parameters['value'] : null;
+        $this->description = $parameters['description'] ?? null;
+        $this->notes = $parameters['notes'] ?? null;
+        $this->eInvoice = $parameters['e_invoice'] ?? null;
+        $this->eiType = isset($parameters['ei_type']) ? (string) $parameters['ei_type'] : null;
+        $this->eiDescription = $parameters['ei_description'] ?? null;
+        $this->editable = $parameters['editable'] ?? null;
+        $this->isDisabled = $parameters['is_disabled'] ?? null;
+    }
+}

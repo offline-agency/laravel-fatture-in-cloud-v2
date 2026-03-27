@@ -1,133 +1,100 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Company;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
-
-class Company extends AbstractEntity
+readonly class Company
 {
-    /**
-     * @var int
-     */
-    public $id;
+    public ?int $id;
 
-    /**
-     * @var string
-     */
-    public $name;
+    public ?string $name;
 
-    /**
-     * @var string
-     */
-    public $email;
+    public ?string $alias;
 
-    /**
-     * @var string
-     */
-    public $type;
+    public ?string $vatNumber;
 
-    /**
-     * @var bool
-     */
-    public $fic;
+    public ?string $taxCode;
 
-    /**
-     * @var string
-     */
-    public $fic_plan_name;
+    public ?string $email;
 
-    /**
-     * @var string
-     */
-    public $fic_signup_date;
+    public ?string $type;
 
-    /**
-     * @var string
-     */
-    public $fic_license_expire;
+    public ?bool $fic;
 
-    /**
-     * @var bool
-     */
-    public $use_fic;
+    public ?string $ficPlanName;
 
-    /**
-     * @var bool
-     */
-    public $fic_need_setup;
+    public ?string $ficSignupDate;
 
-    /**
-     * @var string
-     */
-    public $fic_license_type;
+    public ?string $ficLicenseExpire;
 
-    /**
-     * @var bool
-     */
-    public $dic;
+    public ?bool $useFic;
 
-    /**
-     * @var string
-     */
-    public $dic_plan_name;
+    public ?bool $ficNeedSetup;
 
-    /**
-     * @var string
-     */
-    public $dic_signup_date;
+    public ?string $ficLicenseType;
 
-    /**
-     * @var string
-     */
-    public $dic_license_expire;
+    public ?bool $dic;
 
-    /**
-     * @var bool
-     */
-    public $use_dic;
+    public ?string $dicPlanName;
 
-    /**
-     * @var string
-     */
-    public $dic_license_type;
+    public ?string $dicSignupDate;
 
-    /**
-     * @var string
-     */
-    public $registration_service;
+    public ?string $dicLicenseExpire;
 
-    /**
-     * @var string
-     */
-    public $can_use_coupon;
+    public ?bool $useDic;
 
-    /**
-     * @var object
-     */
-    public $access_info;
+    public ?string $dicLicenseType;
 
-    /**
-     * @var object
-     */
-    public $plan_info;
+    public ?string $registrationService;
 
-    /**
-     * @var bool
-     */
-    public $is_accountant;
+    public ?bool $canUseCoupon;
 
-    /**
-     * @var int
-     */
-    public $accountant_id;
+    public mixed $accessInfo;
 
-    /**
-     * @var string
-     */
-    public $fic_payment_subject;
+    public mixed $planInfo;
 
-    /**
-     * @var string
-     */
-    public $dic_payment_subject;
+    public ?bool $isAccountant;
+
+    public ?int $accountantId;
+
+    public ?string $ficPaymentSubject;
+
+    public ?string $dicPaymentSubject;
+
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
+
+        $this->id = $parameters['id'] ?? null;
+        $this->name = $parameters['name'] ?? null;
+        $this->alias = $parameters['alias'] ?? null;
+        $this->vatNumber = $parameters['vat_number'] ?? null;
+        $this->taxCode = $parameters['tax_code'] ?? null;
+        $this->email = $parameters['email'] ?? null;
+        $this->type = $parameters['type'] ?? null;
+        $this->fic = isset($parameters['fic']) ? (bool) $parameters['fic'] : null;
+        $this->ficPlanName = $parameters['fic_plan_name'] ?? null;
+        $this->ficSignupDate = $parameters['fic_signup_date'] ?? null;
+        $this->ficLicenseExpire = $parameters['fic_license_expire'] ?? null;
+        $this->useFic = isset($parameters['use_fic']) ? (bool) $parameters['use_fic'] : null;
+        $this->ficNeedSetup = isset($parameters['fic_need_setup']) ? (bool) $parameters['fic_need_setup'] : null;
+        $this->ficLicenseType = $parameters['fic_license_type'] ?? null;
+        $this->dic = isset($parameters['dic']) ? (bool) $parameters['dic'] : null;
+        $this->dicPlanName = $parameters['dic_plan_name'] ?? null;
+        $this->dicSignupDate = $parameters['dic_signup_date'] ?? null;
+        $this->dicLicenseExpire = $parameters['dic_license_expire'] ?? null;
+        $this->useDic = isset($parameters['use_dic']) ? (bool) $parameters['use_dic'] : null;
+        $this->dicLicenseType = $parameters['dic_license_type'] ?? null;
+        $this->registrationService = $parameters['registration_service'] ?? null;
+        $this->canUseCoupon = isset($parameters['can_use_coupon']) ? (bool) $parameters['can_use_coupon'] : null;
+        $this->accessInfo = $parameters['access_info'] ?? null;
+        $this->planInfo = $parameters['plan_info'] ?? null;
+        $this->isAccountant = isset($parameters['is_accountant']) ? (bool) $parameters['is_accountant'] : null;
+        $this->accountantId = $parameters['accountant_id'] ?? null;
+        $this->ficPaymentSubject = $parameters['fic_payment_subject'] ?? null;
+        $this->dicPaymentSubject = $parameters['dic_payment_subject'] ?? null;
+    }
 }

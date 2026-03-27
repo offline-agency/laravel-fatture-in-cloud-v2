@@ -1,453 +1,290 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
-
-class IssuedDocument extends AbstractEntity
+readonly class IssuedDocument
 {
-    /**
-     * @var int
-     */
-    public $id;
-
-    /**
-     * @var object
-     */
-    public $entity; //TODO: relate another class
-
-    /**
-     * @var string
-     */
-    public $type; //TODO: can be only some values
-
-    /**
-     * @var int
-     */
-    public $number;
-
-    /**
-     * @var string
-     */
-    public $numeration;
-
-    /**
-     * @var string
-     */
-    public $date; //TODO: date format
-
-    /**
-     * @var int
-     */
-    public $year;
-
-    /**
-     * @var object
-     */
-    public $currency; //TODO: relate another class
-
-    /**
-     * @var object
-     */
-    public $language; //TODO: relate another class
-
-    /**
-     * @var string
-     */
-    public $subject;
-
-    /**
-     * @var string
-     */
-    public $visible_subject;
-
-    /**
-     * @var string
-     */
-    public $rc_center;
-
-    /**
-     * @var string
-     */
-    public $notes;
-
-    /**
-     * @var float
-     */
-    public $rivalsa;
-
-    /**
-     * @var float
-     */
-    public $rivalsa_taxable;
-
-    /**
-     * @var float
-     */
-    public $cassa;
-
-    /**
-     * @var float
-     */
-    public $amount_cassa;
-
-    /**
-     * @var float
-     */
-    public $cassa_taxable;
-
-    /**
-     * @var float
-     */
-    public $amount_cassa_taxable;
-
-    /**
-     * @var float
-     */
-    public $cassa2;
-
-    /**
-     * @var float
-     */
-    public $amount_cassa2;
-
-    /**
-     * @var float
-     */
-    public $cassa2_taxable;
-
-    /**
-     * @var float
-     */
-    public $amount_cassa2_taxable;
-
-    /**
-     * @var float
-     */
-    public $global_cassa_taxable;
-
-    /**
-     * @var float
-     */
-    public $amount_global_cassa_taxable;
-
-    /**
-     * @var float
-     */
-    public $withholding_tax;
-
-    /**
-     * @var float
-     */
-    public $withholding_tax_taxable;
-
-    /**
-     * @var float
-     */
-    public $other_withholding_tax;
-
-    /**
-     * @var float
-     */
-    public $stamp_duty;
-
-    /**
-     * @var object
-     */
-    public $payment_method; //TODO: relate another class
-
-    /**
-     * @var bool
-     */
-    public $use_split_payment;
-
-    /**
-     * @var null|object
-     */
-    public $merged_in; //TODO: relate another class
-
-    /**
-     * @var null|object
-     */
-    public $original_document; //TODO: relate another class
-
-    /**
-     * @var bool
-     */
-    public $use_gross_prices;
-
-    /**
-     * @var bool
-     */
-    public $e_invoice;
-
-    /**
-     * @var object
-     */
-    public $ei_data; //TODO: relate another class
-
-    /**
-     * @var string
-     */
-    public $ei_cassa_type;
-
-    /**
-     * @var string
-     */
-    public $ei_cassa2_type;
-
-    /**
-     * @var string
-     */
-    public $ei_withholding_tax_causal;
-
-    /**
-     * @var string
-     */
-    public $ei_other_withholding_tax_type;
-
-    /**
-     * @var string
-     */
-    public $ei_other_withholding_tax_causal;
-
-    /**
-     * @var array
-     */
-    public $items_list; //TODO: relate another class
-
-    /**
-     * @var array
-     */
-    public $payments_list; //TODO: relate another class
-
-    /**
-     * @var object
-     */
-    public $template; //TODO: relate another class
-
-    /**
-     * @var object
-     */
-    public $delivery_note_template; //TODO: relate another class
-
-    /**
-     * @var object
-     */
-    public $acc_inv_template; //TODO: relate another class
-
-    /**
-     * @var int
-     */
-    public $h_margins;
-
-    /**
-     * @var int
-     */
-    public $v_margins;
-
-    /**
-     * @var bool
-     */
-    public $show_payments;
-
-    /**
-     * @var bool
-     */
-    public $show_payment_method;
-
-    /**
-     * @var string
-     */
-    public $show_totals; //TODO: can be only some values
-
-    /**
-     * @var bool
-     */
-    public $show_paypal_button;
-
-    /**
-     * @var bool
-     */
-    public $show_notification_button;
-
-    /**
-     * @var bool
-     */
-    public $show_tspay_button;
-
-    /**
-     * @var bool
-     */
-    public $delivery_note;
-
-    /**
-     * @var bool
-     */
-    public $accompanying_invoice;
-
-    /**
-     * @var int
-     */
-    public $dn_number;
-
-    /**
-     * @var string
-     */
-    public $dn_date; //TODO: date format
-
-    /**
-     * @var string
-     */
-    public $dn_ai_packages_number;
-
-    /**
-     * @var string
-     */
-    public $dn_ai_weight;
-
-    /**
-     * @var string
-     */
-    public $dn_ai_causal;
-
-    /**
-     * @var string
-     */
-    public $dn_ai_destination;
-
-    /**
-     * @var string
-     */
-    public $dn_ai_transporter;
-
-    /**
-     * @var string
-     */
-    public $dn_ai_notes;
-
-    /**
-     * @var bool
-     */
-    public $is_marked;
-
-    /**
-     * @var string
-     */
-    public $created_at; //TODO: date format
-
-    /**
-     * @var string
-     */
-    public $updated_at; //TODO: date format
-
-    /**
-     * @var float
-     */
-    public $amount_net;
-
-    /**
-     * @var float
-     */
-    public $amount_vat;
-
-    /**
-     * @var float
-     */
-    public $amount_gross;
-
-    /**
-     * @var float
-     */
-    public $amount_due_discount;
-
-    /**
-     * @var float
-     */
-    public $amount_rivalsa;
-
-    /**
-     * @var float
-     */
-    public $amount_rivalsa_taxable;
-
-    /**
-     * @var float
-     */
-    public $amount_withholding_tax;
-
-    /**
-     * @var float
-     */
-    public $amount_withholding_tax_taxable;
-
-    /**
-     * @var float
-     */
-    public $amount_other_withholding_tax;
-
-    /**
-     * @var float
-     */
-    public $other_withholding_tax_taxable;
-
-    /**
-     * @var float
-     */
-    public $amount_enasarco_taxable;
-
-    /**
-     * @var object
-     */
-    public $extra_data; //TODO: relate another class
-
-    /**
-     * @var string
-     */
-    public $seen_date; //TODO: date format
-
-    /**
-     * @var string
-     */
-    public $next_due_date; //TODO: date format
-
-    /**
-     * @var string
-     */
-    public $url;
-
-    /**
-     * @var string
-     */
-    public $attachment_url;
-
-    /**
-     * @var object
-     */
-    public $ei_raw; //TODO: relate another class
-
-    /**
-     * @var object
-     */
-    public $ei_ts_data; //TODO: relate another class
-
-    /**
-     * @var string
-     */
-    public $ei_status; //TODO: can be only some values
-
-    /**
-     * @var bool
-     */
-    public $locked;
-
-    /**
-     * @var bool
-     */
-    public $has_ts_pay_pending_payment;
-
-    /**
-     * @var bool
-     */
-    public $is_first_e_invoice;
+    public ?int $id;
+
+    public ?int $company_id;
+
+    public mixed $entity;
+
+    public ?string $type;
+
+    public ?int $number;
+
+    public ?string $numeration;
+
+    public ?string $date;
+
+    public ?int $year;
+
+    public mixed $currency;
+
+    public mixed $language;
+
+    public ?string $subject;
+
+    public ?string $visibleSubject;
+
+    public ?string $rcCenter;
+
+    public ?string $notes;
+
+    public ?float $rivalsa;
+
+    public ?float $rivalsaTaxable;
+
+    public ?float $cassa;
+
+    public ?float $amountCassa;
+
+    public ?float $cassaTaxable;
+
+    public ?float $amountCassaTaxable;
+
+    public ?float $cassa2;
+
+    public ?float $amountCassa2;
+
+    public ?float $cassa2Taxable;
+
+    public ?float $amountCassa2Taxable;
+
+    public ?float $globalCassaTaxable;
+
+    public ?float $amountGlobalCassaTaxable;
+
+    public ?float $withholdingTax;
+
+    public ?float $withholdingTaxTaxable;
+
+    public ?float $otherWithholdingTax;
+
+    public ?float $stampDuty;
+
+    public mixed $paymentMethod;
+
+    public ?bool $useSplitPayment;
+
+    public mixed $merged_in;
+
+    public mixed $originalDocument;
+
+    public ?bool $useGrossPrices;
+
+    public ?bool $eInvoice;
+
+    public mixed $eiData;
+
+    public ?string $eiCassaType;
+
+    public ?string $eiCassa2Type;
+
+    public ?string $eiWithholdingTaxCausal;
+
+    public ?string $eiOtherWithholdingTaxType;
+
+    public ?string $eiOtherWithholdingTaxCausal;
+
+    public mixed $itemsList;
+
+    public mixed $paymentsList;
+
+    public mixed $template;
+
+    public mixed $deliveryNoteTemplate;
+
+    public mixed $accInvTemplate;
+
+    public ?int $hMargins;
+
+    public ?int $vMargins;
+
+    public ?bool $showPayments;
+
+    public ?bool $showPaymentMethod;
+
+    public ?string $showTotals;
+
+    public ?bool $showPaypalButton;
+
+    public ?bool $showNotificationButton;
+
+    public ?bool $showTspayButton;
+
+    public ?bool $deliveryNote;
+
+    public ?bool $accompanyingInvoice;
+
+    public ?int $dnNumber;
+
+    public ?string $dnDate;
+
+    public ?string $dnAiPackagesNumber;
+
+    public ?string $dnAiWeight;
+
+    public ?string $dnAiCausal;
+
+    public ?string $dnAiDestination;
+
+    public ?string $dnAiTransporter;
+
+    public ?string $dnAiNotes;
+
+    public ?bool $isMarked;
+
+    public ?string $createdAt;
+
+    public ?string $updatedAt;
+
+    public ?float $amountNet;
+
+    public ?float $amountVat;
+
+    public ?float $amountGross;
+
+    public ?float $amountDueDiscount;
+
+    public ?float $amountRivalsa;
+
+    public ?float $amountRivalsaTaxable;
+
+    public ?float $amountWithholdingTax;
+
+    public ?float $amountWithholdingTaxTaxable;
+
+    public ?float $amountOtherWithholdingTax;
+
+    public ?float $otherWithholdingTaxTaxable;
+
+    public ?float $amountEnasarcoTaxable;
+
+    public mixed $extraData;
+
+    public ?string $seenDate;
+
+    public ?string $nextDueDate;
+
+    public ?string $url;
+
+    public ?string $attachmentUrl;
+
+    public mixed $eiRaw;
+
+    public mixed $eiTsData;
+
+    public ?string $eiStatus;
+
+    public ?bool $locked;
+
+    public ?bool $hasTsPayPendingPayment;
+
+    public ?bool $isFirstEInvoice;
+
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
+
+        if (! is_array($parameters)) {
+            $parameters = [];
+        }
+
+        $this->id = $parameters['id'] ?? null;
+        $this->company_id = $parameters['company_id'] ?? null;
+        $this->entity = $parameters['entity'] ?? null;
+        $this->type = $parameters['type'] ?? null;
+        $this->number = isset($parameters['number']) ? (int) $parameters['number'] : null;
+        $this->numeration = $parameters['numeration'] ?? null;
+        $this->date = $parameters['date'] ?? null;
+        $this->year = isset($parameters['year']) ? (int) $parameters['year'] : null;
+        $this->currency = $parameters['currency'] ?? null;
+        $this->language = $parameters['language'] ?? null;
+        $this->subject = $parameters['subject'] ?? null;
+        $this->visibleSubject = $parameters['visible_subject'] ?? null;
+        $this->rcCenter = $parameters['rc_center'] ?? null;
+        $this->notes = $parameters['notes'] ?? null;
+        $this->rivalsa = $parameters['rivalsa'] ?? null;
+        $this->rivalsaTaxable = $parameters['rivalsa_taxable'] ?? null;
+        $this->cassa = $parameters['cassa'] ?? null;
+        $this->amountCassa = $parameters['amount_cassa'] ?? null;
+        $this->cassaTaxable = $parameters['cassa_taxable'] ?? null;
+        $this->amountCassaTaxable = $parameters['amount_cassa_taxable'] ?? null;
+        $this->cassa2 = $parameters['cassa2'] ?? null;
+        $this->amountCassa2 = $parameters['amount_cassa2'] ?? null;
+        $this->cassa2Taxable = $parameters['cassa2_taxable'] ?? null;
+        $this->amountCassa2Taxable = $parameters['amount_cassa2_taxable'] ?? null;
+        $this->globalCassaTaxable = $parameters['global_cassa_taxable'] ?? null;
+        $this->amountGlobalCassaTaxable = $parameters['amount_global_cassa_taxable'] ?? null;
+        $this->withholdingTax = $parameters['withholding_tax'] ?? null;
+        $this->withholdingTaxTaxable = $parameters['withholding_tax_taxable'] ?? null;
+        $this->otherWithholdingTax = $parameters['other_withholding_tax'] ?? null;
+        $this->stampDuty = $parameters['stamp_duty'] ?? null;
+        $this->paymentMethod = $parameters['payment_method'] ?? null;
+        $this->useSplitPayment = $parameters['use_split_payment'] ?? null;
+        $this->merged_in = $parameters['merged_in'] ?? null;
+        $this->originalDocument = $parameters['original_document'] ?? null;
+        $this->useGrossPrices = $parameters['use_gross_prices'] ?? null;
+        $this->eInvoice = $parameters['e_invoice'] ?? null;
+        $this->eiData = $parameters['ei_data'] ?? null;
+        $this->eiCassaType = $parameters['ei_cassa_type'] ?? null;
+        $this->eiCassa2Type = $parameters['ei_cassa2_type'] ?? null;
+        $this->eiWithholdingTaxCausal = $parameters['ei_withholding_tax_causal'] ?? null;
+        $this->eiOtherWithholdingTaxType = $parameters['ei_other_withholding_tax_type'] ?? null;
+        $this->eiOtherWithholdingTaxCausal = $parameters['ei_other_withholding_tax_causal'] ?? null;
+        $this->itemsList = $parameters['items_list'] ?? null;
+        $this->paymentsList = $parameters['payments_list'] ?? null;
+        $this->template = $parameters['template'] ?? null;
+        $this->deliveryNoteTemplate = $parameters['delivery_note_template'] ?? null;
+        $this->accInvTemplate = $parameters['acc_inv_template'] ?? null;
+        $this->hMargins = $parameters['h_margins'] ?? null;
+        $this->vMargins = $parameters['v_margins'] ?? null;
+        $this->showPayments = $parameters['show_payments'] ?? null;
+        $this->showPaymentMethod = $parameters['show_payment_method'] ?? null;
+        $this->showTotals = $parameters['show_totals'] ?? null;
+        $this->showPaypalButton = $parameters['show_paypal_button'] ?? null;
+        $this->showNotificationButton = $parameters['show_notification_button'] ?? null;
+        $this->showTspayButton = $parameters['show_tspay_button'] ?? null;
+        $this->deliveryNote = $parameters['delivery_note'] ?? null;
+        $this->accompanyingInvoice = $parameters['accompanying_invoice'] ?? null;
+        $this->dnNumber = isset($parameters['dn_number']) ? (int) $parameters['dn_number'] : null;
+        $this->dnDate = $parameters['dn_date'] ?? null;
+        $this->dnAiPackagesNumber = $parameters['dn_ai_packages_number'] ?? null;
+        $this->dnAiWeight = $parameters['dn_ai_weight'] ?? null;
+        $this->dnAiCausal = $parameters['dn_ai_causal'] ?? null;
+        $this->dnAiDestination = $parameters['dn_ai_destination'] ?? null;
+        $this->dnAiTransporter = $parameters['dn_ai_transporter'] ?? null;
+        $this->dnAiNotes = $parameters['dn_ai_notes'] ?? null;
+        $this->isMarked = $parameters['is_marked'] ?? null;
+        $this->createdAt = $parameters['created_at'] ?? null;
+        $this->updatedAt = $parameters['updated_at'] ?? null;
+        $this->amountNet = $parameters['amount_net'] ?? null;
+        $this->amountVat = $parameters['amount_vat'] ?? null;
+        $this->amountGross = $parameters['amount_gross'] ?? null;
+        $this->amountDueDiscount = $parameters['amount_due_discount'] ?? null;
+        $this->amountRivalsa = $parameters['amount_rivalsa'] ?? null;
+        $this->amountRivalsaTaxable = $parameters['amount_rivalsa_taxable'] ?? null;
+        $this->amountWithholdingTax = $parameters['amount_withholding_tax'] ?? null;
+        $this->amountWithholdingTaxTaxable = $parameters['amount_withholding_tax_taxable'] ?? null;
+        $this->amountOtherWithholdingTax = $parameters['amount_other_withholding_tax'] ?? null;
+        $this->otherWithholdingTaxTaxable = $parameters['other_withholding_tax_taxable'] ?? null;
+        $this->amountEnasarcoTaxable = $parameters['amount_enasarco_taxable'] ?? null;
+        $this->extraData = $parameters['extra_data'] ?? null;
+        $this->seenDate = $parameters['seen_date'] ?? null;
+        $this->nextDueDate = $parameters['next_due_date'] ?? null;
+        $this->url = $parameters['url'] ?? null;
+        $this->attachmentUrl = $parameters['attachment_url'] ?? null;
+        $this->eiRaw = $parameters['ei_raw'] ?? null;
+        $this->eiTsData = $parameters['ei_ts_data'] ?? null;
+        $this->eiStatus = $parameters['ei_status'] ?? null;
+        $this->locked = $parameters['locked'] ?? null;
+        $this->hasTsPayPendingPayment = $parameters['has_ts_pay_pending_payment'] ?? null;
+        $this->isFirstEInvoice = $parameters['is_first_e_invoice'] ?? null;
+    }
 }

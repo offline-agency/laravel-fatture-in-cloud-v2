@@ -1,103 +1,77 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Product;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
-
-class Product extends AbstractEntity
+readonly class Product
 {
-    /**
-     * @var int
-     */
-    public $id;
+    public ?int $id;
 
-    /**
-     * @var string
-     */
-    public $name;
+    public ?string $name;
 
-    /**
-     * @var string
-     */
-    public $code;
+    public ?string $code;
 
-    /**
-     * @var float
-     */
-    public $net_price;
+    public ?float $netPrice;
 
-    /**
-     * @var float
-     */
-    public $gross_price;
+    public ?float $grossPrice;
 
-    /**
-     * @var bool
-     */
-    public $use_gross_price;
+    public ?bool $useGrossPrice;
 
-    /**
-     * @var object
-     */
-    public $default_vat; //TODO: relate another class
+    public mixed $defaultVat;
 
-    /**
-     * @var float
-     */
-    public $net_cost;
+    public ?float $netCost;
 
-    /**
-     * @var string
-     */
-    public $measure;
+    public ?string $measure;
 
-    /**
-     * @var string
-     */
-    public $description;
+    public ?string $description;
 
-    /**
-     * @var string
-     */
-    public $category;
+    public ?string $category;
 
-    /**
-     * @var string
-     */
-    public $notes;
+    public ?string $notes;
 
-    /**
-     * @var bool
-     */
-    public $in_stock;
+    public ?bool $inStock;
 
-    /**
-     * @var float
-     */
-    public $stock_initial;
+    public ?float $stockInitial;
 
-    /**
-     * @var float
-     */
-    public $stock_current;
+    public ?float $stockCurrent;
 
-    /**
-     * @var float
-     */
-    public $average_cost;
+    public ?float $averageCost;
 
-    /**
-     * @var float
-     */
-    public $average_price;
+    public ?float $averagePrice;
 
-    /**
-     * @var string
-     */
-    public $created_at;
+    public ?string $createdAt;
 
-    /**
-     * @var string
-     */
-    public $updated_at;
+    public ?string $updatedAt;
+
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
+
+        if (! is_array($parameters)) {
+            $parameters = [];
+        }
+
+        $this->id = $parameters['id'] ?? null;
+        $this->name = $parameters['name'] ?? null;
+        $this->code = $parameters['code'] ?? null;
+        $this->netPrice = $parameters['net_price'] ?? null;
+        $this->grossPrice = $parameters['gross_price'] ?? null;
+        $this->useGrossPrice = $parameters['use_gross_price'] ?? null;
+        $this->defaultVat = $parameters['default_vat'] ?? null;
+        $this->netCost = $parameters['net_cost'] ?? null;
+        $this->measure = $parameters['measure'] ?? null;
+        $this->description = $parameters['description'] ?? null;
+        $this->category = $parameters['category'] ?? null;
+        $this->notes = $parameters['notes'] ?? null;
+        $this->inStock = $parameters['in_stock'] ?? null;
+        $this->stockInitial = $parameters['stock_initial'] ?? null;
+        $this->stockCurrent = $parameters['stock_current'] ?? null;
+        $this->averageCost = $parameters['average_cost'] ?? null;
+        $this->averagePrice = $parameters['average_price'] ?? null;
+        $this->createdAt = $parameters['created_at'] ?? null;
+        $this->updatedAt = $parameters['updated_at'] ?? null;
+    }
 }

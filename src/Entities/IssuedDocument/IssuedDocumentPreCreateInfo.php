@@ -1,88 +1,64 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
-
-class IssuedDocumentPreCreateInfo extends AbstractEntity
+readonly class IssuedDocumentPreCreateInfo
 {
-    /**
-     * @var object
-     */
-    public $numerations;
+    public mixed $numerations;
 
-    /**
-     * @var object
-     */
-    public $dn_numerations;
+    public mixed $dnNumerations;
 
-    /**
-     * @var object
-     */
-    public $default_values;
+    public mixed $defaultValues;
 
-    /**
-     * @var object
-     */
-    public $extra_data_default_values;
+    public mixed $extraDataDefaultValues;
 
-    /**
-     * @var object
-     */
-    public $items_default_values;
+    public mixed $itemsDefaultValues;
 
-    /**
-     * @var array
-     */
-    public $countries_list;
+    public mixed $countriesList;
 
-    /**
-     * @var array
-     */
-    public $currencies_list;
+    public mixed $currenciesList;
 
-    /**
-     * @var array
-     */
-    public $templates_list;
+    public mixed $templatesList;
 
-    /**
-     * @var array
-     */
-    public $dn_templates_list;
+    public mixed $dnTemplatesList;
 
-    /**
-     * @var array
-     */
-    public $ai_templates_list;
+    public mixed $aiTemplatesList;
 
-    /**
-     * @var array
-     */
-    public $payment_methods_list;
+    public mixed $paymentMethodsList;
 
-    /**
-     * @var array
-     */
-    public $payment_accounts_list;
+    public mixed $paymentAccountsList;
 
-    /**
-     * @var array
-     */
-    public $vat_types_list;
+    public mixed $vatTypesList;
 
-    /**
-     * @var array
-     */
-    public $measures_list;
+    public mixed $measuresList;
 
-    /**
-     * @var array
-     */
-    public $languages_list;
+    public mixed $languagesList;
 
-    /**
-     * @var object
-     */
-    public $ei_structure;
+    public mixed $eiStructure;
+
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
+
+        $this->numerations = $parameters['numerations'] ?? null;
+        $this->dnNumerations = $parameters['dn_numerations'] ?? null;
+        $this->defaultValues = $parameters['default_values'] ?? null;
+        $this->extraDataDefaultValues = $parameters['extra_data_default_values'] ?? null;
+        $this->itemsDefaultValues = $parameters['items_default_values'] ?? null;
+        $this->countriesList = $parameters['countries_list'] ?? null;
+        $this->currenciesList = $parameters['currencies_list'] ?? null;
+        $this->templatesList = $parameters['templates_list'] ?? null;
+        $this->dnTemplatesList = $parameters['dn_templates_list'] ?? null;
+        $this->aiTemplatesList = $parameters['ai_templates_list'] ?? null;
+        $this->paymentMethodsList = $parameters['payment_methods_list'] ?? null;
+        $this->paymentAccountsList = $parameters['payment_accounts_list'] ?? null;
+        $this->vatTypesList = $parameters['vat_types_list'] ?? null;
+        $this->measuresList = $parameters['measures_list'] ?? null;
+        $this->languagesList = $parameters['languages_list'] ?? null;
+        $this->eiStructure = $parameters['ei_structure'] ?? null;
+    }
 }

@@ -1,78 +1,62 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\User;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
-
-class Company extends AbstractEntity
+readonly class Company
 {
-    /**
-     * @var int
-     */
-    public $id;
+    public ?int $id;
 
-    /**
-     * @var string
-     */
-    public $name;
+    public ?string $name;
 
-    /**
-     * @var string
-     */
-    public $tax_code;
+    public ?string $taxCode;
 
-    /**
-     * @var string
-     */
-    public $type;
+    public ?string $type;
 
-    /**
-     * @var string
-     */
-    public $access_token;
+    public ?string $accessToken;
 
-    /**
-     * @var int
-     */
-    public $connection_id;
+    public ?int $connectionId;
 
-    /**
-     * @var array
-     */
-    public $controlled_companies;
+    public mixed $controlledCompanies;
 
-    /**
-     * @var string
-     */
-    public $alias;
+    public ?string $alias;
 
-    /**
-     * @var string
-     */
-    public $vat_number;
+    public ?string $vatNumber;
 
-    /**
-     * @var bool
-     */
-    public $fic;
+    public ?bool $fic;
 
-    /**
-     * @var bool
-     */
-    public $dic;
+    public ?bool $dic;
 
-    /**
-     * @var string
-     */
-    public $fic_plan;
+    public ?string $ficPlan;
 
-    /**
-     * @var string
-     */
-    public $fic_license_expire;
+    public ?string $ficLicenseExpire;
 
-    /**
-     * @var object
-     */
-    public $permissions;
+    public mixed $permissions;
+
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
+
+        if (! is_array($parameters)) {
+            $parameters = [];
+        }
+
+        $this->id = $parameters['id'] ?? null;
+        $this->name = $parameters['name'] ?? null;
+        $this->taxCode = $parameters['tax_code'] ?? null;
+        $this->type = $parameters['type'] ?? null;
+        $this->accessToken = $parameters['access_token'] ?? null;
+        $this->connectionId = isset($parameters['connection_id']) ? (int) $parameters['connection_id'] : null;
+        $this->controlledCompanies = $parameters['controlled_companies'] ?? null;
+        $this->alias = $parameters['alias'] ?? null;
+        $this->vatNumber = $parameters['vat_number'] ?? null;
+        $this->fic = $parameters['fic'] ?? null;
+        $this->dic = $parameters['dic'] ?? null;
+        $this->ficPlan = $parameters['fic_plan'] ?? null;
+        $this->ficLicenseExpire = $parameters['fic_license_expire'] ?? null;
+        $this->permissions = $parameters['permissions'] ?? null;
+    }
 }

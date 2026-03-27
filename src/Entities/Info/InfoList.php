@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Info;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\Vat as VatEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class InfoList
@@ -10,15 +11,16 @@ class InfoList
     use ListTrait;
 
     private $items;
+
     private $pagination;
 
-    public function __construct($client_response)
+    public function __construct($client_response, string $className)
     {
-        $this->setItems($client_response);
+        $this->setItems($client_response, $className);
     }
 
     /**
-     * @return array<VatEntity>
+     * @return array<mixed>
      */
     public function getItems(): array
     {
@@ -26,10 +28,11 @@ class InfoList
     }
 
     private function setItems(
-        $client_response
+        $client_response,
+        string $className
     ): void {
-        $this->items = array_map(function ($client) {
-            return new VatEntity($client);
+        $this->items = array_map(function ($client) use ($className) {
+            return new $className($client);
         }, $client_response->data);
     }
 }

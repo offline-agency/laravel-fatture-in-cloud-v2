@@ -1,11 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities;
 
-class Error extends AbstractEntity
+readonly class Error
 {
+    public mixed $error;
+
     /**
-     * @var object
+     * @param  object|array|null  $parameters
      */
-    public $error;
+    public function __construct(
+        $parameters = null
+    ) {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
+
+        $this->error = $parameters['error'] ?? null;
+    }
 }

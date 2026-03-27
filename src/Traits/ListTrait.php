@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Traits;
 
 use Illuminate\Support\Arr;
@@ -7,51 +9,50 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 
 trait ListTrait
 {
-    private $all;
-
     public function hasItems(): bool
     {
         return count($this->getItems()) > 0;
     }
 
-    public function getQueryParams(
-        string $url
-    ): array {
-        $url = parse_url($url);
+    public function getQueryParams(string $url): array
+    {
+        $parsedUrl = parse_url($url);
+        $queryString = Arr::get($parsedUrl, 'query', '');
 
-        parse_str(
-            Arr::get($url, 'query'),
-            $query_params
-        );
+        parse_str($queryString, $queryParams);
 
-        return $query_params;
+        return $queryParams;
     }
 
+    /**
+     * @param  array<mixed>  $accumulated
+     * @return array<mixed>|Error
+     */
     private function getAll(
-        ?array $validate_additional_data = [],
+        array $validateAdditionalData = [],
         ?string $url = null,
-        ?array $additional_data = []
-    ) {
-        $additional_data = $this->data($additional_data, $validate_additional_data);
+        array $additionalData = [],
+        array $accumulated = []
+    ): array|Error {
+        $additionalData = $this->data($additionalData, $validateAdditionalData);
 
-        $response = $this->get($url, $additional_data);
+        /** @var object $response */
+        $response = $this->get((string) $url, $additionalData);
 
         if (! $response->success) {
             return new Error($response->data);
         }
 
-        $response = $response->data;
+        $responseData = $response->data;
 
-        $this->all = gettype($this->all) == 'array'
-            ? array_merge($this->all, $response->data)
-            : $response->data;
+        $accumulated = array_merge($accumulated, (array) $responseData->data);
 
-        if (! isset($response->next_page_url)) {
-            return $this->all;
+        if (! isset($responseData->next_page_url)) {
+            return $accumulated;
         }
 
-        $query_params = $this->getQueryParams($response->next_page_url);
+        $queryParams = $this->getQueryParams($responseData->next_page_url);
 
-        return $this->getAll($validate_additional_data, $url, $query_params);
+        return $this->getAll($validateAdditionalData, $url, $queryParams, $accumulated);
     }
 }

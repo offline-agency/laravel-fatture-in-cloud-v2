@@ -1,7 +1,5 @@
 <?php
 
-namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
-
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Supplier;
@@ -10,275 +8,335 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\Supplier as Supplier
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\SupplierList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\SupplierPagination;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\SupplierFakeResponse;
-use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
 
-class SupplierEntityTest extends TestCase
-{
-    // list
-
-    public function test_list_suppliers()
-    {
+describe('Supplier Entity', function () {
+    it('lists suppliers', function () {
         Http::fake([
-            'entities/suppliers' => Http::response(
+            '*/entities/suppliers' => Http::response(
                 (new SupplierFakeResponse())->getSupplierFakeList()
             ),
         ]);
 
-        $suppliers = new Supplier();
-        $response = $suppliers->list();
+        $api = new Supplier();
+        $response = $api->list();
 
-        $this->assertInstanceOf(SupplierList::class, $response);
-        $this->assertInstanceOf(SupplierPagination::class, $response->getPagination());
-        $this->assertIsArray($response->getItems());
-        $this->assertCount(2, $response->getItems());
-        $this->assertInstanceOf(SupplierEntity::class, $response->getItems()[0]);
-    }
+        expect($response)->toBeInstanceOf(SupplierList::class)
+            ->getPagination()->toBeInstanceOf(SupplierPagination::class)
+            ->getItems()->toBeArray()->toHaveCount(2)
+            ->getItems()->{0}->toBeInstanceOf(SupplierEntity::class);
+    });
 
-    public function test_all_suppliers()
-    {
+    it('returns all suppliers', function () {
         Http::fake([
-            'entities/suppliers' => Http::response(
+            '*/entities/suppliers' => Http::response(
                 (new SupplierFakeResponse())->getSupplierFakeAll()
             ),
         ]);
 
-        $suppliers = new Supplier();
-        $response = $suppliers->all();
+        $api = new Supplier();
+        $response = $api->all();
 
-        $this->assertIsArray($response);
-        $this->assertCount(2, $response);
-        $this->assertInstanceOf(SupplierEntity::class, $response[0]);
-    }
+        expect($response)->toBeArray()->toHaveCount(2)
+            ->{0}->toBeInstanceOf(SupplierEntity::class);
+    });
 
-    public function test_error_on_all_suppliers()
-    {
+    it('gets supplier detail', function () {
+        $supplierId = 1;
+
         Http::fake([
-            'entities/suppliers' => Http::response(
-                (new SupplierFakeResponse())->getSupplierFakeError(),
-                401
+            '*/entities/suppliers/'.$supplierId => Http::response(
+                (new SupplierFakeResponse())->getSupplierFakeDetail()
             ),
         ]);
 
-        $suppliers = new Supplier();
-        $response = $suppliers->all();
+        $api = new Supplier();
+        $response = $api->detail($supplierId);
 
-        $this->assertInstanceOf(Error::class, $response);
-    }
+        expect($response)->toBeInstanceOf(SupplierEntity::class);
+    });
 
-    public function test_error_on_list_suppliers()
-    {
+    it('deletes a supplier', function () {
+        $supplierId = 1;
+
         Http::fake([
-            'entities/suppliers' => Http::response(
-                (new SupplierFakeResponse())->getSupplierFakeError(),
-                401
+            '*/entities/suppliers/'.$supplierId => Http::response(),
+        ]);
+
+        $api = new Supplier();
+        $response = $api->delete($supplierId);
+
+        expect($response)->toBe('Supplier deleted');
+    });
+
+    it('creates a supplier', function () {
+        $supplierName = 'Test Supplier';
+
+        Http::fake([
+            '*/entities/suppliers' => Http::response(
+                (new SupplierFakeResponse())->getSupplierFakeDetail([
+                    'name' => $supplierName,
+                ])
             ),
         ]);
 
-        $suppliers = new Supplier();
-        $response = $suppliers->list();
+        $api = new Supplier();
+        $response = $api->create([
+            'data' => [
+                'name' => $supplierName,
+            ],
+        ]);
 
-        $this->assertInstanceOf(Error::class, $response);
-    }
+        expect($response)->toBeInstanceOf(SupplierEntity::class)
+            ->name->toBe($supplierName);
+    });
 
-    // pagination
+    it('validates supplier creation', function () {
+        $api = new Supplier();
+        $response = $api->create([]);
 
-    public function test_go_to_supplier_next_page()
-    {
-        $product_list = new SupplierList(json_decode(
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data');
+    });
+
+    it('edits a supplier', function () {
+        $supplierId = 1;
+        $newName = 'Updated Name';
+
+        Http::fake([
+            '*/entities/suppliers/'.$supplierId => Http::response(
+                (new SupplierFakeResponse())->getSupplierFakeDetail([
+                    'name' => $newName,
+                ])
+            ),
+        ]);
+
+        $api = new Supplier();
+        $response = $api->edit($supplierId, [
+            'data' => [
+                'name' => $newName,
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(SupplierEntity::class)
+            ->name->toBe($newName);
+    });
+
+    it('handles error on list suppliers', function () {
+        Http::fake([
+            'c/*/entities/suppliers' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Supplier();
+        $response = $api->list();
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('handles error on all suppliers', function () {
+        Http::fake([
+            'c/*/entities/suppliers' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Supplier();
+        $response = $api->all();
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('handles error on supplier detail', function () {
+        Http::fake([
+            'c/*/entities/suppliers/*' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+        ]);
+
+        $api = new Supplier();
+        $response = $api->detail(999);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('handles error on delete supplier', function () {
+        Http::fake([
+            'c/*/entities/suppliers/*' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+        ]);
+
+        $api = new Supplier();
+        $response = $api->delete(999);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('validates data.name on supplier creation', function () {
+        $api = new Supplier();
+        $response = $api->create(['data' => []]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.name');
+    });
+
+    it('handles error on create supplier', function () {
+        Http::fake([
+            'c/*/entities/suppliers' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Supplier();
+        $response = $api->create([
+            'data' => ['name' => 'Test Supplier'],
+        ]);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('validates supplier edit - missing data', function () {
+        $api = new Supplier();
+        $response = $api->edit(1, []);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data');
+    });
+
+    it('validates data.name on supplier edit', function () {
+        $api = new Supplier();
+        $response = $api->edit(1, ['data' => []]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.name');
+    });
+
+    it('handles error on edit supplier', function () {
+        Http::fake([
+            'c/*/entities/suppliers/*' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Supplier();
+        $response = $api->edit(1, [
+            'data' => ['name' => 'Test Supplier'],
+        ]);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('checks if supplier list has items', function () {
+        Http::fake([
+            '*/entities/suppliers' => Http::response(
+                (new SupplierFakeResponse())->getSupplierFakeList()
+            ),
+        ]);
+
+        $api = new Supplier();
+        $response = $api->list();
+
+        expect($response->hasItems())->toBeTrue();
+    });
+
+    it('checks if supplier list is empty', function () {
+        Http::fake([
+            '*/entities/suppliers' => Http::response(json_encode(['data' => []])),
+        ]);
+
+        $api = new Supplier();
+        $response = $api->list();
+
+        expect($response->hasItems())->toBeFalse();
+    });
+
+    it('navigates supplier list to next page', function () {
+        $supplierList = new SupplierList(json_decode(
             (new SupplierFakeResponse())->getSupplierFakeList([
                 'next_page_url' => 'https://fake_url/entities/suppliers?per_page=10&page=2',
             ])
         ));
 
-        Http::fake([
-            'entities/suppliers?per_page=10&page=2' => Http::response(
-                (new SupplierFakeResponse())->getSupplierFakeList()
-            ),
-        ]);
+        Http::fake(['c/*/entities/suppliers*' => Http::response((new SupplierFakeResponse())->getSupplierFakeList())]);
 
-        $next_page_response = $product_list->getPagination()->goToNextPage();
+        expect($supplierList->getPagination()->goToNextPage())->toBeInstanceOf(SupplierList::class);
+    });
 
-        $this->assertInstanceOf(SupplierList::class, $next_page_response);
-    }
+    it('returns null navigating supplier list to next page when no next page url', function () {
+        $supplierList = new SupplierList(json_decode(
+            (new SupplierFakeResponse())->getSupplierFakeList(['next_page_url' => null])
+        ));
 
-    public function test_go_to_supplier_prev_page()
-    {
-        $product_list = new SupplierList(json_decode(
+        expect($supplierList->getPagination()->goToNextPage())->toBeNull();
+    });
+
+    it('navigates supplier list to previous page', function () {
+        $supplierList = new SupplierList(json_decode(
             (new SupplierFakeResponse())->getSupplierFakeList([
                 'prev_page_url' => 'https://fake_url/entities/suppliers?per_page=10&page=1',
             ])
         ));
 
-        Http::fake([
-            'entities/suppliers?per_page=10&page=1' => Http::response(
-                (new SupplierFakeResponse())->getSupplierFakeList()
-            ),
-        ]);
+        Http::fake(['c/*/entities/suppliers*' => Http::response((new SupplierFakeResponse())->getSupplierFakeList())]);
 
-        $prev_page_response = $product_list->getPagination()->goToPrevPage();
+        expect($supplierList->getPagination()->goToPrevPage())->toBeInstanceOf(SupplierList::class);
+    });
 
-        $this->assertInstanceOf(SupplierList::class, $prev_page_response);
-    }
-
-    public function test_go_to_supplier_first_page()
-    {
-        $product_list = new SupplierList(json_decode(
-            (new SupplierFakeResponse())->getSupplierFakeList([
-                'first_page_url' => 'https://fake_url/entities/suppliers?per_page=10&page=1',
-            ])
+    it('returns null navigating supplier list to previous page when no prev page url', function () {
+        $supplierList = new SupplierList(json_decode(
+            (new SupplierFakeResponse())->getSupplierFakeList(['prev_page_url' => null])
         ));
 
-        Http::fake([
-            'entities/suppliers?per_page=10&page=1' => Http::response(
-                (new SupplierFakeResponse())->getSupplierFakeList()
-            ),
-        ]);
+        expect($supplierList->getPagination()->goToPrevPage())->toBeNull();
+    });
 
-        $first_page_response = $product_list->getPagination()->goToFirstPage();
-
-        $this->assertInstanceOf(SupplierList::class, $first_page_response);
-    }
-
-    public function test_go_to_supplier_last_page()
-    {
-        $product_list = new SupplierList(json_decode(
-            (new SupplierFakeResponse())->getSupplierFakeList([
-                'last_page_url' => 'https://fake_url/entities/suppliers?per_page=10&page=2',
-            ])
+    it('navigates supplier list to first page', function () {
+        $supplierList = new SupplierList(json_decode(
+            (new SupplierFakeResponse())->getSupplierFakeList()
         ));
 
-        Http::fake([
-            'entities/suppliers?per_page=10&page=2' => Http::response(
-                (new SupplierFakeResponse())->getSupplierFakeList()
-            ),
-        ]);
+        Http::fake(['c/*/entities/suppliers*' => Http::response((new SupplierFakeResponse())->getSupplierFakeList())]);
 
-        $last_page_response = $product_list->getPagination()->goToLastPage();
+        expect($supplierList->getPagination()->goToFirstPage())->toBeInstanceOf(SupplierList::class);
+    });
 
-        $this->assertInstanceOf(SupplierList::class, $last_page_response);
-    }
+    it('returns null navigating supplier list to first page when no first page url', function () {
+        $supplierList = new SupplierList(json_decode(
+            (new SupplierFakeResponse())->getSupplierFakeList(['first_page_url' => null])
+        ));
 
-    // single
+        expect($supplierList->getPagination()->goToFirstPage())->toBeNull();
+    });
 
-    public function test_detail_supplier()
-    {
-        $supplier_id = 1;
+    it('navigates supplier list to last page', function () {
+        $supplierList = new SupplierList(json_decode(
+            (new SupplierFakeResponse())->getSupplierFakeList()
+        ));
 
-        Http::fake([
-            'entities/suppliers/'.$supplier_id => Http::response(
-                (new SupplierFakeResponse())->getSupplierFakeDetail()
-            ),
-        ]);
+        Http::fake(['c/*/entities/suppliers*' => Http::response((new SupplierFakeResponse())->getSupplierFakeList())]);
 
-        $supplier = new Supplier();
-        $response = $supplier->detail($supplier_id);
+        expect($supplierList->getPagination()->goToLastPage())->toBeInstanceOf(SupplierList::class);
+    });
 
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(SupplierEntity::class, $response);
-    }
+    it('returns null navigating supplier list to last page when no last page url', function () {
+        $supplierList = new SupplierList(json_decode(
+            (new SupplierFakeResponse())->getSupplierFakeList(['last_page_url' => null])
+        ));
 
-    public function test_delete_supplier()
-    {
-        $supplier_id = 1;
+        expect($supplierList->getPagination()->goToLastPage())->toBeNull();
+    });
 
-        Http::fake([
-            'entities/suppliers/'.$supplier_id => Http::response(),
-        ]);
+    it('handles null constructor parameter', function () {
+        $entity = new SupplierEntity(null);
 
-        $supplier = new Supplier();
-        $response = $supplier->delete($supplier_id);
-
-        $this->assertEquals('Supplier deleted', $response);
-    }
-
-    // create
-
-    public function test_create_supplier()
-    {
-        Http::fake([
-            'entities/suppliers' => Http::response(
-                (new SupplierFakeResponse())->getSupplierFakeDetail()
-            ),
-        ]);
-
-        $supplier = new Supplier();
-        $response = $supplier->create([
-            'data' => [
-                'name' => 'Test',
-            ],
-        ]);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(SupplierEntity::class, $response);
-    }
-
-    public function test_validation_error_on_create_issued_document()
-    {
-        $supplier = new Supplier();
-        $response = $supplier->create([]);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(MessageBag::class, $response);
-        $this->assertArrayHasKey('data', $response->messages());
-
-        $supplier = new Supplier();
-        $response = $supplier->create([
-            'data' => [
-                'code' => 'test',
-            ],
-        ]);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(MessageBag::class, $response);
-        $this->assertArrayHasKey('data.name', $response->messages());
-    }
-
-    // supplier
-
-    public function test_edit_supplier()
-    {
-        $supplier_id = 1;
-        $supplier_name = 'Test Updated';
-
-        Http::fake([
-            'entities/suppliers/'.$supplier_id => Http::response(
-                (new SupplierFakeResponse())->getSupplierFakeDetail([
-                    'name' => $supplier_name,
-                ])
-            ),
-        ]);
-
-        $supplier = new Supplier();
-        $response = $supplier->edit($supplier_id, [
-            'data' => [
-                'name' => $supplier_name,
-            ],
-        ]);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(SupplierEntity::class, $response);
-    }
-
-    public function test_validation_error_on_edit_issued_document()
-    {
-        $supplier_id = 1;
-
-        $supplier = new Supplier();
-        $response = $supplier->edit($supplier_id, []);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(MessageBag::class, $response);
-        $this->assertArrayHasKey('data', $response->messages());
-
-        $supplier = new Supplier();
-        $response = $supplier->edit($supplier_id, [
-            'data' => [
-                'code' => 'test',
-            ],
-        ]);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(MessageBag::class, $response);
-        $this->assertArrayHasKey('data.name', $response->messages());
-    }
-}
+        expect($entity->id)->toBeNull()
+            ->and($entity->name)->toBeNull();
+    });
+});

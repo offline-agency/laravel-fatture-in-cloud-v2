@@ -1,57 +1,59 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Product;
 
 use OfflineAgency\LaravelFattureInCloudV2\Api\Product as ProductApi;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Pagination;
 
-class ProductPagination extends Pagination
+readonly class ProductPagination extends Pagination
 {
-    public function goToFirstPage()
+    public function goToFirstPage(): ProductList|Error|null
     {
-        if (is_null($this->first_page_url)) {
+        if (is_null($this->firstPageUrl)) {
             return null;
         }
 
-        return $this->changePage($this->first_page_url);
+        return $this->changePage($this->firstPageUrl);
     }
 
-    public function goToLastPage()
+    public function goToLastPage(): ProductList|Error|null
     {
-        if (is_null($this->last_page_url)) {
+        if (is_null($this->lastPageUrl)) {
             return null;
         }
 
-        return $this->changePage($this->last_page_url);
+        return $this->changePage($this->lastPageUrl);
     }
 
-    public function goToPrevPage()
+    public function goToPrevPage(): ProductList|Error|null
     {
         if (! $this->hasPrevPage()) {
             return null;
         }
 
-        return $this->changePage($this->prev_page_url);
+        return $this->changePage($this->prevPageUrl);
     }
 
-    public function goToNextPage()
+    public function goToNextPage(): ProductList|Error|null
     {
         if (! $this->hasNextPage()) {
             return null;
         }
 
-        return $this->changePage($this->next_page_url);
+        return $this->changePage($this->nextPageUrl);
     }
 
     // helpers
 
-    private function changePage(
-        string $url
-    ) {
-        $query_params = $this->getQueryParams($url);
+    private function changePage(string $url): ProductList|Error
+    {
+        $queryParams = $this->getQueryParams($url);
 
         $product = new ProductApi();
 
-        return $product->list($query_params);
+        return $product->list($queryParams);
     }
 }

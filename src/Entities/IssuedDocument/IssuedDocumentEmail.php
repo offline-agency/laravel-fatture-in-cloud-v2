@@ -1,63 +1,49 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
-
-class IssuedDocumentEmail extends AbstractEntity
+readonly class IssuedDocumentEmail
 {
-    /**
-     * @var string
-     */
-    public $recipient_email;
+    public ?string $recipientEmail;
 
-    /**
-     * @var object
-     */
-    public $default_sender_email;
+    public mixed $defaultSenderEmail;
 
-    /**
-     * @var array
-     */
-    public $sender_emails_list;
+    public mixed $senderEmailsList;
 
-    /**
-     * @var string
-     */
-    public $cc_email;
+    public ?string $ccEmail;
 
-    /**
-     * @var string
-     */
-    public $subject;
+    public ?string $subject;
 
-    /**
-     * @var string
-     */
-    public $body;
+    public ?string $body;
 
-    /**
-     * @var bool
-     */
-    public $document_exists;
+    public ?bool $documentExists;
 
-    /**
-     * @var bool
-     */
-    public $delivery_note_exists;
+    public ?bool $deliveryNoteExists;
 
-    /**
-     * @var bool
-     */
-    public $attachment_exists;
+    public ?bool $attachmentExists;
 
-    /**
-     * @var bool
-     */
-    public $accompanying_invoice_exists;
+    public ?bool $accompanyingInvoiceExists;
 
-    /**
-     * @var bool
-     */
-    public $default_attach_pdf;
+    public ?bool $defaultAttachPdf;
+
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
+
+        $this->recipientEmail = $parameters['recipient_email'] ?? null;
+        $this->defaultSenderEmail = $parameters['default_sender_email'] ?? null;
+        $this->senderEmailsList = $parameters['sender_emails_list'] ?? null;
+        $this->ccEmail = $parameters['cc_email'] ?? null;
+        $this->subject = $parameters['subject'] ?? null;
+        $this->body = $parameters['body'] ?? null;
+        $this->documentExists = $parameters['document_exists'] ?? null;
+        $this->deliveryNoteExists = $parameters['delivery_note_exists'] ?? null;
+        $this->attachmentExists = $parameters['attachment_exists'] ?? null;
+        $this->accompanyingInvoiceExists = $parameters['accompanying_invoice_exists'] ?? null;
+        $this->defaultAttachPdf = $parameters['default_attach_pdf'] ?? null;
+    }
 }

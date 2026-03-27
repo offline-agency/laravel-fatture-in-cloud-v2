@@ -1,57 +1,59 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt;
 
 use OfflineAgency\LaravelFattureInCloudV2\Api\Receipt as ReceiptApi;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Pagination;
 
-class ReceiptPagination extends Pagination
+readonly class ReceiptPagination extends Pagination
 {
-    public function goToFirstPage()
+    public function goToFirstPage(): ReceiptList|Error|null
     {
-        if (is_null($this->first_page_url)) {
+        if (is_null($this->firstPageUrl)) {
             return null;
         }
 
-        return $this->changePage($this->first_page_url);
+        return $this->changePage($this->firstPageUrl);
     }
 
-    public function goToLastPage()
+    public function goToLastPage(): ReceiptList|Error|null
     {
-        if (is_null($this->last_page_url)) {
+        if (is_null($this->lastPageUrl)) {
             return null;
         }
 
-        return $this->changePage($this->last_page_url);
+        return $this->changePage($this->lastPageUrl);
     }
 
-    public function goToPrevPage()
+    public function goToPrevPage(): ReceiptList|Error|null
     {
         if (! $this->hasPrevPage()) {
             return null;
         }
 
-        return $this->changePage($this->prev_page_url);
+        return $this->changePage($this->prevPageUrl);
     }
 
-    public function goToNextPage()
+    public function goToNextPage(): ReceiptList|Error|null
     {
         if (! $this->hasNextPage()) {
             return null;
         }
 
-        return $this->changePage($this->next_page_url);
+        return $this->changePage($this->nextPageUrl);
     }
 
     // helpers
 
-    private function changePage(
-        string $url
-    ) {
-        $query_params = $this->getQueryParams($url);
+    private function changePage(string $url): ReceiptList|Error
+    {
+        $queryParams = $this->getQueryParams($url);
 
         $receipt = new ReceiptApi();
 
-        return $receipt->list($query_params);
+        return $receipt->list($queryParams);
     }
 }

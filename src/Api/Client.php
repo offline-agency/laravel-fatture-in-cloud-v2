@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\Client as ClientEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\ClientList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
@@ -12,16 +15,26 @@ class Client extends Api
 {
     use ListTrait;
 
-    public function list(
-        ?array $additional_data = []
-    ) {
-        $additional_data = $this->data($additional_data, [
-            'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
+    /**
+     * List clients. OPTIONAL query: fields, fieldset, sort, page, per_page, q.
+     *
+     * @param  array{fields?: string, fieldset?: string, sort?: string, page?: int, per_page?: int, q?: string}  $additionalData
+     */
+    public function list(array $additionalData = []): ClientList|Error
+    {
+        $additionalData = $this->data($additionalData, [
+            'fields',
+            'fieldset',
+            'sort',
+            'page',
+            'per_page',
+            'q',
         ]);
 
+        /** @var object $response */
         $response = $this->get(
-            'c/'.$this->company_id.'/entities/clients',
-            $additional_data
+            'c/'.$this->companyId.'/entities/clients',
+            $additionalData
         );
 
         if (! $response->success) {
@@ -33,31 +46,48 @@ class Client extends Api
         return new ClientList($clients);
     }
 
-    public function all(
-        ?array $additional_data = []
-    ) {
-        $all_clients = $this->getAll([
-            'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
-        ], 'c/'.$this->company_id.'/entities/clients', $additional_data);
+    /**
+     * Get all clients. OPTIONAL query: fields, fieldset, sort, page, per_page, q.
+     *
+     * @param  array{fields?: string, fieldset?: string, sort?: string, page?: int, per_page?: int, q?: string}  $additionalData
+     * @return array<ClientEntity>|Error
+     */
+    public function all(array $additionalData = []): array|Error
+    {
+        $allClients = $this->getAll([
+            'fields',
+            'fieldset',
+            'sort',
+            'page',
+            'per_page',
+            'q',
+        ], 'c/'.$this->companyId.'/entities/clients', $additionalData);
 
-        return gettype($all_clients) !== 'array'
-            ? $all_clients
-            : array_map(function ($client) {
-                return new ClientEntity($client);
-            }, $all_clients);
+        if ($allClients instanceof Error) {
+            return $allClients;
+        }
+
+        return array_map(function ($client) {
+            return new ClientEntity($client);
+        }, $allClients);
     }
 
-    public function detail(
-        int $client_id,
-        ?array $additional_data = []
-    ) {
-        $additional_data = $this->data($additional_data, [
-            'fields', 'fieldset',
+    /**
+     * Get single client. OPTIONAL query: fields, fieldset.
+     *
+     * @param  array{fields?: string, fieldset?: string}  $additionalData
+     */
+    public function detail(int $clientId, array $additionalData = []): ClientEntity|Error
+    {
+        $additionalData = $this->data($additionalData, [
+            'fields',
+            'fieldset',
         ]);
 
+        /** @var object $response */
         $response = $this->get(
-            'c/'.$this->company_id.'/entities/clients/'.$client_id,
-            $additional_data
+            'c/'.$this->companyId.'/entities/clients/'.$clientId,
+            $additionalData
         );
 
         if (! $response->success) {
@@ -69,11 +99,14 @@ class Client extends Api
         return new ClientEntity($client);
     }
 
-    public function delete(
-        int $client_id
-    ) {
+    /**
+     * Delete client.
+     */
+    public function delete(int $clientId): string|Error
+    {
+        /** @var object $response */
         $response = $this->destroy(
-            'c/'.$this->company_id.'/entities/clients/'.$client_id
+            'c/'.$this->companyId.'/entities/clients/'.$clientId
         );
 
         if (! $response->success) {
@@ -83,9 +116,13 @@ class Client extends Api
         return 'Client deleted';
     }
 
-    public function create(
-        array $body = []
-    ) {
+    /**
+     * Create client. Body REQUIRED: data.name (and often type).
+     *
+     * @param  array{data?: array{name?: string}}  $body
+     */
+    public function create(array $body = []): ClientEntity|Error|MessageBag
+    {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.name' => 'required',
@@ -95,8 +132,9 @@ class Client extends Api
             return $validator->errors();
         }
 
+        /** @var object $response */
         $response = $this->post(
-            'c/'.$this->company_id.'/entities/clients',
+            'c/'.$this->companyId.'/entities/clients',
             $body
         );
 
@@ -109,10 +147,13 @@ class Client extends Api
         return new ClientEntity($client);
     }
 
-    public function edit(
-        int $client_id,
-        array $body = []
-    ) {
+    /**
+     * Edit client. Body REQUIRED: data.name.
+     *
+     * @param  array{data?: array{name?: string}}  $body
+     */
+    public function edit(int $clientId, array $body = []): ClientEntity|Error|MessageBag
+    {
         $validator = Validator::make($body, [
             'data' => 'required',
             'data.name' => 'required',
@@ -122,8 +163,9 @@ class Client extends Api
             return $validator->errors();
         }
 
+        /** @var object $response */
         $response = $this->put(
-            'c/'.$this->company_id.'/entities/clients/'.$client_id,
+            'c/'.$this->companyId.'/entities/clients/'.$clientId,
             $body
         );
 
@@ -131,8 +173,8 @@ class Client extends Api
             return new Error($response->data);
         }
 
-        $client_id = $response->data->data;
+        $clientResponse = $response->data->data;
 
-        return new ClientEntity($client_id);
+        return new ClientEntity($clientResponse);
     }
 }

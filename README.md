@@ -4,21 +4,55 @@
 [![MIT Licensed](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![run-tests](https://github.com/offline-agency/laravel-fatture-in-cloud-v2/actions/workflows/main.yml/badge.svg)](https://github.com/offline-agency/laravel-fatture-in-cloud-v2/actions/workflows/main.yml)
 [![codecov](https://codecov.io/gh/offline-agency/laravel-fatture-in-cloud-v2/branch/master/graph/badge.svg?token=02NPUBvT9i)](https://codecov.io/gh/offline-agency/laravel-fatture-in-cloud-v2)
-[![StyleCI](https://github.styleci.io/repos/470182449/shield)](https://styleci.io/repos/470182449)
+[![Laravel Pint](https://img.shields.io/badge/code%20style-pint-orange)](https://github.com/laravel/pint)
+[![PHPStan Level 6](https://img.shields.io/badge/PHPStan-level%206-brightgreen)](https://phpstan.org/)
 [![Total Downloads](https://img.shields.io/packagist/dt/offline-agency/laravel-fatture-in-cloud-v2.svg?style=flat-square)](https://packagist.org/packages/offline-agency/laravel-fatture-in-cloud-v2)
 ![Laravel Fatture in Cloud v2](https://banners.beyondco.de/Laravel%20Fatture%20in%20Cloud%20v2.png?theme=dark&packageManager=composer+require&packageName=offline-agency%2Flaravel-fatture-in-cloud-v2&pattern=autumn&style=style_1&description=A+simple+laravel+integration+with+Fatture+in+Cloud+APIs+v2&md=1&showWatermark=0&fontSize=100px&images=currency-euro&widths=200)
 
 🔙 This is the documentation for the API v2. You can find the package for the API v1 [here](https://docs.offlineagency.com/laravel-fatture-in-cloud/#laravel-fatture-in-cloud).
 
+### Warning for integrators
+
+- **Keep your copy up to date:** Check the [official laravel-fatture-in-cloud-v2](https://github.com/offline-agency/laravel-fatture-in-cloud-v2) package and update your local dependency (e.g. run `composer update offline-agency/laravel-fatture-in-cloud-v2` or pull the latest from the repository).
+- **Response variables are camelCase:** Entity properties use **camelCase** (e.g. `amountGross`, `amountNet`, `amountVat`), not snake_case (`amount_gross`, `amount_net`, `amount_vat`). If you have existing code that reads response data, update it to use the new property names. Use the entity classes in this package as the reference—for example, [`IssuedDocument`](src/Entities/IssuedDocument/IssuedDocument.php) for issued documents. Examples: `amount_gross` → `amountGross`, `amount_net` → `amountNet`, `created_at` → `createdAt`.
+- **Config:** Check the package config [`config/fatture-in-cloud-v2.php`](config/fatture-in-cloud-v2.php) and update your project’s config to match, especially **`baseUrl`**. Use the root API URL only (no extra path segments).
+
+## Requirements
+
+- PHP ^8.4 (includes 8.5)
+- Laravel ^11.0|^12.0
+
+| PHP | Laravel 11 | Laravel 12 |
+|-----|:----------:|:----------:|
+| 8.4 | ✅ | ✅ |
+| 8.5 | ✅ | ✅ |
+
+### API Granularization (Breaking Changes)
+The monolithic `Settings` and `Setting` classes have been split into granular resources to improve maintainability and strictly follow the Single Responsibility Principle:
+- `Settings` -> Split into `VatType`, `PaymentAccount`, and `PaymentMethod`.
+- `ArchiveDocument` -> Renamed to `Archive`.
+- `Cashbooks` -> Renamed to `Cashbook`.
+- New classes added: `Email`, `Situation`, `PriceList`, and `Webhook`.
+
+### Strictly Typed & Readonly Entities
+All entities (e.g., `Client`, `IssuedDocument`, `PriceList`) have been refactored to be **readonly** classes with **strict types**.
+- Properties are now immutable.
+- Usage of `mixed` types has been minimized in favor of strict `string`, `int`, `float`, `bool`, etc.
+- Constructors ensure safe data mapping from API responses.
+
+### Modern testing suite
+- Switched from PHPUnit to **Pest PHP** for a more expressive and modern testing experience.
+- Automated code styling with **Laravel Pint**.
+
+### Architecture
+- The package now utilizes a central `FattureInCloud` connector for better state management.
+- API interactions are handled via the native Laravel `Http` client.
+
 ## Documentation, Installation, and Usage Instructions
+
+This package provides a simple Laravel integration with [Fatture in Cloud APIs v2](https://developers.fattureincloud.it/).
+
 See the [documentation](https://docs.offlineagency.com/laravel-fatture-in-cloud-v2/) for detailed installation and usage instructions.
-``` php
-composer require offline-agency/laravel-fatture-in-cloud-v2
-```
-## What It Does
-
-This package provides a simple Laravel integration with [Fatture in Cloud APIs v2](https://developers.fattureincloud.it/). Let's see some example:
-
 ``` php
 $issued_documents = new \OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument();
 $issued_document_list = $issued_document->list('invoice', [
@@ -85,7 +119,7 @@ $response = $issued_documents->bin($document_id);
 ```
 
 ### Rate limit [![HOT](https://img.shields.io/static/v1.svg?label=&message=HOT&color=red)]()
-This package provides a method to intercept throttle errors (403, 429) and automatically retry.
+This     package provides a method to intercept throttle errors (403, 429) and automatically retry.
 You can specify limits on your config, remember to use milliseconds to indicate time:
 
 ```php
@@ -112,27 +146,54 @@ We are currently work on this package to implement all endpoints. Enable notific
 
 ✅ Issued Documents
 
-🔜 Issued e-invoices
+✅ Issued e-invoices
 
-❌ Received Documents
+✅ Received Documents
 
 ✅ Receipts
 
-❌ Taxes
+✅ Taxes
 
-❌ Archive
+✅ Archive
 
-❌ Cashbook
+✅ Cashbook
 
-🔜 Info
+✅ Info
 
-❌ Settings
+✅ Price Lists
+
+✅ Webhooks
+
+✅ Situation
+
+✅ Emails
+
+✅ Stock
+
+✅ Payment Accounts
+
+✅ Payment Methods
+
+✅ VAT Types
 
 ## Testing
 
 ```bash
 composer test
 ```
+
+Unit and Feature tests use mocked HTTP. To run **integration tests** (real HTTP calls to Fatture in Cloud), set in `.env`:
+
+- `FCV2_DEFAULT_ID` – company ID
+- `FCV2_DEFAULT_BEARER` – API bearer token
+
+Then run:
+
+```bash
+php vendor/bin/pest tests/Integration
+```
+
+If these env vars are not set, integration tests are skipped.
 
 ## Contributing
 
@@ -148,7 +209,7 @@ tracker.
 - [Offline Agency](https://github.com/offline-agency)
 - [Giacomo Fabbian](https://github.com/Giacomo92)
 - [Nicolas Sanavia](https://github.com/SanaviaNicolas)
-- [All Contributors](../../contributors)
+- [All Contributors](https://github.com/offline-agency/laravel-fatture-in-cloud-v2/graphs/contributors)
 
 ## About us
 

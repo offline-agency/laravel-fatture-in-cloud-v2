@@ -1,7 +1,5 @@
 <?php
 
-namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
-
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\MessageBag;
@@ -13,362 +11,402 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\ReceiptMonthlyTotals;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\ReceiptPagination;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt\ReceiptPreCreateInfo;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ReceiptFakeResponse;
-use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
 
-class ReceiptEntityTest extends TestCase
-{
-    // list
-
-    public function test_list_receipts()
-    {
+describe('Receipt Entity', function () {
+    it('lists receipts', function () {
         Http::fake([
-            'receipts' => Http::response(
+            '*/receipts' => Http::response(
                 (new ReceiptFakeResponse())->getReceiptsFakeList()
             ),
         ]);
 
-        $receipts = new Receipt();
-        $response = $receipts->list();
+        $api = new Receipt();
+        $response = $api->list();
 
-        $this->assertInstanceOf(ReceiptList::class, $response);
-        $this->assertInstanceOf(ReceiptPagination::class, $response->getPagination());
-        $this->assertIsArray($response->getItems());
-        $this->assertCount(2, $response->getItems());
-        $this->assertInstanceOf(ReceiptEntity::class, $response->getItems()[0]);
-    }
+        expect($response)->toBeInstanceOf(ReceiptList::class)
+            ->getPagination()->toBeInstanceOf(ReceiptPagination::class)
+            ->getItems()->toBeArray()->toHaveCount(2)
+            ->getItems()->{0}->toBeInstanceOf(ReceiptEntity::class);
+    });
 
-    public function test_all_receipts()
-    {
+    it('handles error on list receipts', function () {
         Http::fake([
-            'receipts' => Http::response(
+            'c/*/receipts' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->list();
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('returns all receipts', function () {
+        Http::fake([
+            '*/receipts' => Http::response(
                 (new ReceiptFakeResponse())->getReceiptsFakeAll()
             ),
         ]);
 
-        $receipts = new Receipt();
-        $response = $receipts->all();
+        $api = new Receipt();
+        $response = $api->all();
 
-        $this->assertIsArray($response);
-        $this->assertCount(2, $response);
-        $this->assertInstanceOf(ReceiptEntity::class, $response[0]);
-    }
+        expect($response)->toBeArray()->toHaveCount(2)
+            ->{0}->toBeInstanceOf(ReceiptEntity::class);
+    });
 
-    public function test_error_on_all_receipts()
-    {
+    it('handles error on all receipts', function () {
         Http::fake([
-            'receipts' => Http::response(
-                (new ReceiptFakeResponse())->getReceiptFakeError(),
-                401
+            'c/*/receipts*' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->all();
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('gets receipt detail', function () {
+        $receiptId = 1;
+
+        Http::fake([
+            '*/receipts/'.$receiptId => Http::response(
+                (new ReceiptFakeResponse())->getReceiptsFakeDetail()
             ),
         ]);
 
-        $receipts = new Receipt();
-        $response = $receipts->all();
+        $api = new Receipt();
+        $response = $api->detail($receiptId);
 
-        $this->assertInstanceOf(Error::class, $response);
-    }
+        expect($response)->toBeInstanceOf(ReceiptEntity::class);
+    });
 
-    public function test_list_receipts_has_receipts_method()
-    {
+    it('handles error on receipt detail', function () {
         Http::fake([
-            'receipts' => Http::response(
+            'c/*/receipts/*' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->detail(999);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('deletes a receipt', function () {
+        $receiptId = 1;
+
+        Http::fake([
+            '*/receipts/'.$receiptId => Http::response(),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->delete($receiptId);
+
+        expect($response)->toBe('Receipt deleted');
+    });
+
+    it('handles error on delete receipt', function () {
+        Http::fake([
+            'c/*/receipts/*' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->delete(999);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('creates a receipt', function () {
+        Http::fake([
+            '*/receipts' => Http::response(
+                (new ReceiptFakeResponse())->getReceiptsFakeDetail()
+            ),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->create([
+            'data' => [
+                'date' => Carbon::now()->format('Y-m-d'),
+                'type' => 'sales_receipt',
+                'payment_account' => [
+                    'name' => 'Bank',
+                ],
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(ReceiptEntity::class);
+    });
+
+    it('validates receipt creation', function () {
+        $api = new Receipt();
+        $response = $api->create([]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data');
+    });
+
+    it('handles error on create receipt', function () {
+        Http::fake([
+            'c/*/receipts' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->create([
+            'data' => [
+                'date' => Carbon::now()->format('Y-m-d'),
+                'type' => 'sales_receipt',
+                'payment_account' => ['name' => 'Bank'],
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('edits a receipt', function () {
+        $receiptId = 1;
+
+        Http::fake([
+            'c/*/receipts/'.$receiptId => Http::response([
+                'data' => [
+                    'id' => $receiptId,
+                    'date' => '2024-06-05',
+                    'type' => 'sales_receipt',
+                    'payment_account' => ['name' => 'Bank'],
+                ],
+            ], 200),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->edit($receiptId, [
+            'data' => [
+                'date' => '2024-06-05',
+                'type' => 'sales_receipt',
+                'payment_account' => ['name' => 'Bank'],
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(ReceiptEntity::class);
+    });
+
+    it('validates on edit receipt - missing data', function () {
+        $api = new Receipt();
+        $response = $api->edit(1, []);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data');
+    });
+
+    it('handles error on edit receipt', function () {
+        Http::fake([
+            'c/*/receipts/*' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->edit(1, [
+            'data' => [
+                'date' => '2024-06-05',
+                'type' => 'sales_receipt',
+                'payment_account' => ['name' => 'Bank'],
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('gets pre-create info', function () {
+        Http::fake([
+            'c/*/receipts/info' => Http::response([
+                'data' => [
+                    'numerations_list' => [],
+                    'payment_accounts_list' => [],
+                    'categories_list' => [],
+                    'rc_centers_list' => [],
+                ],
+            ], 200),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->preCreateInfo();
+
+        expect($response)->toBeInstanceOf(ReceiptPreCreateInfo::class);
+    });
+
+    it('handles error on pre-create info', function () {
+        Http::fake([
+            'c/*/receipts/info' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->preCreateInfo();
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('gets monthly totals', function () {
+        $type = 'till_receipt';
+        $year = 2022;
+
+        Http::fake([
+            '*/receipts/monthly_totals?type='.$type.'&year='.$year => Http::response(
+                (new ReceiptFakeResponse())->getReceiptsFakeMonthlyTotals()
+            ),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->monthlyTotals($type, $year);
+
+        expect($response)->toBeArray()->toHaveCount(2)
+            ->{0}->toBeInstanceOf(ReceiptMonthlyTotals::class);
+    });
+
+    it('handles error on monthly totals', function () {
+        Http::fake([
+            'c/*/receipts/monthly_totals*' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Receipt();
+        $response = $api->monthlyTotals('till_receipt', 2022);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('validates invalid type on monthly totals', function () {
+        $api = new Receipt();
+        $response = $api->monthlyTotals('invalid_type', 2022);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('type');
+    });
+
+    it('checks if receipt list has items', function () {
+        Http::fake([
+            '*/receipts' => Http::response(
                 (new ReceiptFakeResponse())->getReceiptsFakeList()
             ),
         ]);
 
-        $receipts = new Receipt();
-        $response = $receipts->list();
+        $api = new Receipt();
+        $response = $api->list();
 
-        $this->assertTrue($response->hasItems());
-    }
+        expect($response->hasItems())->toBeTrue();
+    });
 
-    public function test_empty_list_receipts_has_receipts_method()
-    {
+    it('checks if receipt list is empty', function () {
         Http::fake([
-            'receipts' => Http::response(
+            '*/receipts' => Http::response(
                 (new ReceiptFakeResponse())->getEmptyReceiptFakeList()
             ),
         ]);
 
-        $receipts = new Receipt();
-        $response = $receipts->list();
+        $api = new Receipt();
+        $response = $api->list();
 
-        $this->assertFalse($response->hasItems());
-    }
+        expect($response->hasItems())->toBeFalse();
+    });
 
-    public function test_error_on_list_receipts()
-    {
-        Http::fake([
-            'receipts' => Http::response(
-                (new ReceiptFakeResponse())->getReceiptFakeError(),
-                401
-            ),
-        ]);
-
-        $receipts = new Receipt();
-        $response = $receipts->list();
-
-        $this->assertInstanceOf(Error::class, $response);
-    }
-
-    // pagination
-
-    public function test_go_to_receipt_next_page()
-    {
-        $receipt_list = new ReceiptList(json_decode(
+    it('navigates receipt list to next page', function () {
+        $receiptList = new ReceiptList(json_decode(
             (new ReceiptFakeResponse())->getReceiptsFakeList([
                 'next_page_url' => 'https://fake_url/receipts?per_page=10&page=2',
             ])
         ));
 
-        Http::fake([
-            'receipts?per_page=10&page=2' => Http::response(
-                (new ReceiptFakeResponse())->getReceiptsFakeList()
-            ),
-        ]);
+        Http::fake(['c/*/receipts*' => Http::response((new ReceiptFakeResponse())->getReceiptsFakeList())]);
 
-        $next_page_response = $receipt_list->getPagination()->goToNextPage();
+        expect($receiptList->getPagination()->goToNextPage())->toBeInstanceOf(ReceiptList::class);
+    });
 
-        $this->assertInstanceOf(ReceiptList::class, $next_page_response);
-    }
+    it('returns null navigating receipt list to next page when no next page url', function () {
+        $receiptList = new ReceiptList(json_decode(
+            (new ReceiptFakeResponse())->getReceiptsFakeList(['next_page_url' => null])
+        ));
 
-    public function test_go_to_receipt_prev_page()
-    {
-        $receipt_list = new ReceiptList(json_decode(
+        expect($receiptList->getPagination()->goToNextPage())->toBeNull();
+    });
+
+    it('navigates receipt list to previous page', function () {
+        $receiptList = new ReceiptList(json_decode(
             (new ReceiptFakeResponse())->getReceiptsFakeList([
                 'prev_page_url' => 'https://fake_url/receipts?per_page=10&page=1',
             ])
         ));
 
-        Http::fake([
-            'receipts?per_page=10&page=1' => Http::response(
-                (new ReceiptFakeResponse())->getReceiptsFakeList()
-            ),
-        ]);
+        Http::fake(['c/*/receipts*' => Http::response((new ReceiptFakeResponse())->getReceiptsFakeList())]);
 
-        $prev_page_response = $receipt_list->getPagination()->goToPrevPage();
+        expect($receiptList->getPagination()->goToPrevPage())->toBeInstanceOf(ReceiptList::class);
+    });
 
-        $this->assertInstanceOf(ReceiptList::class, $prev_page_response);
-    }
-
-    public function test_go_to_receipt_first_page()
-    {
-        $receipt_list = new ReceiptList(json_decode(
-            (new ReceiptFakeResponse())->getReceiptsFakeList([
-                'first_page_url' => 'https://fake_url/receipts?per_page=10&page=1',
-            ])
+    it('returns null navigating receipt list to previous page when no prev page url', function () {
+        $receiptList = new ReceiptList(json_decode(
+            (new ReceiptFakeResponse())->getReceiptsFakeList(['prev_page_url' => null])
         ));
 
-        Http::fake([
-            'receipts?per_page=10&page=1' => Http::response(
-                (new ReceiptFakeResponse())->getReceiptsFakeList()
-            ),
-        ]);
+        expect($receiptList->getPagination()->goToPrevPage())->toBeNull();
+    });
 
-        $first_page_response = $receipt_list->getPagination()->goToFirstPage();
-
-        $this->assertInstanceOf(ReceiptList::class, $first_page_response);
-    }
-
-    public function test_go_to_receipt_last_page()
-    {
-        $receipt_list = new ReceiptList(json_decode(
-            (new ReceiptFakeResponse())->getReceiptsFakeList([
-                'last_page_url' => 'https://fake_url/receipts?per_page=10&page=2',
-            ])
+    it('navigates receipt list to first page', function () {
+        $receiptList = new ReceiptList(json_decode(
+            (new ReceiptFakeResponse())->getReceiptsFakeList()
         ));
 
-        Http::fake([
-            'receipts?per_page=10&page=2' => Http::response(
-                (new ReceiptFakeResponse())->getReceiptsFakeList()
-            ),
-        ]);
+        Http::fake(['c/*/receipts*' => Http::response((new ReceiptFakeResponse())->getReceiptsFakeList())]);
 
-        $last_page_response = $receipt_list->getPagination()->goToLastPage();
+        expect($receiptList->getPagination()->goToFirstPage())->toBeInstanceOf(ReceiptList::class);
+    });
 
-        $this->assertInstanceOf(ReceiptList::class, $last_page_response);
-    }
+    it('returns null navigating receipt list to first page when no first page url', function () {
+        $receiptList = new ReceiptList(json_decode(
+            (new ReceiptFakeResponse())->getReceiptsFakeList(['first_page_url' => null])
+        ));
 
-    // single
+        expect($receiptList->getPagination()->goToFirstPage())->toBeNull();
+    });
 
-    public function test_detail_receipt()
-    {
-        $receipt_id = 1;
+    it('navigates receipt list to last page', function () {
+        $receiptList = new ReceiptList(json_decode(
+            (new ReceiptFakeResponse())->getReceiptsFakeList()
+        ));
 
-        Http::fake([
-            'receipts/'.$receipt_id => Http::response(
-                (new ReceiptFakeResponse())->getReceiptsFakeDetail()
-            ),
-        ]);
+        Http::fake(['c/*/receipts*' => Http::response((new ReceiptFakeResponse())->getReceiptsFakeList())]);
 
-        $receipt = new Receipt();
-        $response = $receipt->detail($receipt_id);
+        expect($receiptList->getPagination()->goToLastPage())->toBeInstanceOf(ReceiptList::class);
+    });
 
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(ReceiptEntity::class, $response);
-    }
+    it('returns null navigating receipt list to last page when no last page url', function () {
+        $receiptList = new ReceiptList(json_decode(
+            (new ReceiptFakeResponse())->getReceiptsFakeList(['last_page_url' => null])
+        ));
 
-    public function test_delete_receipt()
-    {
-        $receipt_id = 1;
+        expect($receiptList->getPagination()->goToLastPage())->toBeNull();
+    });
 
-        Http::fake([
-            'receipts/'.$receipt_id => Http::response(),
-        ]);
+    it('handles null constructor parameter', function () {
+        $entity = new ReceiptEntity(null);
 
-        $receipt = new Receipt();
-        $response = $receipt->delete($receipt_id);
-
-        $this->assertEquals('Receipt deleted', $response);
-    }
-
-    // create
-
-    public function test_create_receipt()
-    {
-        Http::fake([
-            'receipts' => Http::response(
-                (new ReceiptFakeResponse())->getReceiptsFakeDetail()
-            ),
-        ]);
-
-        $receipt = new Receipt();
-        $response = $receipt->create([
-            'data' => [
-                'date' => Carbon::now()->format('Y-m-d'),
-                'type' => 'sales_receipt',
-                'payment_account' => [
-                    'name' => 'fake',
-                ],
-            ],
-        ]);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(ReceiptEntity::class, $response);
-    }
-
-    public function test_validation_error_on_create_receipt()
-    {
-        $receipt = new Receipt();
-        $response = $receipt->create([]);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(MessageBag::class, $response);
-        $this->assertArrayHasKey('data', $response->messages());
-
-        $receipt = new Receipt();
-        $response = $receipt->create([
-            'data' => [
-                'number' => 1,
-            ],
-        ]);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(MessageBag::class, $response);
-        $this->assertArrayHasKey('data.date', $response->messages());
-        $this->assertArrayHasKey('data.type', $response->messages());
-        $this->assertArrayHasKey('data.payment_account', $response->messages());
-        $this->assertArrayHasKey('data.payment_account.name', $response->messages());
-    }
-
-    // edit
-
-    public function test_edit_receipt()
-    {
-        $receipt_id = 1;
-
-        Http::fake([
-            'receipts/'.$receipt_id => Http::response(
-                (new ReceiptFakeResponse())->getReceiptsFakeDetail(),
-            ),
-        ]);
-
-        $receipt = new Receipt();
-        $response = $receipt->edit($receipt_id, [
-            'data' => [
-                'date' => Carbon::now()->format('Y-m-d'),
-                'type' => 'sales_receipt',
-                'payment_account' => [
-                    'name' => 'fake',
-                ],
-            ],
-        ]);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(ReceiptEntity::class, $response);
-    }
-
-    public function test_validation_error_on_edit_receipt()
-    {
-        $receipt_id = 1;
-
-        $receipt = new Receipt();
-        $response = $receipt->edit($receipt_id, []);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(MessageBag::class, $response);
-        $this->assertArrayHasKey('data', $response->messages());
-
-        $receipt = new Receipt();
-        $response = $receipt->edit($receipt_id, [
-            'data' => [
-                'number' => 1,
-            ],
-        ]);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(MessageBag::class, $response);
-        $this->assertArrayHasKey('data.date', $response->messages());
-        $this->assertArrayHasKey('data.type', $response->messages());
-        $this->assertArrayHasKey('data.payment_account', $response->messages());
-        $this->assertArrayHasKey('data.payment_account.name', $response->messages());
-    }
-
-    // pre create info
-
-    public function test_pre_create_info_receipt()
-    {
-        Http::fake([
-            'receipts/info' => Http::response(
-                (new ReceiptFakeResponse())->getReceiptsFakePreCreateInfo()
-            ),
-        ]);
-
-        $receipt = new Receipt();
-        $response = $receipt->preCreateInfo();
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(ReceiptPreCreateInfo::class, $response);
-    }
-
-    // monthly totals
-
-    public function test_monthly_totals_receipt()
-    {
-        $type = 'till_receipt';
-        $year = 2022;
-
-        Http::fake([
-            'receipts/monthly_totals?type='.$type.'&year='.$year => Http::response(
-                (new ReceiptFakeResponse())->getReceiptsFakeMonthlyTotals()
-            ),
-        ]);
-
-        $receipt = new Receipt();
-        $response = $receipt->monthlyTotals($type, $year);
-
-        $this->assertIsArray($response);
-        $this->assertCount(2, $response);
-        $this->assertInstanceOf(ReceiptMonthlyTotals::class, $response[0]);
-    }
-
-    public function test_validation_error_on_create_issued_document()
-    {
-        $receipt = new Receipt();
-        $response = $receipt->monthlyTotals('fake_type', 2022);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(MessageBag::class, $response);
-        $this->assertArrayHasKey('type', $response->messages());
-    }
-}
+        expect($entity->id)->toBeNull()
+            ->and($entity->date)->toBeNull();
+    });
+});

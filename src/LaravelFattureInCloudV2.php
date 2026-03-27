@@ -1,18 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2;
 
 use Exception;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 
 class LaravelFattureInCloudV2
 {
-    private $company;
-    private $bearer;
-    protected $baseUrl;
-    protected $header;
-    protected $company_id;
+    /** @var array<string, mixed>|null */
+    private ?array $company = null;
+
+    private string $bearer = '';
+
+    protected string $baseUrl = '';
+
+    protected PendingRequest $header;
+
+    protected string $company_id = '';
 
     /**
      * @throws Exception
@@ -31,28 +39,28 @@ class LaravelFattureInCloudV2
         $this->setHeader();
     }
 
-    private function setBaseUrl()
+    private function setBaseUrl(): void
     {
-        $this->baseUrl = config('fatture-in-cloud-v2.baseUrl');
+        $this->baseUrl = (string) config('fatture-in-cloud-v2.baseUrl');
     }
 
     /**
      * @throws Exception
      */
-    private function setCompanyId()
+    private function setCompanyId(): void
     {
         $company = $this->getCompany();
 
-        $company_id = Arr::get($company, 'id');
+        $company_id = Arr::get($company ?? [], 'id');
 
         if ($company_id === '') {
             throw new Exception('Set company ID on your config/fatture-in-cloud-v2!');
         }
 
-        $this->company_id = $company_id;
+        $this->company_id = (string) $company_id;
     }
 
-    private function setHeader()
+    private function setHeader(): void
     {
         $this->header = Http::withHeaders([
             'Accept' => 'application/json',
@@ -60,7 +68,7 @@ class LaravelFattureInCloudV2
         ]);
     }
 
-    private function getBearer()
+    private function getBearer(): string
     {
         return $this->bearer;
     }
@@ -72,26 +80,30 @@ class LaravelFattureInCloudV2
     {
         $company = $this->getCompany();
 
-        $bearer = Arr::get($company, 'bearer');
+        $bearer = Arr::get($company ?? [], 'bearer');
 
         if ($bearer === '') {
             throw new Exception('Set bearer on your config/fatture-in-cloud-v2!');
         }
 
-        $this->bearer = $bearer;
+        $this->bearer = (string) $bearer;
     }
 
-    private function getCompany()
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function getCompany(): ?array
     {
         return $this->company;
     }
 
-    private function setCompany($company_name): void
+    private function setCompany(?string $company_name): void
     {
+        /** @var array<string, array<string, mixed>> $companies */
         $companies = config('fatture-in-cloud-v2.companies');
 
         $this->company = is_null($company_name)
-            ? reset($companies)
+            ? reset($companies) ?: null
             : Arr::get($companies, $company_name);
     }
 }

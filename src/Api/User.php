@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
@@ -8,8 +10,12 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\User\User as UserEntity;
 
 class User extends Api
 {
-    public function userInfo()
+    /**
+     * Get current user info.
+     */
+    public function userInfo(): UserEntity|Error
     {
+        /** @var object $response */
         $response = $this->get(
             'user/info',
         );
@@ -20,33 +26,39 @@ class User extends Api
 
         $user = $response->data;
 
-        $complete_user = (object) array_merge(
+        $completeUser = (object) array_merge(
             (array) $user->data,
             (array) $user->info,
             (array) $user->email_confirmation_state
         );
 
-        return new UserEntity($complete_user);
+        return new UserEntity($completeUser);
     }
 
-    public function listCompanies(
-        ?array $additional_data = []
-    ) {
-        $additional_data = $this->data($additional_data, [
-            'fields', 'fieldset',
+    /**
+     * List user companies. OPTIONAL query: fields, fieldset.
+     *
+     * @param  array{fields?: string, fieldset?: string}  $additionalData
+     */
+    public function listCompanies(array $additionalData = []): CompanyList|Error
+    {
+        $additionalData = $this->data($additionalData, [
+            'fields',
+            'fieldset',
         ]);
 
+        /** @var object $response */
         $response = $this->get(
             'user/companies',
-            $additional_data
+            $additionalData
         );
 
         if (! $response->success) {
             return new Error($response->data);
         }
 
-        $user_company_response = $response->data->data;
+        $userCompanyResponse = $response->data->data;
 
-        return new CompanyList($user_company_response);
+        return new CompanyList($userCompanyResponse);
     }
 }

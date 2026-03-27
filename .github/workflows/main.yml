@@ -8,62 +8,52 @@ on:
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
-        php: [7.3, 7.4, 8.0, 8.1, 8.2, 8.3]
-        laravel: [5.8, 6.*, 7.*, 8.*, 9.*, 10.*, 11.*]
-        exclude:
-            - laravel: 9.*
-              php: 7.4
-            - laravel: 9.*
-              php: 7.3
-            - laravel: 10.*
-              php: 7.4
-            - laravel: 10.*
-              php: 7.3
-            - laravel: 10.*
-              php: 8.0
-            - laravel: 11.*
-              php: 7.4
-            - laravel: 11.*
-              php: 7.3
-            - laravel: 11.*
-              php: 8.0
-            - laravel: 11.*
-              php: 8.1
+        php: [8.4, 8.5]
+        laravel: ['11.*', '12.*']
+        include:
+          - laravel: '11.*'
+            testbench: '9.*'
+          - laravel: '12.*'
+            testbench: '10.*'
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.os }}
+    name: P${{ matrix.php }} - L${{ matrix.laravel }}
 
     steps:
-      - uses: actions/checkout@v2
-      - name: "Installing php"
+      - uses: actions/checkout@v4
+
+      - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: curl,mbstring,xdebug
+          extensions: curl, mbstring, xdebug
           coverage: xdebug
           tools: composer
+
       - name: Show PHP version
         run: php -v && composer -V
-      - name: Download Composer cache dependencies from cache
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Cache Composer dependencies
-        uses: actions/cache@v1
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ matrix.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ matrix.os }}-composer-
+
       - name: Install dependencies
         run: |
+          composer require "laravel/framework:${{ matrix.laravel }}" --no-update --no-interaction
+          composer require --dev "orchestra/testbench:${{ matrix.testbench }}" --no-update --no-interaction
           composer update --prefer-dist --no-interaction
+
       - name: Run tests
-        run: |
-          ./vendor/bin/phpunit --coverage-clover coverage.xml
-      - uses: codecov/codecov-action@v2
+        run: ./vendor/bin/pest --parallel --coverage-clover coverage.xml
+
+      - name: Check code style
+        if: matrix.php == '8.4' && matrix.laravel == '12.*'
+        run: ./vendor/bin/pint --test
+
+      - name: Run PHPStan
+        if: matrix.php == '8.4' && matrix.laravel == '12.*'
+        run: ./vendor/bin/phpstan analyse --no-progress
+
+      - uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false

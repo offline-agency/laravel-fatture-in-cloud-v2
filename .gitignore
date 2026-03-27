@@ -1,12 +1,14 @@
 .idea
+.vscode
 .php_cs
 .php_cs.cache
 .phpunit.result.cache
+.phpunit.cache/
 build
 composer.lock
 coverage
+coverage.xml
 docs
-phpunit.xml
 psalm.xml
 testbench.yaml
 vendor

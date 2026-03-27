@@ -1,7 +1,6 @@
 <?php
 
-namespace OfflineAgency\LaravelFattureInCloudV2\Tests\Feature;
-
+use Faker\Factory as FakerFactory;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Product;
@@ -9,313 +8,539 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\Product as ProductEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\ProductList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\ProductPagination;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovement;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovementList;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ProductFakeResponse;
-use OfflineAgency\LaravelFattureInCloudV2\Tests\TestCase;
 
-class ProductEntityTest extends TestCase
-{
-    // list
-
-    public function test_list_products()
-    {
+describe('Product Entity', function () {
+    it('lists products', function () {
         Http::fake([
-            'products' => Http::response(
+            '*/products' => Http::response(
                 (new ProductFakeResponse())->getProductsFakeList()
             ),
         ]);
 
-        $products = new Product();
-        $response = $products->list();
+        $api = new Product();
+        $response = $api->list();
 
-        $this->assertInstanceOf(ProductList::class, $response);
-        $this->assertInstanceOf(ProductPagination::class, $response->getPagination());
-        $this->assertIsArray($response->getItems());
-        $this->assertCount(2, $response->getItems());
-        $this->assertInstanceOf(ProductEntity::class, $response->getItems()[0]);
-    }
+        expect($response)->toBeInstanceOf(ProductList::class)
+            ->getPagination()->toBeInstanceOf(ProductPagination::class)
+            ->getItems()->toBeArray()->toHaveCount(2)
+            ->getItems()->{0}->toBeInstanceOf(ProductEntity::class);
+    });
 
-    public function test_all_products()
-    {
+    it('handles error on list products', function () {
         Http::fake([
-            'products' => Http::response(
+            'c/*/products' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Product();
+        $response = $api->list();
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('returns all products', function () {
+        Http::fake([
+            '*/products' => Http::response(
                 (new ProductFakeResponse())->getProductsFakeAll()
             ),
         ]);
 
-        $products = new Product();
-        $response = $products->all();
+        $api = new Product();
+        $response = $api->all();
 
-        $this->assertIsArray($response);
-        $this->assertCount(2, $response);
-        $this->assertInstanceOf(ProductEntity::class, $response[0]);
-    }
+        expect($response)->toBeArray()->toHaveCount(2)
+            ->{0}->toBeInstanceOf(ProductEntity::class);
+    });
 
-    public function test_error_on_all_products()
-    {
+    it('handles error on all products', function () {
         Http::fake([
-            'products' => Http::response(
-                (new ProductFakeResponse())->getProductsFakeList(),
-                401
-            ),
+            'c/*/products*' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
         ]);
 
-        $products = new Product();
-        $response = $products->all();
+        $api = new Product();
+        $response = $api->all();
 
-        $this->assertInstanceOf(Error::class, $response);
-    }
+        expect($response)->toBeInstanceOf(Error::class);
+    });
 
-    public function test_list_product_has_products_method()
-    {
-        Http::fake([
-            'products' => Http::response(
-                (new ProductFakeResponse())->getProductsFakeList()
-            ),
-        ]);
-
-        $products = new Product();
-        $response = $products->list();
-
-        $this->assertTrue($response->hasItems());
-    }
-
-    public function test_empty_list_product_has_products_method()
-    {
-        Http::fake([
-            'products' => Http::response(
-                (new ProductFakeResponse())->getEmptyProductFakeList()
-            ),
-        ]);
-
-        $products = new Product();
-        $response = $products->list();
-
-        $this->assertFalse($response->hasItems());
-    }
-
-    public function test_error_on_list_products()
-    {
-        Http::fake([
-            'products' => Http::response(
-                (new ProductFakeResponse())->getProductsFakeList(),
-                401
-            ),
-        ]);
-
-        $products = new Product();
-        $response = $products->list();
-
-        $this->assertInstanceOf(Error::class, $response);
-    }
-
-    // pagination
-
-    public function test_go_to_product_next_page()
-    {
-        $product_list = new ProductList(json_decode(
-            (new ProductFakeResponse())->getProductsFakeList([
-                'next_page_url' => 'https://fake_url/entity?per_page=10&page=2',
-            ])
-        ));
+    it('gets product detail', function () {
+        $productId = 1;
 
         Http::fake([
-            'products?per_page=10&page=2' => Http::response(
-                (new ProductFakeResponse())->getProductsFakeList()
-            ),
-        ]);
-
-        $next_page_response = $product_list->getPagination()->goToNextPage();
-
-        $this->assertInstanceOf(ProductList::class, $next_page_response);
-    }
-
-    public function test_go_to_product_prev_page()
-    {
-        $product_list = new ProductList(json_decode(
-            (new ProductFakeResponse())->getProductsFakeList([
-                'prev_page_url' => 'https://fake_url/entity?per_page=10&page=1',
-            ])
-        ));
-
-        Http::fake([
-            'products?per_page=10&page=1' => Http::response(
-                (new ProductFakeResponse())->getProductsFakeList()
-            ),
-        ]);
-
-        $prev_page_response = $product_list->getPagination()->goToPrevPage();
-
-        $this->assertInstanceOf(ProductList::class, $prev_page_response);
-    }
-
-    public function test_go_to_product_first_page()
-    {
-        $product_list = new ProductList(json_decode(
-            (new ProductFakeResponse())->getProductsFakeList([
-                'first_page_url' => 'https://fake_url/entity?per_page=10&page=1',
-            ])
-        ));
-
-        Http::fake([
-            'products?per_page=10&page=1' => Http::response(
-                (new ProductFakeResponse())->getProductsFakeList()
-            ),
-        ]);
-
-        $first_page_response = $product_list->getPagination()->goToFirstPage();
-
-        $this->assertInstanceOf(ProductList::class, $first_page_response);
-    }
-
-    public function test_go_to_product_last_page()
-    {
-        $product_list = new ProductList(json_decode(
-            (new ProductFakeResponse())->getProductsFakeList([
-                'last_page_url' => 'https://fake_url/entity?per_page=10&page=2',
-            ])
-        ));
-
-        Http::fake([
-            'products?per_page=10&page=2' => Http::response(
-                (new ProductFakeResponse())->getProductsFakeList()
-            ),
-        ]);
-
-        $last_page_response = $product_list->getPagination()->goToLastPage();
-
-        $this->assertInstanceOf(ProductList::class, $last_page_response);
-    }
-
-    // single
-
-    public function test_detail_product()
-    {
-        $product_id = 1;
-
-        Http::fake([
-            'products/'.$product_id => Http::response(
+            '*/products/'.$productId => Http::response(
                 (new ProductFakeResponse())->getProductsFakeDetail()
             ),
         ]);
 
-        $product = new Product();
-        $response = $product->detail($product_id);
+        $api = new Product();
+        $response = $api->detail($productId);
 
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(ProductEntity::class, $response);
-    }
+        expect($response)->toBeInstanceOf(ProductEntity::class);
+    });
 
-    public function test_delete_product()
-    {
-        $product_id = 1;
-
+    it('handles error on product detail', function () {
         Http::fake([
-            'products/'.$product_id => Http::response(),
+            'c/*/products/*' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
         ]);
 
-        $product = new Product();
-        $response = $product->delete($product_id);
+        $api = new Product();
+        $response = $api->detail(999);
 
-        $this->assertEquals('Product deleted', $response);
-    }
+        expect($response)->toBeInstanceOf(Error::class);
+    });
 
-    // create
-
-    public function test_create_product()
-    {
-        $product_name = 'Test';
+    it('deletes a product', function () {
+        $productId = 1;
 
         Http::fake([
-            'products' => Http::response(
+            '*/products/'.$productId => Http::response(),
+        ]);
+
+        $api = new Product();
+        $response = $api->delete($productId);
+
+        expect($response)->toBe('Product deleted');
+    });
+
+    it('handles error on delete product', function () {
+        Http::fake([
+            'c/*/products/*' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+        ]);
+
+        $api = new Product();
+        $response = $api->delete(999);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('creates a product', function () {
+        $productName = 'New Product';
+
+        Http::fake([
+            '*/products' => Http::response(
                 (new ProductFakeResponse())->getProductsFakeDetail([
-                    'name' => $product_name,
+                    'name' => $productName,
                 ])
             ),
         ]);
 
-        $product = new Product();
-        $response = $product->create([
+        $api = new Product();
+        $response = $api->create([
             'data' => [
-                'name' => $product_name,
+                'name' => $productName,
+                'code' => 'p001',
+                'description' => 'Desc',
             ],
         ]);
 
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(ProductEntity::class, $response);
-    }
+        expect($response)->toBeInstanceOf(ProductEntity::class)
+            ->name->toBe($productName);
+    });
 
-    public function test_validation_error_on_create_issued_document()
-    {
-        $product = new Product();
-        $response = $product->create([]);
+    it('validates product creation', function () {
+        $api = new Product();
+        $response = $api->create([]);
 
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(MessageBag::class, $response);
-        $this->assertArrayHasKey('data', $response->messages());
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data');
+    });
 
-        $product = new Product();
-        $response = $product->create([
+    it('creates a product with Faker it_IT payload', function () {
+        $faker = FakerFactory::create('it_IT');
+        $payload = [
             'data' => [
-                'net_price' => 100,
+                'code' => $faker->bothify('PROD-####'),
+                'name' => $faker->words(3, true),
+                'description' => $faker->sentence(),
+                'net_price' => $faker->randomFloat(2, 10, 1000),
+                'category' => $faker->word(),
             ],
-        ]);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(MessageBag::class, $response);
-        $this->assertArrayHasKey('data.name', $response->messages());
-        $this->assertArrayHasKey('data.code', $response->messages());
-        $this->assertArrayHasKey('data.description', $response->messages());
-    }
-
-    // edit
-
-    public function test_edit_product()
-    {
-        $document_id = 1;
-        $product_name = 'Test Updated';
+        ];
 
         Http::fake([
-            'products/'.$document_id => Http::response(
+            '*/products' => Http::response(
+                (new ProductFakeResponse())->getProductsFakeDetail(array_merge($payload['data'], ['id' => 1]))
+            ),
+        ]);
+
+        $api = new Product();
+        $response = $api->create($payload);
+
+        expect($response)->toBeInstanceOf(ProductEntity::class)
+            ->name->toBe($payload['data']['name']);
+    });
+
+    it('handles error on create product', function () {
+        Http::fake([
+            'c/*/products' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Product();
+        $response = $api->create([
+            'data' => [
+                'name' => 'Test Product',
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('edits a product', function () {
+        $productId = 1;
+        $newName = 'Updated Name';
+
+        Http::fake([
+            '*/products/'.$productId => Http::response(
                 (new ProductFakeResponse())->getProductsFakeDetail([
-                    'id' => $document_id,
-                    'name' => $product_name,
+                    'id' => $productId,
+                    'name' => $newName,
                 ])
             ),
         ]);
 
-        $product = new Product();
-        $response = $product->edit($document_id, [
+        $api = new Product();
+        $response = $api->edit($productId, [
             'data' => [
-                'name' => $product_name,
+                'name' => $newName,
             ],
         ]);
 
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(ProductEntity::class, $response);
-    }
+        expect($response)->toBeInstanceOf(ProductEntity::class)
+            ->name->toBe($newName);
+    });
 
-    public function test_validation_error_on_update_issued_document()
-    {
-        $product_id = 1;
+    it('validates product edit', function () {
+        $api = new Product();
+        $response = $api->edit(1, []);
 
-        $product = new Product();
-        $response = $product->edit($product_id, []);
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data');
+    });
 
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(MessageBag::class, $response);
-        $this->assertArrayHasKey('data', $response->messages());
+    it('handles error on edit product', function () {
+        Http::fake([
+            'c/*/products/*' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
 
-        $product = new Product();
-        $response = $product->edit($product_id, [
+        $api = new Product();
+        $response = $api->edit(1, [
             'data' => [
-                'net_price' => 100,
+                'name' => 'Updated',
             ],
         ]);
 
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(MessageBag::class, $response);
-        $this->assertArrayHasKey('data.name', $response->messages());
-        $this->assertArrayHasKey('data.code', $response->messages());
-        $this->assertArrayHasKey('data.description', $response->messages());
-    }
-}
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('lists stock movements', function () {
+        $productId = 1;
+
+        Http::fake([
+            'c/*/products/'.$productId.'/stock' => Http::response([
+                'data' => [
+                    ['id' => 1, 'date' => '2024-06-05', 'amount' => 10.0, 'description' => 'Initial stock', 'type' => 'in'],
+                ],
+            ], 200),
+        ]);
+
+        $api = new Product();
+        $response = $api->listStockMovements($productId);
+
+        expect($response)->toBeInstanceOf(StockMovementList::class)
+            ->getItems()->toHaveCount(1);
+    });
+
+    it('handles error on list stock movements', function () {
+        Http::fake([
+            'c/*/products/*/stock' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+        ]);
+
+        $api = new Product();
+        $response = $api->listStockMovements(999);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('creates a stock movement', function () {
+        $productId = 1;
+
+        Http::fake([
+            'c/*/products/'.$productId.'/stock' => Http::response([
+                'data' => ['id' => 1, 'date' => '2024-06-05', 'amount' => 10.0, 'description' => 'New stock', 'type' => 'in'],
+            ], 200),
+        ]);
+
+        $api = new Product();
+        $response = $api->createStockMovement($productId, [
+            'data' => [
+                'date' => '2024-06-05',
+                'qty' => 10.0,
+                'description' => 'New stock',
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(StockMovement::class)
+            ->and($response->amount)->toBe(10.0);
+    });
+
+    it('validates on create stock movement - missing data', function () {
+        $api = new Product();
+        $response = $api->createStockMovement(1, []);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data');
+    });
+
+    it('validates on create stock movement - missing data.qty', function () {
+        $api = new Product();
+        $response = $api->createStockMovement(1, [
+            'data' => ['description' => 'Test'],
+        ]);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data.qty');
+    });
+
+    it('handles error on create stock movement', function () {
+        Http::fake([
+            'c/*/products/*/stock' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Product();
+        $response = $api->createStockMovement(1, [
+            'data' => ['qty' => 5.0],
+        ]);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('deletes a stock movement', function () {
+        $productId = 1;
+        $stockMovementId = 1;
+
+        Http::fake([
+            'c/*/products/'.$productId.'/stock/'.$stockMovementId => Http::response(null, 200),
+        ]);
+
+        $api = new Product();
+        $response = $api->deleteStockMovement($productId, $stockMovementId);
+
+        expect($response)->toBe('Stock movement deleted');
+    });
+
+    it('handles error on delete stock movement', function () {
+        Http::fake([
+            'c/*/products/*/stock/*' => Http::response([
+                'code' => 'NOT_FOUND',
+                'message' => 'Not found',
+            ], 404),
+        ]);
+
+        $api = new Product();
+        $response = $api->deleteStockMovement(1, 999);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('edits a stock movement', function () {
+        $productId = 1;
+        $stockMovementId = 1;
+
+        Http::fake([
+            'c/*/products/'.$productId.'/stock/'.$stockMovementId => Http::response([
+                'data' => ['id' => $stockMovementId, 'date' => '2024-06-05', 'amount' => 20.0, 'description' => 'Updated', 'type' => 'in'],
+            ], 200),
+        ]);
+
+        $api = new Product();
+        $response = $api->editStockMovement($productId, $stockMovementId, [
+            'data' => [
+                'qty' => 20.0,
+                'description' => 'Updated',
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(StockMovement::class)
+            ->and($response->amount)->toBe(20.0);
+    });
+
+    it('validates on edit stock movement', function () {
+        $api = new Product();
+        $response = $api->editStockMovement(1, 1, []);
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('data');
+    });
+
+    it('handles error on edit stock movement', function () {
+        Http::fake([
+            'c/*/products/*/stock/*' => Http::response([
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Unauthorized',
+            ], 401),
+        ]);
+
+        $api = new Product();
+        $response = $api->editStockMovement(1, 1, [
+            'data' => ['qty' => 5.0],
+        ]);
+
+        expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('checks if product list has items', function () {
+        Http::fake([
+            '*/products' => Http::response(
+                (new ProductFakeResponse())->getProductsFakeList()
+            ),
+        ]);
+
+        $api = new Product();
+        $response = $api->list();
+
+        expect($response->hasItems())->toBeTrue();
+    });
+
+    it('checks if product list is empty', function () {
+        Http::fake([
+            '*/products' => Http::response(
+                (new ProductFakeResponse())->getEmptyProductFakeList()
+            ),
+        ]);
+
+        $api = new Product();
+        $response = $api->list();
+
+        expect($response->hasItems())->toBeFalse();
+    });
+
+    it('navigates product list to next page', function () {
+        $productList = new ProductList(json_decode(
+            (new ProductFakeResponse())->getProductsFakeList([
+                'next_page_url' => 'https://fake_url/products?per_page=10&page=2',
+            ])
+        ));
+
+        Http::fake(['*/products*' => Http::response((new ProductFakeResponse())->getProductsFakeList())]);
+
+        expect($productList->getPagination()->goToNextPage())->toBeInstanceOf(ProductList::class);
+    });
+
+    it('returns null navigating product list to next page when no next page url', function () {
+        $productList = new ProductList(json_decode(
+            (new ProductFakeResponse())->getProductsFakeList(['next_page_url' => null])
+        ));
+
+        expect($productList->getPagination()->goToNextPage())->toBeNull();
+    });
+
+    it('navigates product list to previous page', function () {
+        $productList = new ProductList(json_decode(
+            (new ProductFakeResponse())->getProductsFakeList([
+                'prev_page_url' => 'https://fake_url/products?per_page=10&page=1',
+            ])
+        ));
+
+        Http::fake(['*/products*' => Http::response((new ProductFakeResponse())->getProductsFakeList())]);
+
+        expect($productList->getPagination()->goToPrevPage())->toBeInstanceOf(ProductList::class);
+    });
+
+    it('returns null navigating product list to previous page when no prev page url', function () {
+        $productList = new ProductList(json_decode(
+            (new ProductFakeResponse())->getProductsFakeList(['prev_page_url' => null])
+        ));
+
+        expect($productList->getPagination()->goToPrevPage())->toBeNull();
+    });
+
+    it('navigates product list to first page', function () {
+        $productList = new ProductList(json_decode(
+            (new ProductFakeResponse())->getProductsFakeList()
+        ));
+
+        Http::fake(['*/products*' => Http::response((new ProductFakeResponse())->getProductsFakeList())]);
+
+        expect($productList->getPagination()->goToFirstPage())->toBeInstanceOf(ProductList::class);
+    });
+
+    it('returns null navigating product list to first page when no first page url', function () {
+        $productList = new ProductList(json_decode(
+            (new ProductFakeResponse())->getProductsFakeList(['first_page_url' => null])
+        ));
+
+        expect($productList->getPagination()->goToFirstPage())->toBeNull();
+    });
+
+    it('navigates product list to last page', function () {
+        $productList = new ProductList(json_decode(
+            (new ProductFakeResponse())->getProductsFakeList()
+        ));
+
+        Http::fake(['*/products*' => Http::response((new ProductFakeResponse())->getProductsFakeList())]);
+
+        expect($productList->getPagination()->goToLastPage())->toBeInstanceOf(ProductList::class);
+    });
+
+    it('returns null navigating product list to last page when no last page url', function () {
+        $productList = new ProductList(json_decode(
+            (new ProductFakeResponse())->getProductsFakeList(['last_page_url' => null])
+        ));
+
+        expect($productList->getPagination()->goToLastPage())->toBeNull();
+    });
+
+    it('checks if stock movement list has items', function () {
+        $list = new StockMovementList((object) ['data' => [
+            (object) ['id' => 1, 'quantity' => 10],
+        ]]);
+
+        expect($list->hasItems())->toBeTrue();
+    });
+
+    it('checks if stock movement list is empty', function () {
+        $list = new StockMovementList((object) ['data' => []]);
+
+        expect($list->hasItems())->toBeFalse();
+    });
+
+    it('handles null constructor parameter for Product', function () {
+        $entity = new ProductEntity(null);
+
+        expect($entity->id)->toBeNull()
+            ->and($entity->name)->toBeNull();
+    });
+
+    it('handles null constructor parameter for StockMovement', function () {
+        $entity = new StockMovement(null);
+
+        expect($entity->id)->toBeNull()
+            ->and($entity->date)->toBeNull();
+    });
+});

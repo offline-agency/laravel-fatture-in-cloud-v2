@@ -1,83 +1,65 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt;
 
-use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
-
-class Receipt extends AbstractEntity
+readonly class Receipt
 {
-    /**
-     * @var int
-     */
-    public $id;
+    public ?int $id;
 
-    /**
-     * @var string
-     */
-    public $date;
+    public ?string $date;
 
-    /**
-     * @var int
-     */
-    public $number;
+    public ?int $number;
 
-    /**
-     * @var string
-     */
-    public $numeration;
+    public ?string $numeration;
 
-    /**
-     * @var float
-     */
-    public $amount_net;
+    public ?float $amountNet;
 
-    /**
-     * @var float
-     */
-    public $amount_vat;
+    public ?float $amountVat;
 
-    /**
-     * @var float
-     */
-    public $amount_gross;
+    public ?float $amountGross;
 
-    /**
-     * @var bool
-     */
-    public $use_gross_prices;
+    public ?bool $useGrossPrices;
 
-    /**
-     * @var string
-     */
-    public $type;
+    public ?string $type;
 
-    /**
-     * @var string
-     */
-    public $description;
+    public ?string $description;
 
-    /**
-     * @var string
-     */
-    public $rc_center;
+    public ?string $rcCenter;
 
-    /**
-     * @var string
-     */
-    public $created_at;
+    public ?string $createdAt;
 
-    /**
-     * @var string
-     */
-    public $updated_at;
+    public ?string $updatedAt;
 
-    /**
-     * @var object
-     */
-    public $payment_account;
+    public mixed $paymentAccount;
 
-    /**
-     * @var array
-     */
-    public $items_list;
+    public mixed $itemsList;
+
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
+
+        if (! is_array($parameters)) {
+            $parameters = [];
+        }
+
+        $this->id = $parameters['id'] ?? null;
+        $this->date = $parameters['date'] ?? null;
+        $this->number = $parameters['number'] ?? null;
+        $this->numeration = $parameters['numeration'] ?? null;
+        $this->amountNet = $parameters['amount_net'] ?? null;
+        $this->amountVat = $parameters['amount_vat'] ?? null;
+        $this->amountGross = $parameters['amount_gross'] ?? null;
+        $this->useGrossPrices = $parameters['use_gross_prices'] ?? null;
+        $this->type = $parameters['type'] ?? null;
+        $this->description = $parameters['description'] ?? null;
+        $this->rcCenter = $parameters['rc_center'] ?? null;
+        $this->createdAt = $parameters['created_at'] ?? null;
+        $this->updatedAt = $parameters['updated_at'] ?? null;
+        $this->paymentAccount = $parameters['payment_account'] ?? null;
+        $this->itemsList = $parameters['items_list'] ?? null;
+    }
 }
