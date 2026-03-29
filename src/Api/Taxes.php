@@ -10,12 +10,18 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\Taxes as TaxesEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\TaxesAttachment;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\TaxesList;
+use OfflineAgency\LaravelFattureInCloudV2\Enums\ReceivedDocumentType;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class Taxes extends Api
 {
     use ListTrait;
 
+    /**
+     * @deprecated Use ReceivedDocumentType enum instead.
+     *
+     * @var array<string>
+     */
     public const DOCUMENT_TYPES = [
         'expense',
         'passive_credit_note',
@@ -23,11 +29,13 @@ class Taxes extends Api
     ];
 
     public function list(
-        string $type,
+        ReceivedDocumentType|string $type,
         array $additionalData = []
     ): TaxesList|Error {
+        $typeValue = $type instanceof ReceivedDocumentType ? $type->value : $type;
+
         $additionalData = array_merge($additionalData, [
-            'type' => $type,
+            'type' => $typeValue,
         ]);
 
         $additionalData = $this->data($additionalData, [
@@ -50,11 +58,13 @@ class Taxes extends Api
     }
 
     public function all(
-        string $type,
+        ReceivedDocumentType|string $type,
         array $additionalData = []
     ): array|Error {
+        $typeValue = $type instanceof ReceivedDocumentType ? $type->value : $type;
+
         $additionalData = array_merge($additionalData, [
-            'type' => $type,
+            'type' => $typeValue,
         ]);
 
         $allDocuments = $this->getAll([

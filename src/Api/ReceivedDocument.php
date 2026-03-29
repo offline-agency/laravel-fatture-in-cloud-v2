@@ -12,12 +12,18 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocu
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentPreCreateInfo;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocumentTotals;
+use OfflineAgency\LaravelFattureInCloudV2\Enums\ReceivedDocumentType;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class ReceivedDocument extends Api
 {
     use ListTrait;
 
+    /**
+     * @deprecated Use ReceivedDocumentType enum instead.
+     *
+     * @var array<string>
+     */
     public const DOCUMENT_TYPES = [
         'expense',
         'passive_credit_note',
@@ -25,11 +31,13 @@ class ReceivedDocument extends Api
     ];
 
     public function list(
-        string $type,
+        ReceivedDocumentType|string $type,
         array $additionalData = []
     ): ReceivedDocumentList|Error {
+        $typeValue = $type instanceof ReceivedDocumentType ? $type->value : $type;
+
         $additionalData = array_merge($additionalData, [
-            'type' => $type,
+            'type' => $typeValue,
         ]);
 
         $additionalData = $this->data($additionalData, [
@@ -52,11 +60,13 @@ class ReceivedDocument extends Api
     }
 
     public function all(
-        string $type,
+        ReceivedDocumentType|string $type,
         array $additionalData = []
     ): array|Error {
+        $typeValue = $type instanceof ReceivedDocumentType ? $type->value : $type;
+
         $additionalData = array_merge($additionalData, [
-            'type' => $type,
+            'type' => $typeValue,
         ]);
 
         $allDocuments = $this->getAll([

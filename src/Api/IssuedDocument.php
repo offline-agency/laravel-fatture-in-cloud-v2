@@ -14,12 +14,18 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPreCreateInfo;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentScheduleEmail;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentTotals;
+use OfflineAgency\LaravelFattureInCloudV2\Enums\IssuedDocumentType;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 class IssuedDocument extends Api
 {
     use ListTrait;
 
+    /**
+     * @deprecated Use IssuedDocumentType enum instead.
+     *
+     * @var array<string>
+     */
     public const DOCUMENT_TYPES = [
         'invoice',
         'quote',
@@ -35,11 +41,13 @@ class IssuedDocument extends Api
     ];
 
     public function list(
-        string $type,
+        IssuedDocumentType|string $type,
         ?array $additional_data = []
     ): IssuedDocumentList|Error {
+        $typeValue = $type instanceof IssuedDocumentType ? $type->value : $type;
+
         $additional_data = array_merge($additional_data, [
-            'type' => $type,
+            'type' => $typeValue,
         ]);
 
         $additional_data = $this->data($additional_data, [
@@ -63,12 +71,17 @@ class IssuedDocument extends Api
     /**
      * @return array<IssuedDocumentEntity>|Error
      */
+    /**
+     * @return array<IssuedDocumentEntity>|Error
+     */
     public function all(
-        string $type,
+        IssuedDocumentType|string $type,
         ?array $additional_data = []
     ): array|Error {
+        $typeValue = $type instanceof IssuedDocumentType ? $type->value : $type;
+
         $additional_data = array_merge($additional_data, [
-            'type' => $type,
+            'type' => $typeValue,
         ]);
 
         $all_documents = $this->getAll([
@@ -256,12 +269,14 @@ class IssuedDocument extends Api
     }
 
     public function preCreateInfo(
-        string $type
+        IssuedDocumentType|string $type
     ): IssuedDocumentPreCreateInfo|Error {
+        $typeValue = $type instanceof IssuedDocumentType ? $type->value : $type;
+
         $response = $this->get(
             'c/'.$this->companyId.'/issued_documents/info',
             [
-                'type' => $type,
+                'type' => $typeValue,
             ]
         );
 

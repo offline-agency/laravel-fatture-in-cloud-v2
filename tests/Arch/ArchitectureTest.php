@@ -26,6 +26,10 @@ arch('no debug functions')
     ->expect(['dd', 'dump', 'ray', 'var_dump', 'print_r'])
     ->not->toBeUsed();
 
+arch('enums are string-backed')
+    ->expect('OfflineAgency\LaravelFattureInCloudV2\Enums')
+    ->toBeStringBackedEnums();
+
 arch('entities do not depend on Api namespace')
     ->expect('OfflineAgency\LaravelFattureInCloudV2\Entities')
     ->not->toUse('OfflineAgency\LaravelFattureInCloudV2\Api')
