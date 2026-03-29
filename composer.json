@@ -43,10 +43,16 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/pest",
-        "test-coverage": "vendor/bin/pest --coverage-html coverage",
+        "test": "vendor/bin/pest --parallel",
+        "test:coverage": "vendor/bin/pest --parallel --coverage --min=80",
         "format": "vendor/bin/pint",
-        "format:test": "vendor/bin/pint --test"
+        "format:test": "vendor/bin/pint --test",
+        "analyse": "vendor/bin/phpstan analyse --no-progress",
+        "check": [
+            "@format:test",
+            "@analyse",
+            "@test"
+        ]
     },
     "config": {
         "sort-packages": true,

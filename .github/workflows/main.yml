@@ -47,15 +47,32 @@ jobs:
       - name: Run tests
         run: ./vendor/bin/pest --parallel --coverage-clover coverage.xml
 
-      - name: Check code style
-        if: matrix.php == '8.4' && matrix.laravel == '13.*'
-        run: ./vendor/bin/pint --test
-
-      - name: Run PHPStan
-        if: matrix.php == '8.4' && matrix.laravel == '13.*'
-        run: ./vendor/bin/phpstan analyse --no-progress
-
       - uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
+
+  static-analysis:
+    runs-on: ubuntu-latest
+    name: Static Analysis
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer
+
+      - name: Install dependencies
+        run: |
+          composer require "laravel/framework:13.*" --no-update --no-interaction
+          composer require --dev "orchestra/testbench:11.*" --no-update --no-interaction
+          composer update --prefer-dist --no-interaction
+
+      - name: Run PHPStan
+        run: ./vendor/bin/phpstan analyse --no-progress --error-format=github
+
+      - name: Check code style
+        run: ./vendor/bin/pint --test
