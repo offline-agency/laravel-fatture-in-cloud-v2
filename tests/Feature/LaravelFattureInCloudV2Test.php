@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Config;
-use OfflineAgency\LaravelFattureInCloudV2\FattureInCloud;
+use OfflineAgency\LaravelFattureInCloudV2\FattureInCloudManager;
 use OfflineAgency\LaravelFattureInCloudV2\LaravelFattureInCloudV2;
 use OfflineAgency\LaravelFattureInCloudV2\LaravelFattureInCloudV2Facade;
 
@@ -32,8 +32,8 @@ describe('LaravelFattureInCloudV2', function () {
 })->covers(LaravelFattureInCloudV2::class);
 
 describe('LaravelFattureInCloudV2Facade', function () {
-    it('facade resolves to FattureInCloud instance', function () {
-        expect(LaravelFattureInCloudV2Facade::getFacadeRoot())->toBeInstanceOf(FattureInCloud::class);
+    it('facade resolves to FattureInCloudManager instance', function () {
+        expect(LaravelFattureInCloudV2Facade::getFacadeRoot())->toBeInstanceOf(FattureInCloudManager::class);
     });
 
     it('facade accessor returns correct key', function () {
