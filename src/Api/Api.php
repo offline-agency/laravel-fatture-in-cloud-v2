@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 
-use Illuminate\Http\Client\Response;
+use Closure;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use OfflineAgency\LaravelFattureInCloudV2\FattureInCloud;
@@ -14,11 +14,11 @@ class Api
 {
     use NormalizesDatesTrait;
 
+    private const MAX_RETRIES = 3;
+
     protected FattureInCloud $connector;
 
     protected string $companyId;
-
-    protected string $company_id;
 
     protected string $accessToken;
 
@@ -26,72 +26,85 @@ class Api
     {
         $this->connector = $connector ?? new FattureInCloud();
         $this->companyId = $this->connector->getCompanyId();
-        $this->company_id = $this->companyId;
         $this->accessToken = $this->connector->getAccessToken();
     }
 
     protected function get(string $url, array $queryParameters = []): object
     {
-        $response = $this->connector->getRequest()
-            ->get($url, $queryParameters);
-
-        return $this->handleResponse($response, 'get', $url, $queryParameters);
+        return $this->executeWithRetry(function () use ($url, $queryParameters) {
+            return $this->connector->getRequest()
+                ->get($url, $queryParameters);
+        });
     }
 
     protected function post(string $url, array $body, bool $hasFile = false): object
     {
-        $request = $this->connector->getRequest();
+        return $this->executeWithRetry(function () use ($url, $body, $hasFile) {
+            $request = $this->connector->getRequest();
 
-        if ($hasFile) {
-            $attachment = Arr::get($body, 'attachment');
-            $filename = Arr::get($body, 'filename');
-            $request->attach('attachment', $attachment, $filename);
-        }
+            if ($hasFile) {
+                $attachment = Arr::get($body, 'attachment');
+                $filename = Arr::get($body, 'filename');
+                $request->attach('attachment', $attachment, $filename);
+            }
 
-        $response = $request->post($url, $body);
-
-        return $this->handleResponse($response, 'post', $url, $body);
+            return $request->post($url, $body);
+        });
     }
 
     protected function put(string $url, array $body): object
     {
-        $response = $this->connector->getRequest()
-            ->put($url, $body);
-
-        return $this->handleResponse($response, 'put', $url, $body);
+        return $this->executeWithRetry(function () use ($url, $body) {
+            return $this->connector->getRequest()
+                ->put($url, $body);
+        });
     }
 
     protected function destroy(string $url, array $queryParameters = []): object
     {
-        $response = $this->connector->getRequest()
-            ->delete($url, $queryParameters);
-
-        return $this->handleResponse($response, 'destroy', $url, $queryParameters);
+        return $this->executeWithRetry(function () use ($url, $queryParameters) {
+            return $this->connector->getRequest()
+                ->delete($url, $queryParameters);
+        });
     }
 
-    protected function handleResponse(Response $response, string $method, string $url, array $data = []): object
+    private function executeWithRetry(Closure $request): object
     {
-        if ($response->status() === 403 || $response->status() === 429) {
-            $this->waitThrottle($response->status());
+        $maxRetries = (int) Config::get('fatture-in-cloud-v2.limits.max_retries', self::MAX_RETRIES);
+        $attempt = 0;
 
-            return $this->{$method}($url, $data);
+        while (true) {
+            $response = $request();
+
+            if ($response->status() !== 403 && $response->status() !== 429) {
+                return (object) [
+                    'success' => $response->successful(),
+                    'data' => $response->object(),
+                ];
+            }
+
+            $attempt++;
+
+            if ($attempt >= $maxRetries) {
+                return (object) [
+                    'success' => false,
+                    'data' => $response->object(),
+                ];
+            }
+
+            $this->waitThrottle($response->status(), $attempt);
         }
-
-        return (object) [
-            'success' => $response->successful(),
-            'data' => $response->object(),
-        ];
     }
 
-    private function waitThrottle(int $status): void
+    private function waitThrottle(int $status, int $attempt): void
     {
-        $limit = match ($status) {
-            403 => Config::get('fatture-in-cloud-v2.limits.403'),
-            429 => Config::get('fatture-in-cloud-v2.limits.429'),
-            default => Config::get('fatture-in-cloud-v2.limits.default'),
+        $baseDelay = match ($status) {
+            403 => (int) Config::get('fatture-in-cloud-v2.limits.403'),
+            429 => (int) Config::get('fatture-in-cloud-v2.limits.429'),
+            default => (int) Config::get('fatture-in-cloud-v2.limits.default'),
         };
 
-        usleep((int) $limit);
+        usleep($baseDelay * (2 ** ($attempt - 1)));
     }
 
     /**
