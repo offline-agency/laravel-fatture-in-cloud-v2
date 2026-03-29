@@ -349,4 +349,4 @@ describe('Client Entity', function () {
         expect($entity->id)->toBeNull()
             ->and($entity->name)->toBeNull();
     });
-});
+})->covers(Client::class);

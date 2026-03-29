@@ -20,12 +20,3 @@ parameters:
         # to proper generics is tracked as a follow-up task.
         - identifier: missingType.iterableValue
 
-        # Legacy entity list classes (TaxesList, ReceivedDocumentList, InfoList
-        # variants) predate the readonly refactoring and use untyped properties
-        # and constructor parameters. Migration is tracked separately.
-        - identifier: missingType.property
-        - identifier: missingType.parameter
-
-        # Unused properties in legacy list entity classes (pagination property
-        # declared but superseded by ListTrait-based pagination).
-        - identifier: property.unused

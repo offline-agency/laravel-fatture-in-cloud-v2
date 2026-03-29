@@ -29,7 +29,7 @@ describe('LaravelFattureInCloudV2', function () {
 
         new LaravelFattureInCloudV2();
     })->throws(Exception::class, 'Set bearer on your config/fatture-in-cloud-v2!');
-});
+})->covers(LaravelFattureInCloudV2::class);
 
 describe('LaravelFattureInCloudV2Facade', function () {
     it('facade resolves to FattureInCloud instance', function () {
@@ -43,4 +43,4 @@ describe('LaravelFattureInCloudV2Facade', function () {
 
         expect($method->invoke(null))->toBe('laravel-fatture-in-cloud-v2');
     });
-});
+})->covers(LaravelFattureInCloudV2Facade::class);

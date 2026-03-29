@@ -199,27 +199,17 @@ describe('Cashbook', function () {
         expect($response)->toBeInstanceOf(Error::class);
     });
 
-    it('validates on create cashbook entry', function () {
+    it('validates required fields on create cashbook entry', function (array $body, string $expectedKey) {
         $api = new Cashbook();
-        $response = $api->create([]);
+        $response = $api->create($body);
 
         expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data');
-    });
-
-    it('validates data.kind on create cashbook entry', function () {
-        $api = new Cashbook();
-        $response = $api->create([
-            'data' => [
-                'date' => '2024-06-05',
-                'description' => 'A description',
-                'kind' => 'invalid_kind',
-            ],
-        ]);
-
-        expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data.kind');
-    });
+            ->and($response->messages())->toHaveKey($expectedKey);
+    })->with([
+        'missing data' => [[], 'data'],
+        'invalid kind' => [['data' => ['date' => '2024-06-05', 'description' => 'A description', 'kind' => 'invalid_kind']], 'data.kind'],
+        'missing payment_account_in' => [['data' => ['date' => '2024-06-05', 'description' => 'Desc', 'kind' => 'cashbook']], 'data.payment_account_in'],
+    ]);
 
     it('handles error on create cashbook entry', function () {
         Http::fake([
@@ -265,53 +255,19 @@ describe('Cashbook', function () {
             ->and($response->description)->toBe('Updated');
     });
 
-    it('validates on edit cashbook entry', function () {
+    it('validates required fields on edit cashbook entry', function (array $body, string $expectedKey) {
         $api = new Cashbook();
-        $response = $api->edit(1, []);
+        $response = $api->edit(1, $body);
 
         expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data');
-    });
-
-    it('validates data.date on edit cashbook entry', function () {
-        $api = new Cashbook();
-        $response = $api->edit(1, ['data' => ['description' => 'Desc', 'kind' => 'cashbook', 'payment_account_in' => ['id' => 1]]]);
-
-        expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data.date');
-    });
-
-    it('validates data.description on edit cashbook entry', function () {
-        $api = new Cashbook();
-        $response = $api->edit(1, ['data' => ['date' => '2024-06-05', 'kind' => 'cashbook', 'payment_account_in' => ['id' => 1]]]);
-
-        expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data.description');
-    });
-
-    it('validates data.payment_account_in on create cashbook entry', function () {
-        $api = new Cashbook();
-        $response = $api->create(['data' => ['date' => '2024-06-05', 'description' => 'Desc', 'kind' => 'cashbook']]);
-
-        expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data.payment_account_in');
-    });
-
-    it('validates data.payment_account_in on edit cashbook entry', function () {
-        $api = new Cashbook();
-        $response = $api->edit(1, ['data' => ['date' => '2024-06-05', 'description' => 'Desc', 'kind' => 'cashbook']]);
-
-        expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data.payment_account_in');
-    });
-
-    it('validates data.kind on edit cashbook entry', function () {
-        $api = new Cashbook();
-        $response = $api->edit(1, ['data' => ['date' => '2024-06-05', 'description' => 'Desc', 'kind' => 'invalid_kind']]);
-
-        expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data.kind');
-    });
+            ->and($response->messages())->toHaveKey($expectedKey);
+    })->with([
+        'missing data' => [[], 'data'],
+        'missing date' => [['data' => ['description' => 'Desc', 'kind' => 'cashbook', 'payment_account_in' => ['id' => 1]]], 'data.date'],
+        'missing description' => [['data' => ['date' => '2024-06-05', 'kind' => 'cashbook', 'payment_account_in' => ['id' => 1]]], 'data.description'],
+        'missing payment_account_in' => [['data' => ['date' => '2024-06-05', 'description' => 'Desc', 'kind' => 'cashbook']], 'data.payment_account_in'],
+        'invalid kind' => [['data' => ['date' => '2024-06-05', 'description' => 'Desc', 'kind' => 'invalid_kind']], 'data.kind'],
+    ]);
 
     it('handles error on edit cashbook entry', function () {
         Http::fake([
@@ -432,4 +388,4 @@ describe('Cashbook', function () {
         expect($entity->id)->toBeNull()
             ->and($entity->kind)->toBeNull();
     });
-});
+})->covers(Cashbook::class);

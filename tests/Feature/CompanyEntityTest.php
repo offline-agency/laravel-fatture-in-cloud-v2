@@ -37,4 +37,4 @@ describe('Company Entity', function () {
 
         expect($response)->toBeInstanceOf(Error::class);
     });
-});
+})->covers(Company::class);

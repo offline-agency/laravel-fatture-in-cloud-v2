@@ -1,22 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\Taxes as TaxesEntity;
-use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
-class TaxesList
+readonly class TaxesList
 {
-    use ListTrait;
+    /**
+     * @var array<TaxesEntity>
+     */
+    private array $items;
 
-    private $items;
+    private TaxesPagination $pagination;
 
-    private $pagination;
-
-    public function __construct($taxes_response)
+    public function __construct(object $taxesResponse)
     {
-        $this->setItems($taxes_response);
-        $this->setPagination($taxes_response);
+        $this->items = array_map(function ($document) {
+            return new TaxesEntity($document);
+        }, $taxesResponse->data);
+
+        $this->pagination = new TaxesPagination($taxesResponse);
     }
 
     /**
@@ -32,17 +37,8 @@ class TaxesList
         return $this->pagination;
     }
 
-    private function setItems(
-        $taxes_response
-    ): void {
-        $this->items = array_map(function ($document) {
-            return new TaxesEntity($document);
-        }, $taxes_response->data);
-    }
-
-    private function setPagination(
-        $received_document_response
-    ): void {
-        $this->pagination = new TaxesPagination($received_document_response);
+    public function hasItems(): bool
+    {
+        return count($this->items) > 0;
     }
 }

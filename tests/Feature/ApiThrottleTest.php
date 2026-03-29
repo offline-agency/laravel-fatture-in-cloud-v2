@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
+use OfflineAgency\LaravelFattureInCloudV2\Api\Api;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Client;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\Client as ClientEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ClientFakeResponse;
@@ -47,4 +48,4 @@ describe('Api throttle', function () {
 
         expect(true)->toBeTrue();
     });
-});
+})->covers(Api::class);

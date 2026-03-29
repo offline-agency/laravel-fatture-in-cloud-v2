@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Info;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\Vat as ArchiveCategoriesEntity;
-use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
-class InfoArchiveCategoriesList
+readonly class InfoArchiveCategoriesList
 {
-    use ListTrait;
+    /**
+     * @var array<ArchiveCategoriesEntity>
+     */
+    private array $items;
 
-    private $items;
-
-    private $pagination;
-
-    public function __construct($archive_categories_response)
+    public function __construct(object $archiveCategoriesResponse)
     {
-        $this->setItems($archive_categories_response);
+        $this->items = array_map(function ($client) {
+            return new ArchiveCategoriesEntity($client);
+        }, $archiveCategoriesResponse->data);
     }
 
     /**
@@ -28,11 +28,8 @@ class InfoArchiveCategoriesList
         return $this->items;
     }
 
-    private function setItems(
-        $archive_categories_response
-    ): void {
-        $this->items = array_map(function ($client) {
-            return new ArchiveCategoriesEntity($client);
-        }, $archive_categories_response->data);
+    public function hasItems(): bool
+    {
+        return count($this->items) > 0;
     }
 }

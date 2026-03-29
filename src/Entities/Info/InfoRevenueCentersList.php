@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Info;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\Vat as RevenueCentersEntity;
-use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
-class InfoRevenueCentersList
+readonly class InfoRevenueCentersList
 {
-    use ListTrait;
+    /**
+     * @var array<RevenueCentersEntity>
+     */
+    private array $items;
 
-    private $items;
-
-    private $pagination;
-
-    public function __construct($revenue_centers_response)
+    public function __construct(object $revenueCentersResponse)
     {
-        $this->setItems($revenue_centers_response);
+        $this->items = array_map(function ($client) {
+            return new RevenueCentersEntity($client);
+        }, $revenueCentersResponse->data);
     }
 
     /**
@@ -28,11 +28,8 @@ class InfoRevenueCentersList
         return $this->items;
     }
 
-    private function setItems(
-        $revenue_centers_response
-    ): void {
-        $this->items = array_map(function ($client) {
-            return new RevenueCentersEntity($client);
-        }, $revenue_centers_response->data);
+    public function hasItems(): bool
+    {
+        return count($this->items) > 0;
     }
 }

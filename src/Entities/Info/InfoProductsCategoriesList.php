@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Info;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\Vat as ProductsCategoriesEntity;
-use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
-class InfoProductsCategoriesList
+readonly class InfoProductsCategoriesList
 {
-    use ListTrait;
+    /**
+     * @var array<ProductsCategoriesEntity>
+     */
+    private array $items;
 
-    private $items;
-
-    private $pagination;
-
-    public function __construct($products_categories_response)
+    public function __construct(object $productsCategoriesResponse)
     {
-        $this->setItems($products_categories_response);
+        $this->items = array_map(function ($client) {
+            return new ProductsCategoriesEntity($client);
+        }, $productsCategoriesResponse->data);
     }
 
     /**
@@ -28,11 +28,8 @@ class InfoProductsCategoriesList
         return $this->items;
     }
 
-    private function setItems(
-        $products_categories_response
-    ): void {
-        $this->items = array_map(function ($client) {
-            return new ProductsCategoriesEntity($client);
-        }, $products_categories_response->data);
+    public function hasItems(): bool
+    {
+        return count($this->items) > 0;
     }
 }

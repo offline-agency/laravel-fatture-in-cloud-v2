@@ -125,4 +125,4 @@ describe('Info Entity', function () {
         expect($entity->id)->toBeNull()
             ->and($entity->name)->toBeNull();
     });
-});
+})->covers(Info::class);

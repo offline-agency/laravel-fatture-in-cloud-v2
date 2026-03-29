@@ -205,4 +205,4 @@ describe('PriceList', function () {
         expect($entity->id)->toBeNull()
             ->and($entity->name)->toBeNull();
     });
-});
+})->covers(PriceList::class);

@@ -6,75 +6,59 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Info;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
 
-class PaymentMethods extends AbstractEntity
+readonly class PaymentMethods extends AbstractEntity
 {
-    /**
-     * @var int
-     */
-    public $id;
+    public ?int $id;
 
-    /**
-     * @var string
-     */
-    public $name;
+    public ?string $name;
 
-    /**
-     * @var string
-     */
-    public $type;
+    public ?string $type;
 
-    /**
-     * @var bool
-     */
-    public $is_default;
+    public ?bool $isDefault;
 
-    /**
-     * @var string
-     */
-    public $iban;
+    public ?string $iban;
 
-    /**
-     * @var string
-     */
-    public $sia;
+    public ?string $sia;
 
-    /**
-     * @var string
-     */
-    public $cuc;
+    public ?string $cuc;
 
-    /**
-     * @var bool
-     */
-    public $virtual;
+    public ?bool $virtual;
 
-    /**
-     * @var string
-     */
-    public $title;
+    public ?string $title;
 
-    /**
-     * @var string
-     */
-    public $description;
+    public ?string $description;
 
-    /**
-     * @var string
-     */
-    public $bank_iban;
+    public ?string $bankIban;
 
-    /**
-     * @var string
-     */
-    public $bank_name;
+    public ?string $bankName;
 
-    /**
-     * @var string
-     */
-    public $bank_beneficiary;
+    public ?string $bankBeneficiary;
 
-    /**
-     * @var string
-     */
-    public $ei_payment_method;
+    public ?string $eiPaymentMethod;
+
+    public function __construct(mixed $parameters = null)
+    {
+        if (is_object($parameters)) {
+            $parameters = get_object_vars($parameters);
+        }
+
+        if (! is_array($parameters)) {
+            $parameters = [];
+        }
+
+        $this->id = $parameters['id'] ?? null;
+        $this->name = $parameters['name'] ?? null;
+        $this->type = $parameters['type'] ?? null;
+        $this->isDefault = $parameters['is_default'] ?? null;
+        $this->iban = $parameters['iban'] ?? null;
+        $this->sia = $parameters['sia'] ?? null;
+        $this->cuc = $parameters['cuc'] ?? null;
+        $this->virtual = $parameters['virtual'] ?? null;
+        $this->title = $parameters['title'] ?? null;
+        $this->description = $parameters['description'] ?? null;
+        $this->bankIban = $parameters['bank_iban'] ?? null;
+        $this->bankName = $parameters['bank_name'] ?? null;
+        $this->bankBeneficiary = $parameters['bank_beneficiary'] ?? null;
+        $this->eiPaymentMethod = $parameters['ei_payment_method'] ?? null;
+    }
 }

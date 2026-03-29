@@ -64,4 +64,4 @@ describe('Pagination', function () {
 
         expect($queryParams)->toBeArray()->toBeEmpty();
     });
-});
+})->covers(Pagination::class);

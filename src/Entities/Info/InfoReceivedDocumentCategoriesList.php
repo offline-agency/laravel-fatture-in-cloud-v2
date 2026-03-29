@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Info;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\Vat as ReceivedDocumentCategoriesEntity;
-use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
-class InfoReceivedDocumentCategoriesList
+readonly class InfoReceivedDocumentCategoriesList
 {
-    use ListTrait;
+    /**
+     * @var array<ReceivedDocumentCategoriesEntity>
+     */
+    private array $items;
 
-    private $items;
-
-    private $pagination;
-
-    public function __construct($received_document_categories_response)
+    public function __construct(object $receivedDocumentCategoriesResponse)
     {
-        $this->setItems($received_document_categories_response);
+        $this->items = array_map(function ($client) {
+            return new ReceivedDocumentCategoriesEntity($client);
+        }, $receivedDocumentCategoriesResponse->data);
     }
 
     /**
@@ -28,11 +28,8 @@ class InfoReceivedDocumentCategoriesList
         return $this->items;
     }
 
-    private function setItems(
-        $received_document_categories_response
-    ): void {
-        $this->items = array_map(function ($client) {
-            return new ReceivedDocumentCategoriesEntity($client);
-        }, $received_document_categories_response->data);
+    public function hasItems(): bool
+    {
+        return count($this->items) > 0;
     }
 }

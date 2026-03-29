@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
 
-class ReceivedDocumentAttachment extends AbstractEntity
+readonly class ReceivedDocumentAttachment extends AbstractEntity
 {
     public string $attachment_token;
 
