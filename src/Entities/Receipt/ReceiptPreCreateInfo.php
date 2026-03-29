@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt;
 
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
+
 readonly class ReceiptPreCreateInfo
 {
+    use CastsFromMixed;
+
     public mixed $numerations;
 
     public mixed $numerationsList;
@@ -20,15 +24,13 @@ readonly class ReceiptPreCreateInfo
 
     public function __construct(mixed $parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        $this->numerations = $parameters['numerations'] ?? null;
-        $this->numerationsList = $parameters['numerations_list'] ?? null;
-        $this->rcCentersList = $parameters['rc_centers_list'] ?? null;
-        $this->paymentAccountsList = $parameters['payment_accounts_list'] ?? null;
-        $this->categoriesList = $parameters['categories_list'] ?? null;
-        $this->vatTypesList = $parameters['vat_types_list'] ?? null;
+        $this->numerations = self::mixedValue($parameters, 'numerations');
+        $this->numerationsList = self::mixedValue($parameters, 'numerations_list');
+        $this->rcCentersList = self::mixedValue($parameters, 'rc_centers_list');
+        $this->paymentAccountsList = self::mixedValue($parameters, 'payment_accounts_list');
+        $this->categoriesList = self::mixedValue($parameters, 'categories_list');
+        $this->vatTypesList = self::mixedValue($parameters, 'vat_types_list');
     }
 }

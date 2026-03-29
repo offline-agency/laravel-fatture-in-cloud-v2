@@ -4,27 +4,31 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Traits;
 
-use Illuminate\Support\Arr;
+use OfflineAgency\LaravelFattureInCloudV2\Api\Api;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 
+/** @phpstan-require-extends Api */
 trait ListTrait
 {
-    public function hasItems(): bool
-    {
-        return count($this->getItems()) > 0;
-    }
-
+    /**
+     * @return array<int|string, mixed>
+     */
     public function getQueryParams(string $url): array
     {
-        $parsedUrl = parse_url($url);
-        $queryString = Arr::get($parsedUrl, 'query', '');
+        $query = parse_url($url, PHP_URL_QUERY);
 
-        parse_str($queryString, $queryParams);
+        if (! is_string($query)) {
+            return [];
+        }
+
+        parse_str($query, $queryParams);
 
         return $queryParams;
     }
 
     /**
+     * @param  array<string>  $validateAdditionalData
+     * @param  array<int|string, mixed>  $additionalData
      * @param  array<mixed>  $accumulated
      * @return array<mixed>|Error
      */
@@ -36,7 +40,6 @@ trait ListTrait
     ): array|Error {
         $additionalData = $this->data($additionalData, $validateAdditionalData);
 
-        /** @var object $response */
         $response = $this->get((string) $url, $additionalData);
 
         if (! $response->success) {

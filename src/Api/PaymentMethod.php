@@ -14,7 +14,6 @@ class PaymentMethod extends Api
 {
     public function list(): PaymentMethodList|Error
     {
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/settings/payment_methods',
         );
@@ -30,7 +29,6 @@ class PaymentMethod extends Api
 
     public function detail(int $paymentMethodId): PaymentMethodEntity|Error
     {
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/settings/payment_methods/'.$paymentMethodId,
         );
@@ -46,7 +44,6 @@ class PaymentMethod extends Api
 
     public function delete(int $paymentMethodId): string|Error
     {
-        /** @var object $response */
         $response = $this->destroy(
             'c/'.$this->companyId.'/settings/payment_methods/'.$paymentMethodId
         );
@@ -58,6 +55,9 @@ class PaymentMethod extends Api
         return 'Payment method deleted';
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function create(array $body = []): PaymentMethodEntity|Error|MessageBag
     {
         $validator = Validator::make($body, [
@@ -69,7 +69,6 @@ class PaymentMethod extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/settings/payment_methods',
             $body
@@ -84,6 +83,9 @@ class PaymentMethod extends Api
         return new PaymentMethodEntity($paymentMethod);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function edit(int $paymentMethodId, array $body = []): PaymentMethodEntity|Error|MessageBag
     {
         $validator = Validator::make($body, [
@@ -95,7 +97,6 @@ class PaymentMethod extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->put(
             'c/'.$this->companyId.'/settings/payment_methods/'.$paymentMethodId,
             $body

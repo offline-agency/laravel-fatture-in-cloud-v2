@@ -5,21 +5,18 @@ declare(strict_types=1);
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Settings;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
 
 readonly class SettingsGetVatType extends AbstractEntity
 {
+    use CastsFromMixed;
+
     public ?bool $editable;
 
     public function __construct(mixed $parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        if (! is_array($parameters)) {
-            $parameters = [];
-        }
-
-        $this->editable = $parameters['editable'] ?? null;
+        $this->editable = self::nullableBool($parameters, 'editable');
     }
 }

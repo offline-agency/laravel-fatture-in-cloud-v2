@@ -14,7 +14,6 @@ class Webhook extends Api
 {
     public function list(): WebhookSubscriptionList|Error
     {
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/webhooks/subscriptions',
         );
@@ -30,7 +29,6 @@ class Webhook extends Api
 
     public function detail(string $subscriptionId): WebhookEntity|Error
     {
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/webhooks/subscriptions/'.$subscriptionId,
         );
@@ -46,7 +44,6 @@ class Webhook extends Api
 
     public function delete(string $subscriptionId): string|Error
     {
-        /** @var object $response */
         $response = $this->destroy(
             'c/'.$this->companyId.'/webhooks/subscriptions/'.$subscriptionId
         );
@@ -58,6 +55,9 @@ class Webhook extends Api
         return 'Webhook subscription deleted';
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function create(array $body = []): WebhookEntity|Error|MessageBag
     {
         $validator = Validator::make($body, [
@@ -70,7 +70,6 @@ class Webhook extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/webhooks/subscriptions',
             $body
@@ -85,6 +84,9 @@ class Webhook extends Api
         return new WebhookEntity($webhook);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function edit(string $subscriptionId, array $body = []): WebhookEntity|Error|MessageBag
     {
         $validator = Validator::make($body, [
@@ -97,7 +99,6 @@ class Webhook extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->put(
             'c/'.$this->companyId.'/webhooks/subscriptions/'.$subscriptionId,
             $body

@@ -31,7 +31,7 @@ readonly class CashbookPagination extends Pagination
 
     public function goToPrevPage(): CashbookList|Error|MessageBag|null
     {
-        if (! $this->hasPrevPage()) {
+        if (is_null($this->prevPageUrl)) {
             return null;
         }
 
@@ -40,7 +40,7 @@ readonly class CashbookPagination extends Pagination
 
     public function goToNextPage(): CashbookList|Error|MessageBag|null
     {
-        if (! $this->hasNextPage()) {
+        if (is_null($this->nextPageUrl)) {
             return null;
         }
 

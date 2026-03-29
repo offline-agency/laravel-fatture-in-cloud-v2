@@ -30,7 +30,10 @@ class Api
         $this->accessToken = $this->connector->getAccessToken();
     }
 
-    protected function get(string $url, array $queryParameters = []): object
+    /**
+     * @param  array<string, mixed>  $queryParameters
+     */
+    protected function get(string $url, array $queryParameters = []): ApiResponse
     {
         return $this->executeWithRetry(function () use ($url, $queryParameters) {
             return $this->connector->getRequest()
@@ -38,7 +41,10 @@ class Api
         });
     }
 
-    protected function post(string $url, array $body, bool $hasFile = false): object
+    /**
+     * @param  array<string, mixed>  $body
+     */
+    protected function post(string $url, array $body, bool $hasFile = false): ApiResponse
     {
         return $this->executeWithRetry(function () use ($url, $body, $hasFile) {
             $request = $this->connector->getRequest();
@@ -46,14 +52,21 @@ class Api
             if ($hasFile) {
                 $attachment = Arr::get($body, 'attachment');
                 $filename = Arr::get($body, 'filename');
-                $request->attach('attachment', $attachment, $filename);
+                $request->attach(
+                    'attachment',
+                    is_string($attachment) ? $attachment : '',
+                    is_string($filename) ? $filename : null,
+                );
             }
 
             return $request->post($url, $body);
         });
     }
 
-    protected function put(string $url, array $body): object
+    /**
+     * @param  array<string, mixed>  $body
+     */
+    protected function put(string $url, array $body): ApiResponse
     {
         return $this->executeWithRetry(function () use ($url, $body) {
             return $this->connector->getRequest()
@@ -61,7 +74,10 @@ class Api
         });
     }
 
-    protected function destroy(string $url, array $queryParameters = []): object
+    /**
+     * @param  array<string, mixed>  $queryParameters
+     */
+    protected function destroy(string $url, array $queryParameters = []): ApiResponse
     {
         return $this->executeWithRetry(function () use ($url, $queryParameters) {
             return $this->connector->getRequest()
@@ -69,28 +85,33 @@ class Api
         });
     }
 
-    private function executeWithRetry(Closure $request): object
+    private function executeWithRetry(Closure $request): ApiResponse
     {
-        $maxRetries = (int) Config::get('fatture-in-cloud-v2.limits.max_retries', self::MAX_RETRIES);
+        $configRetries = Config::get('fatture-in-cloud-v2.limits.max_retries', self::MAX_RETRIES);
+        $maxRetries = is_numeric($configRetries) ? (int) $configRetries : self::MAX_RETRIES;
         $attempt = 0;
 
         while (true) {
             $response = $request();
 
             if ($response->status() !== 403 && $response->status() !== 429) {
-                return (object) [
-                    'success' => $response->successful(),
-                    'data' => $response->object(),
-                ];
+                $obj = $response->object();
+
+                return new ApiResponse(
+                    success: $response->successful(),
+                    data: $obj instanceof \stdClass ? $obj : new \stdClass(),
+                );
             }
 
             $attempt++;
 
             if ($attempt >= $maxRetries) {
-                return (object) [
-                    'success' => false,
-                    'data' => $response->object(),
-                ];
+                $obj = $response->object();
+
+                return new ApiResponse(
+                    success: false,
+                    data: $obj instanceof \stdClass ? $obj : new \stdClass(),
+                );
             }
 
             $this->waitThrottle($response->status(), $attempt);
@@ -99,17 +120,18 @@ class Api
 
     private function waitThrottle(int $status, int $attempt): void
     {
-        $baseDelay = match ($status) {
-            403 => (int) Config::get('fatture-in-cloud-v2.limits.403'),
-            429 => (int) Config::get('fatture-in-cloud-v2.limits.429'),
-            default => (int) Config::get('fatture-in-cloud-v2.limits.default'),
+        $configDelay = match ($status) {
+            403 => Config::get('fatture-in-cloud-v2.limits.403'),
+            429 => Config::get('fatture-in-cloud-v2.limits.429'),
+            default => Config::get('fatture-in-cloud-v2.limits.default'),
         };
+        $baseDelay = is_numeric($configDelay) ? (int) $configDelay : 0;
 
         usleep($baseDelay * (2 ** ($attempt - 1)));
     }
 
     /**
-     * @param  array<string, mixed>  $data
+     * @param  array<int|string, mixed>  $data
      * @param  array<string>  $fields
      * @return array<string, mixed>
      */

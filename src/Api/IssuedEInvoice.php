@@ -14,9 +14,11 @@ class IssuedEInvoice extends Api
 {
     use ListTrait;
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function send(int $documentId, array $body = []): IssuedEInvoiceSend|Error
     {
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/issued_documents/'.$documentId.'/e_invoice/send',
             $body
@@ -33,7 +35,6 @@ class IssuedEInvoice extends Api
 
     public function verifyXML(int $documentId): IssuedEInvoiceVerifyXML|Error
     {
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/issued_documents/'.$documentId.'/e_invoice/xml_verify',
         );
@@ -48,13 +49,15 @@ class IssuedEInvoice extends Api
     }
 
     /** @return object|Error */
+    /**
+     * @param  array<string, mixed>  $additionalData
+     */
     public function getXML(int $documentId, array $additionalData = []): object
     {
         $additionalData = $this->data($additionalData, [
             'include_attachment',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/issued_documents/'.$documentId.'/e_invoice/xml',
             $additionalData
@@ -69,7 +72,6 @@ class IssuedEInvoice extends Api
 
     public function getRejectionReason(int $documentId): IssuedEInvoiceRejectionReason|Error
     {
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/issued_documents/'.$documentId.'/e_invoice/error_reason',
         );

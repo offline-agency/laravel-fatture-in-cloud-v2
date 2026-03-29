@@ -28,6 +28,9 @@ class Taxes extends Api
         'passive_delivery_note',
     ];
 
+    /**
+     * @param  array<string, mixed>  $additionalData
+     */
     public function list(
         ReceivedDocumentType|string $type,
         array $additionalData = []
@@ -42,7 +45,6 @@ class Taxes extends Api
             'type', 'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/taxes',
             $additionalData
@@ -57,6 +59,10 @@ class Taxes extends Api
         return new TaxesList($taxesResponse);
     }
 
+    /**
+     * @param  array<string, mixed>  $additionalData
+     * @return array<TaxesEntity>|Error
+     */
     public function all(
         ReceivedDocumentType|string $type,
         array $additionalData = []
@@ -80,6 +86,9 @@ class Taxes extends Api
         }, $allDocuments);
     }
 
+    /**
+     * @param  array<string, mixed>  $additionalData
+     */
     public function detail(
         int $documentId,
         array $additionalData = []
@@ -88,7 +97,6 @@ class Taxes extends Api
             'fields', 'fieldset',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/taxes/'.$documentId,
             $additionalData
@@ -106,7 +114,6 @@ class Taxes extends Api
     public function bin(
         int $documentId
     ): TaxesEntity|Error {
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/bin/taxes/'.$documentId
         );
@@ -123,7 +130,6 @@ class Taxes extends Api
     public function delete(
         int $documentId
     ): string|Error {
-        /** @var object $response */
         $response = $this->destroy(
             'c/'.$this->companyId.'/taxes/'.$documentId
         );
@@ -160,7 +166,6 @@ class Taxes extends Api
 
         $body = $this->normalizeBodyDate($body, 'data.due_date');
 
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/taxes',
             $body
@@ -175,6 +180,9 @@ class Taxes extends Api
         return new TaxesEntity($taxes);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function edit(
         int $documentId,
         array $body = []
@@ -188,11 +196,10 @@ class Taxes extends Api
             return $validator->errors();
         }
 
-        if (isset($body['data']['due_date'])) {
+        if (is_array($body['data'] ?? null) && isset($body['data']['due_date'])) {
             $body = $this->normalizeBodyDate($body, 'data.due_date');
         }
 
-        /** @var object $response */
         $response = $this->put(
             'c/'.$this->companyId.'/taxes/'.$documentId,
             $body
@@ -207,6 +214,9 @@ class Taxes extends Api
         return new TaxesEntity($taxes);
     }
 
+    /**
+     * @param  array<string, mixed>  $additionalData
+     */
     public function binDetail(
         int $documentId,
         array $additionalData = []
@@ -222,7 +232,9 @@ class Taxes extends Api
             if (
                 ! $document instanceof Error
                 && $document->type === 'proforma'
-                && isset($document->merged_in)
+                && is_object($document->merged_in)
+                && isset($document->merged_in->id)
+                && is_int($document->merged_in->id)
             ) {
                 $document = $this->detail(
                     $document->merged_in->id,
@@ -234,6 +246,9 @@ class Taxes extends Api
         return $document;
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function attachment(
         array $body = []
     ): TaxesAttachment|Error|MessageBag {
@@ -246,7 +261,6 @@ class Taxes extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/taxes/attachment',
             $body,
@@ -265,7 +279,6 @@ class Taxes extends Api
     public function deleteAttachment(
         int $documentId
     ): string|Error {
-        /** @var object $response */
         $response = $this->destroy(
             'c/'.$this->companyId.'/taxes/'.$documentId.'/attachment'
         );

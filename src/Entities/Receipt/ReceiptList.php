@@ -15,7 +15,7 @@ readonly class ReceiptList
 
     public ReceiptPagination $pagination;
 
-    public function __construct(object $receiptResponse)
+    public function __construct(\stdClass $receiptResponse)
     {
         $this->items = array_map(function ($receipt) {
             return new ReceiptEntity($receipt);

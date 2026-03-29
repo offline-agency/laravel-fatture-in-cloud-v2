@@ -4,20 +4,22 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities;
 
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
+
 readonly class Error
 {
+    use CastsFromMixed;
+
     public mixed $error;
 
     /**
-     * @param  object|array|null  $parameters
+     * @param  object|array<string, mixed>|null  $parameters
      */
     public function __construct(
         $parameters = null
     ) {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        $this->error = $parameters['error'] ?? null;
+        $this->error = self::mixedValue($parameters, 'error');
     }
 }

@@ -14,7 +14,6 @@ class VatType extends Api
 {
     public function list(): VatTypeList|Error
     {
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/settings/vat_types',
         );
@@ -30,7 +29,6 @@ class VatType extends Api
 
     public function detail(int $vatTypeId): VatTypeEntity|Error
     {
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/settings/vat_types/'.$vatTypeId,
         );
@@ -46,7 +44,6 @@ class VatType extends Api
 
     public function delete(int $vatTypeId): string|Error
     {
-        /** @var object $response */
         $response = $this->destroy(
             'c/'.$this->companyId.'/settings/vat_types/'.$vatTypeId
         );
@@ -58,6 +55,9 @@ class VatType extends Api
         return 'VAT type deleted';
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function create(array $body = []): VatTypeEntity|Error|MessageBag
     {
         $validator = Validator::make($body, [
@@ -69,7 +69,6 @@ class VatType extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/settings/vat_types',
             $body
@@ -84,6 +83,9 @@ class VatType extends Api
         return new VatTypeEntity($vatType);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function edit(int $vatTypeId, array $body = []): VatTypeEntity|Error|MessageBag
     {
         $validator = Validator::make($body, [
@@ -95,7 +97,6 @@ class VatType extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->put(
             'c/'.$this->companyId.'/settings/vat_types/'.$vatTypeId,
             $body

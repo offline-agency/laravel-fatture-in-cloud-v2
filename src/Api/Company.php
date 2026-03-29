@@ -21,7 +21,6 @@ class Company extends Api
             'fieldset',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$companyId.'/company/info',
             $additionalData

@@ -14,7 +14,6 @@ class PaymentAccount extends Api
 {
     public function list(): PaymentAccountList|Error
     {
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/settings/payment_accounts',
         );
@@ -30,7 +29,6 @@ class PaymentAccount extends Api
 
     public function detail(int $paymentAccountId): PaymentAccountEntity|Error
     {
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/settings/payment_accounts/'.$paymentAccountId,
         );
@@ -46,7 +44,6 @@ class PaymentAccount extends Api
 
     public function delete(int $paymentAccountId): string|Error
     {
-        /** @var object $response */
         $response = $this->destroy(
             'c/'.$this->companyId.'/settings/payment_accounts/'.$paymentAccountId
         );
@@ -58,6 +55,9 @@ class PaymentAccount extends Api
         return 'Payment account deleted';
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function create(array $body = []): PaymentAccountEntity|Error|MessageBag
     {
         $validator = Validator::make($body, [
@@ -69,7 +69,6 @@ class PaymentAccount extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/settings/payment_accounts',
             $body
@@ -84,6 +83,9 @@ class PaymentAccount extends Api
         return new PaymentAccountEntity($paymentAccount);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function edit(int $paymentAccountId, array $body = []): PaymentAccountEntity|Error|MessageBag
     {
         $validator = Validator::make($body, [
@@ -95,7 +97,6 @@ class PaymentAccount extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->put(
             'c/'.$this->companyId.'/settings/payment_accounts/'.$paymentAccountId,
             $body

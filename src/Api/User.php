@@ -15,7 +15,6 @@ class User extends Api
      */
     public function userInfo(): UserEntity|Error
     {
-        /** @var object $response */
         $response = $this->get(
             'user/info',
         );
@@ -47,7 +46,6 @@ class User extends Api
             'fieldset',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'user/companies',
             $additionalData

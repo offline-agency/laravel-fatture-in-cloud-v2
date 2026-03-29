@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt;
 
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
+
 readonly class Receipt
 {
+    use CastsFromMixed;
+
     public ?int $id;
 
     public ?string $date;
@@ -38,28 +42,22 @@ readonly class Receipt
 
     public function __construct(mixed $parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        if (! is_array($parameters)) {
-            $parameters = [];
-        }
-
-        $this->id = $parameters['id'] ?? null;
-        $this->date = $parameters['date'] ?? null;
-        $this->number = $parameters['number'] ?? null;
-        $this->numeration = $parameters['numeration'] ?? null;
-        $this->amountNet = $parameters['amount_net'] ?? null;
-        $this->amountVat = $parameters['amount_vat'] ?? null;
-        $this->amountGross = $parameters['amount_gross'] ?? null;
-        $this->useGrossPrices = $parameters['use_gross_prices'] ?? null;
-        $this->type = $parameters['type'] ?? null;
-        $this->description = $parameters['description'] ?? null;
-        $this->rcCenter = $parameters['rc_center'] ?? null;
-        $this->createdAt = $parameters['created_at'] ?? null;
-        $this->updatedAt = $parameters['updated_at'] ?? null;
-        $this->paymentAccount = $parameters['payment_account'] ?? null;
-        $this->itemsList = $parameters['items_list'] ?? null;
+        $this->id = self::nullableInt($parameters, 'id');
+        $this->date = self::nullableString($parameters, 'date');
+        $this->number = self::nullableInt($parameters, 'number');
+        $this->numeration = self::nullableString($parameters, 'numeration');
+        $this->amountNet = self::nullableFloat($parameters, 'amount_net');
+        $this->amountVat = self::nullableFloat($parameters, 'amount_vat');
+        $this->amountGross = self::nullableFloat($parameters, 'amount_gross');
+        $this->useGrossPrices = self::nullableBool($parameters, 'use_gross_prices');
+        $this->type = self::nullableString($parameters, 'type');
+        $this->description = self::nullableString($parameters, 'description');
+        $this->rcCenter = self::nullableString($parameters, 'rc_center');
+        $this->createdAt = self::nullableString($parameters, 'created_at');
+        $this->updatedAt = self::nullableString($parameters, 'updated_at');
+        $this->paymentAccount = self::mixedValue($parameters, 'payment_account');
+        $this->itemsList = self::mixedValue($parameters, 'items_list');
     }
 }

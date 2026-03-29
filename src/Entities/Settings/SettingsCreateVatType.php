@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Settings;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
 
 readonly class SettingsCreateVatType extends AbstractEntity
 {
+    use CastsFromMixed;
+
     public ?float $value;
 
     public ?string $description;
@@ -24,20 +27,14 @@ readonly class SettingsCreateVatType extends AbstractEntity
 
     public function __construct(mixed $parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        if (! is_array($parameters)) {
-            $parameters = [];
-        }
-
-        $this->value = $parameters['value'] ?? null;
-        $this->description = $parameters['description'] ?? null;
-        $this->notes = $parameters['notes'] ?? null;
-        $this->eInvoice = $parameters['e_invoice'] ?? null;
-        $this->eiType = $parameters['ei_type'] ?? null;
-        $this->eiDescription = $parameters['ei_description'] ?? null;
-        $this->isDisabled = $parameters['is_disabled'] ?? null;
+        $this->value = self::nullableFloat($parameters, 'value');
+        $this->description = self::nullableString($parameters, 'description');
+        $this->notes = self::nullableString($parameters, 'notes');
+        $this->eInvoice = self::nullableBool($parameters, 'e_invoice');
+        $this->eiType = self::nullableString($parameters, 'ei_type');
+        $this->eiDescription = self::nullableString($parameters, 'ei_description');
+        $this->isDisabled = self::nullableBool($parameters, 'is_disabled');
     }
 }

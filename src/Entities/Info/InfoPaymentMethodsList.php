@@ -13,7 +13,7 @@ readonly class InfoPaymentMethodsList
      */
     private array $items;
 
-    public function __construct(object $paymentMethodsResponse)
+    public function __construct(\stdClass $paymentMethodsResponse)
     {
         $this->items = array_map(function ($client) {
             return new PaymentMethodEntity($client);

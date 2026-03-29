@@ -11,7 +11,7 @@ readonly class PaymentAccountList
      */
     public array $items;
 
-    public function __construct(object $paymentAccountResponse)
+    public function __construct(\stdClass $paymentAccountResponse)
     {
         $this->items = array_map(function ($paymentAccount) {
             return new PaymentAccount($paymentAccount);

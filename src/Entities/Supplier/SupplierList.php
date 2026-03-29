@@ -15,7 +15,7 @@ readonly class SupplierList
 
     public SupplierPagination $pagination;
 
-    public function __construct(object $supplierResponse)
+    public function __construct(\stdClass $supplierResponse)
     {
         $this->items = array_map(function ($supplier) {
             return new SupplierEntity($supplier);

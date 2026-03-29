@@ -30,6 +30,9 @@ class ReceivedDocument extends Api
         'passive_delivery_note',
     ];
 
+    /**
+     * @param  array<string, mixed>  $additionalData
+     */
     public function list(
         ReceivedDocumentType|string $type,
         array $additionalData = []
@@ -44,7 +47,6 @@ class ReceivedDocument extends Api
             'type', 'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/received_documents',
             $additionalData
@@ -59,6 +61,10 @@ class ReceivedDocument extends Api
         return new ReceivedDocumentList($receivedDocumentResponse);
     }
 
+    /**
+     * @param  array<string, mixed>  $additionalData
+     * @return array<ReceivedDocumentEntity>|Error
+     */
     public function all(
         ReceivedDocumentType|string $type,
         array $additionalData = []
@@ -82,6 +88,9 @@ class ReceivedDocument extends Api
         }, $allDocuments);
     }
 
+    /**
+     * @param  array<string, mixed>  $additionalData
+     */
     public function detail(
         int $documentId,
         array $additionalData = []
@@ -90,7 +99,6 @@ class ReceivedDocument extends Api
             'fields', 'fieldset',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/received_documents/'.$documentId,
             $additionalData
@@ -108,7 +116,6 @@ class ReceivedDocument extends Api
     public function bin(
         int $documentId
     ): ReceivedDocumentEntity|Error {
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/bin/received_documents/'.$documentId
         );
@@ -125,7 +132,6 @@ class ReceivedDocument extends Api
     public function delete(
         int $documentId
     ): string|Error {
-        /** @var object $response */
         $response = $this->destroy(
             'c/'.$this->companyId.'/received_documents/'.$documentId
         );
@@ -160,7 +166,6 @@ class ReceivedDocument extends Api
         $body = $this->normalizeBodyDate($body, 'data.date');
         $body = $this->normalizeBodyDate($body, 'data.due_date');
 
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/received_documents',
             $body
@@ -175,6 +180,9 @@ class ReceivedDocument extends Api
         return new ReceivedDocumentEntity($receivedDocument);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function edit(
         int $documentId,
         array $body = []
@@ -191,7 +199,6 @@ class ReceivedDocument extends Api
         $body = $this->normalizeBodyDate($body, 'data.date');
         $body = $this->normalizeBodyDate($body, 'data.due_date');
 
-        /** @var object $response */
         $response = $this->put(
             'c/'.$this->companyId.'/received_documents/'.$documentId,
             $body
@@ -206,6 +213,9 @@ class ReceivedDocument extends Api
         return new ReceivedDocumentEntity($receivedDocument);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function getNewTotals(
         array $body
     ): ReceivedDocumentTotals|Error|MessageBag {
@@ -221,7 +231,6 @@ class ReceivedDocument extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/received_documents/totals',
             $body
@@ -236,6 +245,9 @@ class ReceivedDocument extends Api
         return new ReceivedDocumentTotals($receivedDocument);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function getExistingTotals(
         int $documentId,
         array $body = []
@@ -249,7 +261,6 @@ class ReceivedDocument extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/received_documents/'.$documentId.'/totals',
             $body
@@ -267,7 +278,6 @@ class ReceivedDocument extends Api
     public function preCreateInfo(
         string $type
     ): ReceivedDocumentPreCreateInfo|Error {
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/received_documents/info',
             [
@@ -284,6 +294,9 @@ class ReceivedDocument extends Api
         return new ReceivedDocumentPreCreateInfo($info);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function attachment(
         array $body = []
     ): ReceivedDocumentAttachment|Error|MessageBag {
@@ -296,7 +309,6 @@ class ReceivedDocument extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/received_documents/attachment',
             $body,
@@ -315,7 +327,6 @@ class ReceivedDocument extends Api
     public function deleteAttachment(
         int $documentId
     ): string|Error {
-        /** @var object $response */
         $response = $this->destroy(
             'c/'.$this->companyId.'/received_documents/'.$documentId.'/attachment'
         );
@@ -327,6 +338,9 @@ class ReceivedDocument extends Api
         return 'Attachment deleted';
     }
 
+    /**
+     * @param  array<string, mixed>  $additionalData
+     */
     public function binDetail(
         int $documentId,
         array $additionalData = []
@@ -342,7 +356,9 @@ class ReceivedDocument extends Api
             if (
                 ! $document instanceof Error
                 && $document->type === 'proforma'
-                && isset($document->merged_in)
+                && is_object($document->merged_in)
+                && isset($document->merged_in->id)
+                && is_int($document->merged_in->id)
             ) {
                 $document = $this->detail(
                     $document->merged_in->id,

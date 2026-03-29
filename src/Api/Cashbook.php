@@ -18,7 +18,7 @@ class Cashbook extends Api
     /**
      * List cashbook entries. REQUIRED query: date_from, date_to (Y-m-d). OPTIONAL: fields, fieldset, sort, page, per_page, q.
      *
-     * @param  array{date_from?: string, date_to?: string, fields?: string, fieldset?: string, sort?: string, page?: int, per_page?: int, q?: string}  $additionalData
+     * @param  array<string, mixed>  $additionalData
      */
     public function list(array $additionalData = []): CashbookList|Error|MessageBag
     {
@@ -37,8 +37,8 @@ class Cashbook extends Api
         }
 
         $normalized = array_merge($additionalData, [
-            'date_from' => $this->normalizeDateToYmd($additionalData['date_from']),
-            'date_to' => $this->normalizeDateToYmd($additionalData['date_to']),
+            'date_from' => $this->normalizeDateToYmd($additionalData['date_from'] ?? ''),
+            'date_to' => $this->normalizeDateToYmd($additionalData['date_to'] ?? ''),
         ]);
         $additionalData = $this->data($normalized, [
             'fields',
@@ -51,7 +51,6 @@ class Cashbook extends Api
             'date_to',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/cashbook',
             $additionalData
@@ -69,7 +68,7 @@ class Cashbook extends Api
     /**
      * Get all cashbook entries. REQUIRED query: date_from, date_to (Y-m-d). OPTIONAL: fields, fieldset, sort, page, per_page, q.
      *
-     * @param  array{date_from?: string, date_to?: string, fields?: string, fieldset?: string, sort?: string, page?: int, per_page?: int, q?: string}  $additionalData
+     * @param  array<string, mixed>  $additionalData
      * @return array<CashbookEntity>|Error|MessageBag
      */
     public function all(array $additionalData = []): array|Error|MessageBag
@@ -89,8 +88,8 @@ class Cashbook extends Api
         }
 
         $normalized = array_merge($additionalData, [
-            'date_from' => $this->normalizeDateToYmd($additionalData['date_from']),
-            'date_to' => $this->normalizeDateToYmd($additionalData['date_to']),
+            'date_from' => $this->normalizeDateToYmd($additionalData['date_from'] ?? ''),
+            'date_to' => $this->normalizeDateToYmd($additionalData['date_to'] ?? ''),
         ]);
         $allCashbook = $this->getAll([
             'fields',
@@ -124,7 +123,6 @@ class Cashbook extends Api
             'fieldset',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/cashbook/'.$entryId,
             $additionalData
@@ -141,7 +139,6 @@ class Cashbook extends Api
 
     public function delete(int $entryId): string|Error
     {
-        /** @var object $response */
         $response = $this->destroy(
             'c/'.$this->companyId.'/cashbook/'.$entryId
         );
@@ -174,7 +171,6 @@ class Cashbook extends Api
 
         $body = $this->normalizeBodyDate($body, 'data.date');
 
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/cashbook',
             $body
@@ -210,7 +206,6 @@ class Cashbook extends Api
 
         $body = $this->normalizeBodyDate($body, 'data.date');
 
-        /** @var object $response */
         $response = $this->put(
             'c/'.$this->companyId.'/cashbook/'.$entryId,
             $body

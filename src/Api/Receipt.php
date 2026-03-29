@@ -25,7 +25,7 @@ class Receipt extends Api
     /**
      * List receipts. OPTIONAL query: fields, fieldset, sort, page, per_page, q.
      *
-     * @param  array{fields?: string, fieldset?: string, sort?: string, page?: int, per_page?: int, q?: string}  $additionalData
+     * @param  array<string, mixed>  $additionalData
      */
     public function list(array $additionalData = []): ReceiptList|Error
     {
@@ -38,7 +38,6 @@ class Receipt extends Api
             'q',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/receipts',
             $additionalData
@@ -54,6 +53,7 @@ class Receipt extends Api
     }
 
     /**
+     * @param  array<string, mixed>  $additionalData
      * @return array<ReceiptEntity>|Error
      */
     public function all(array $additionalData = []): array|Error
@@ -76,6 +76,9 @@ class Receipt extends Api
         }, $allReceipts);
     }
 
+    /**
+     * @param  array<string, mixed>  $additionalData
+     */
     public function detail(int $receiptId, array $additionalData = []): ReceiptEntity|Error
     {
         $additionalData = $this->data($additionalData, [
@@ -83,7 +86,6 @@ class Receipt extends Api
             'fieldset',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/receipts/'.$receiptId,
             $additionalData
@@ -100,7 +102,6 @@ class Receipt extends Api
 
     public function delete(int $receiptId): string|Error
     {
-        /** @var object $response */
         $response = $this->destroy(
             'c/'.$this->companyId.'/receipts/'.$receiptId
         );
@@ -133,7 +134,6 @@ class Receipt extends Api
 
         $body = $this->normalizeBodyDate($body, 'data.date');
 
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/receipts',
             $body
@@ -148,6 +148,9 @@ class Receipt extends Api
         return new ReceiptEntity($receipt);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function edit(int $receiptId, array $body = []): ReceiptEntity|Error|MessageBag
     {
         $validator = Validator::make($body, [
@@ -164,7 +167,6 @@ class Receipt extends Api
 
         $body = $this->normalizeBodyDate($body, 'data.date');
 
-        /** @var object $response */
         $response = $this->put(
             'c/'.$this->companyId.'/receipts/'.$receiptId,
             $body
@@ -181,7 +183,6 @@ class Receipt extends Api
 
     public function preCreateInfo(): ReceiptPreCreateInfo|Error
     {
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/receipts/info',
         );
@@ -213,7 +214,6 @@ class Receipt extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/receipts/monthly_totals',
             [

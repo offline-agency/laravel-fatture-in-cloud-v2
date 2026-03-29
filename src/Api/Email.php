@@ -14,7 +14,6 @@ class Email extends Api
      */
     public function list(): EmailList|Error
     {
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/emails',
         );

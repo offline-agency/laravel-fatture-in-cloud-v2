@@ -13,7 +13,7 @@ readonly class InfoArchiveCategoriesList
      */
     private array $items;
 
-    public function __construct(object $archiveCategoriesResponse)
+    public function __construct(\stdClass $archiveCategoriesResponse)
     {
         $this->items = array_map(function ($client) {
             return new ArchiveCategoriesEntity($client);

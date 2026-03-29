@@ -18,7 +18,7 @@ class Archive extends Api
     /**
      * List archive documents. OPTIONAL query: fields, fieldset, sort, page, per_page, q.
      *
-     * @param  array{fields?: string, fieldset?: string, sort?: string, page?: int, per_page?: int, q?: string}  $additionalData
+     * @param  array<string, mixed>  $additionalData
      */
     public function list(array $additionalData = []): ArchiveList|Error
     {
@@ -31,7 +31,6 @@ class Archive extends Api
             'q',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/archive',
             $additionalData
@@ -49,7 +48,7 @@ class Archive extends Api
     /**
      * Get all archive documents (paginated). OPTIONAL query: fields, fieldset, sort, page, per_page, q.
      *
-     * @param  array{fields?: string, fieldset?: string, sort?: string, page?: int, per_page?: int, q?: string}  $additionalData
+     * @param  array<string, mixed>  $additionalData
      * @return array<ArchiveEntity>|Error
      */
     public function all(array $additionalData = []): array|Error
@@ -84,7 +83,6 @@ class Archive extends Api
             'fieldset',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/archive/'.$archiveId,
             $additionalData
@@ -101,7 +99,6 @@ class Archive extends Api
 
     public function delete(int $archiveId): string|Error
     {
-        /** @var object $response */
         $response = $this->destroy(
             'c/'.$this->companyId.'/archive/'.$archiveId
         );
@@ -133,7 +130,6 @@ class Archive extends Api
 
         $body = $this->normalizeBodyDate($body, 'data.date');
 
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/archive',
             $body
@@ -168,7 +164,6 @@ class Archive extends Api
 
         $body = $this->normalizeBodyDate($body, 'data.date');
 
-        /** @var object $response */
         $response = $this->put(
             'c/'.$this->companyId.'/archive/'.$archiveId,
             $body
@@ -199,7 +194,6 @@ class Archive extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/archive/attachment',
             $body,

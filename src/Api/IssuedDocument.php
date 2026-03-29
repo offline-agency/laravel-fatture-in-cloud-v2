@@ -40,9 +40,13 @@ class IssuedDocument extends Api
         'self_supplier_invoice',
     ];
 
+    /**
+     * @param  array<string, mixed>  $additional_data
+     * @param  array<string, mixed>  $additional_data
+     */
     public function list(
         IssuedDocumentType|string $type,
-        ?array $additional_data = []
+        array $additional_data = []
     ): IssuedDocumentList|Error {
         $typeValue = $type instanceof IssuedDocumentType ? $type->value : $type;
 
@@ -69,14 +73,12 @@ class IssuedDocument extends Api
     }
 
     /**
-     * @return array<IssuedDocumentEntity>|Error
-     */
-    /**
+     * @param  array<string, mixed>  $additional_data
      * @return array<IssuedDocumentEntity>|Error
      */
     public function all(
         IssuedDocumentType|string $type,
-        ?array $additional_data = []
+        array $additional_data = []
     ): array|Error {
         $typeValue = $type instanceof IssuedDocumentType ? $type->value : $type;
 
@@ -95,9 +97,13 @@ class IssuedDocument extends Api
             }, $all_documents);
     }
 
+    /**
+     * @param  array<string, mixed>  $additional_data
+     * @param  array<string, mixed>  $additional_data
+     */
     public function detail(
         int $document_id,
-        ?array $additional_data = []
+        array $additional_data = []
     ): IssuedDocumentEntity|Error {
         $additional_data = $this->data($additional_data, [
             'fields', 'fieldset',
@@ -183,6 +189,9 @@ class IssuedDocument extends Api
         return new IssuedDocumentEntity($issued_document);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function edit(
         int $document_id,
         array $body = []
@@ -212,6 +221,9 @@ class IssuedDocument extends Api
         return new IssuedDocumentEntity($issued_document);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function getNewTotals(
         array $body
     ): IssuedDocumentTotals|Error|MessageBag {
@@ -241,6 +253,9 @@ class IssuedDocument extends Api
         return new IssuedDocumentTotals($issued_document);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function getExistingTotals(
         int $document_id,
         array $body = []
@@ -305,6 +320,9 @@ class IssuedDocument extends Api
         return new IssuedDocumentEmail($email);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function attachment(
         array $body = []
     ): IssuedDocumentAttachment|Error|MessageBag {
@@ -346,6 +364,9 @@ class IssuedDocument extends Api
         return 'Attachment deleted';
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function scheduleEmail(
         int $document_id,
         array $body = []
@@ -384,9 +405,13 @@ class IssuedDocument extends Api
         return new IssuedDocumentScheduleEmail($schedule_email);
     }
 
+    /**
+     * @param  array<string, mixed>  $additional_data
+     * @param  array<string, mixed>  $additional_data
+     */
     public function binDetail(
         int $document_id,
-        ?array $additional_data = []
+        array $additional_data = []
     ): IssuedDocumentEntity|Error {
         $document = $this->detail(
             $document_id,
@@ -399,7 +424,9 @@ class IssuedDocument extends Api
             if (
                 ! $document instanceof Error
                 && $document->type === 'proforma'
-                && ! is_null($document->merged_in)
+                && is_object($document->merged_in)
+                && isset($document->merged_in->id)
+                && is_int($document->merged_in->id)
             ) {
                 $document = $this->detail(
                     $document->merged_in->id,

@@ -11,7 +11,7 @@ readonly class InfoList
      */
     private array $items;
 
-    public function __construct(object $clientResponse, string $className)
+    public function __construct(\stdClass $clientResponse, string $className)
     {
         $this->items = array_map(function ($client) use ($className) {
             return new $className($client);

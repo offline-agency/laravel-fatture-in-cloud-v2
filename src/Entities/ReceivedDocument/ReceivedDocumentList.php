@@ -15,7 +15,7 @@ readonly class ReceivedDocumentList
 
     private ReceivedDocumentPagination $pagination;
 
-    public function __construct(object $receivedDocumentResponse)
+    public function __construct(\stdClass $receivedDocumentResponse)
     {
         $this->items = array_map(function ($document) {
             return new ReceivedDocumentEntity($document);

@@ -15,7 +15,7 @@ readonly class TaxesList
 
     private TaxesPagination $pagination;
 
-    public function __construct(object $taxesResponse)
+    public function __construct(\stdClass $taxesResponse)
     {
         $this->items = array_map(function ($document) {
             return new TaxesEntity($document);

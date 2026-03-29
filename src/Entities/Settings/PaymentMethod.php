@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Settings;
 
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
+
 readonly class PaymentMethod
 {
+    use CastsFromMixed;
+
     public ?int $id;
 
     public ?string $name;
@@ -16,23 +20,18 @@ readonly class PaymentMethod
 
     public ?object $defaultPaymentAccount;
 
+    /** @var array<mixed>|null */
     public ?array $details;
 
     public function __construct(mixed $parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        if (! is_array($parameters)) {
-            $parameters = [];
-        }
-
-        $this->id = $parameters['id'] ?? null;
-        $this->name = $parameters['name'] ?? null;
-        $this->type = $parameters['type'] ?? null;
-        $this->isDefault = $parameters['is_default'] ?? null;
-        $this->defaultPaymentAccount = isset($parameters['default_payment_account']) ? (object) $parameters['default_payment_account'] : null;
-        $this->details = $parameters['details'] ?? null;
+        $this->id = self::nullableInt($parameters, 'id');
+        $this->name = self::nullableString($parameters, 'name');
+        $this->type = self::nullableString($parameters, 'type');
+        $this->isDefault = self::nullableBool($parameters, 'is_default');
+        $this->defaultPaymentAccount = self::nullableObject($parameters, 'default_payment_account');
+        $this->details = self::nullableArray($parameters, 'details');
     }
 }

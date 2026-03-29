@@ -20,7 +20,6 @@ class Situation extends Api
             'year',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/get/situation',
             $additionalData

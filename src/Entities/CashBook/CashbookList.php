@@ -13,7 +13,7 @@ readonly class CashbookList
 
     public CashbookPagination $pagination;
 
-    public function __construct(object $cashbookResponse)
+    public function __construct(\stdClass $cashbookResponse)
     {
         $this->items = array_map(function ($cashbook) {
             return new CashbookEntry($cashbook);

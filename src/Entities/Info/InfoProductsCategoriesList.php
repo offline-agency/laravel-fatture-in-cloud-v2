@@ -13,7 +13,7 @@ readonly class InfoProductsCategoriesList
      */
     private array $items;
 
-    public function __construct(object $productsCategoriesResponse)
+    public function __construct(\stdClass $productsCategoriesResponse)
     {
         $this->items = array_map(function ($client) {
             return new ProductsCategoriesEntity($client);
