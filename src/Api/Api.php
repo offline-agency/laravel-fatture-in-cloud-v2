@@ -7,6 +7,7 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 use Closure;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
+use OfflineAgency\LaravelFattureInCloudV2\Contracts\ConnectorInterface;
 use OfflineAgency\LaravelFattureInCloudV2\FattureInCloud;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\NormalizesDatesTrait;
 
@@ -16,13 +17,13 @@ class Api
 
     private const MAX_RETRIES = 3;
 
-    protected FattureInCloud $connector;
+    protected ConnectorInterface $connector;
 
     protected string $companyId;
 
     protected string $accessToken;
 
-    public function __construct(?FattureInCloud $connector = null)
+    public function __construct(?ConnectorInterface $connector = null)
     {
         $this->connector = $connector ?? new FattureInCloud();
         $this->companyId = $this->connector->getCompanyId();

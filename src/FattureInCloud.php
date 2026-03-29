@@ -8,8 +8,9 @@ use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
+use OfflineAgency\LaravelFattureInCloudV2\Contracts\ConnectorInterface;
 
-class FattureInCloud
+class FattureInCloud implements ConnectorInterface
 {
     protected string $companyId;
 

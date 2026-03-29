@@ -9,6 +9,9 @@ use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 
+/**
+ * @deprecated Use {@see FattureInCloud} instead. Will be removed in v4.0.
+ */
 class LaravelFattureInCloudV2
 {
     /** @var array<string, mixed>|null */
