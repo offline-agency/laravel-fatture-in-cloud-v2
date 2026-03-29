@@ -19,6 +19,11 @@ class LaravelFattureInCloudV2ServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../config/fatture-in-cloud-v2.php' => config_path('fatture-in-cloud-v2.php'),
             ], 'config');
+
+            $this->commands([
+                Console\TestConnectionCommand::class,
+                Console\ApiStatusCommand::class,
+            ]);
         }
     }
 
