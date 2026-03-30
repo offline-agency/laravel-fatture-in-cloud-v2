@@ -7,6 +7,9 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Situation\Situation as SituationEntity;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Situation
+ */
 class Situation extends Api
 {
     /**

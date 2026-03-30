@@ -11,6 +11,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\Supplier as Supplier
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\SupplierList;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Suppliers
+ */
 class Supplier extends Api
 {
     use ListTrait;

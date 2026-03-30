@@ -11,6 +11,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\CashBook\CashbookList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Cashbook
+ */
 class Cashbook extends Api
 {
     use ListTrait;

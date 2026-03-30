@@ -10,6 +10,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\PaymentAccount as PaymentAccountEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\PaymentAccountList;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Settings
+ */
 class PaymentAccount extends Api
 {
     public function list(): PaymentAccountList|Error

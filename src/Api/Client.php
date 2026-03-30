@@ -11,6 +11,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\ClientList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Clients
+ */
 class Client extends Api
 {
     use ListTrait;

@@ -8,6 +8,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\User\CompanyList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\User\User as UserEntity;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/User
+ */
 class User extends Api
 {
     /**

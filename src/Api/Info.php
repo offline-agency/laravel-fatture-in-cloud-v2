@@ -9,6 +9,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\InfoList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\PaymentAccount;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\Vat;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Info
+ */
 class Info extends Api
 {
     /**

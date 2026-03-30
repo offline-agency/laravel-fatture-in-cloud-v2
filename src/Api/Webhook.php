@@ -10,6 +10,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Webhook\WebhookSubscription as WebhookEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Webhook\WebhookSubscriptionList;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Webhooks
+ */
 class Webhook extends Api
 {
     public function list(): WebhookSubscriptionList|Error

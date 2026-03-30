@@ -9,7 +9,6 @@ build
 composer.lock
 coverage
 coverage.xml
-docs
 psalm.xml
 testbench.yaml
 vendor

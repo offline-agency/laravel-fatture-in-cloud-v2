@@ -10,6 +10,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\VatType as VatTypeEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\VatTypeList;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Settings
+ */
 class VatType extends Api
 {
     public function list(): VatTypeList|Error

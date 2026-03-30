@@ -10,6 +10,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedEInvoice\IssuedEInvoice
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedEInvoice\IssuedEInvoiceVerifyXML;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Issued-e-invoices
+ */
 class IssuedEInvoice extends Api
 {
     use ListTrait;

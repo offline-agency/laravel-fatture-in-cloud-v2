@@ -11,6 +11,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Archive\ArchiveList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Archive
+ */
 class Archive extends Api
 {
     use ListTrait;

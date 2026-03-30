@@ -10,6 +10,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\PaymentMethod as PaymentMethodEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Settings\PaymentMethodList;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Settings
+ */
 class PaymentMethod extends Api
 {
     public function list(): PaymentMethodList|Error

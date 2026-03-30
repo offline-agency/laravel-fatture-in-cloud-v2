@@ -5,7 +5,7 @@
 [![run-tests](https://github.com/offline-agency/laravel-fatture-in-cloud-v2/actions/workflows/main.yml/badge.svg)](https://github.com/offline-agency/laravel-fatture-in-cloud-v2/actions/workflows/main.yml)
 [![codecov](https://codecov.io/gh/offline-agency/laravel-fatture-in-cloud-v2/branch/master/graph/badge.svg?token=02NPUBvT9i)](https://codecov.io/gh/offline-agency/laravel-fatture-in-cloud-v2)
 [![Laravel Pint](https://img.shields.io/badge/code%20style-pint-orange)](https://github.com/laravel/pint)
-[![PHPStan Level 6](https://img.shields.io/badge/PHPStan-level%206-brightgreen)](https://phpstan.org/)
+[![PHPStan Level 9](https://img.shields.io/badge/PHPStan-level%209-brightgreen)](https://phpstan.org/)
 [![Total Downloads](https://img.shields.io/packagist/dt/offline-agency/laravel-fatture-in-cloud-v2.svg?style=flat-square)](https://packagist.org/packages/offline-agency/laravel-fatture-in-cloud-v2)
 ![Laravel Fatture in Cloud v2](https://banners.beyondco.de/Laravel%20Fatture%20in%20Cloud%20v2.png?theme=dark&packageManager=composer+require&packageName=offline-agency%2Flaravel-fatture-in-cloud-v2&pattern=autumn&style=style_1&description=A+simple+laravel+integration+with+Fatture+in+Cloud+APIs+v2&md=1&showWatermark=0&fontSize=100px&images=currency-euro&widths=200)
 
@@ -48,26 +48,74 @@ All entities (e.g., `Client`, `IssuedDocument`, `PriceList`) have been refactore
 - The package now utilizes a central `FattureInCloud` connector for better state management.
 - API interactions are handled via the native Laravel `Http` client.
 
-## Documentation, Installation, and Usage Instructions
+## Quick Start
 
 This package provides a simple Laravel integration with [Fatture in Cloud APIs v2](https://developers.fattureincloud.it/).
 
 See the [documentation](https://docs.offlineagency.com/laravel-fatture-in-cloud-v2/) for detailed installation and usage instructions.
-``` php
-$issued_documents = new \OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument();
-$issued_document_list = $issued_document->list('invoice', [
-    'per_page' => 50
-]);  
 
-// return an array of invoices 
-$issued_document_list->getItems();
+```php
+// 1. Via Facade (recommended)
+use OfflineAgency\LaravelFattureInCloudV2\LaravelFattureInCloudV2Facade as FIC;
+use OfflineAgency\LaravelFattureInCloudV2\Enums\IssuedDocumentType;
 
-// return pagination fields like page, per_page...
-$issued_document_list->getPagination();
+$clients = FIC::clients()->list();
+$invoices = FIC::issuedDocuments()->list(IssuedDocumentType::Invoice);
 
-// return single product's fields
-$product = new \OfflineAgency\LaravelFattureInCloudV2\Api\Product();
-$product_detail = $product->detail($product_id);
+// 2. Via Dependency Injection
+use OfflineAgency\LaravelFattureInCloudV2\Contracts\FattureInCloudManagerInterface;
+
+public function __construct(private FattureInCloudManagerInterface $fic) {}
+$this->fic->issuedDocuments()->list(IssuedDocumentType::Invoice);
+
+// 3. Direct instantiation (still works)
+$api = new \OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument();
+$list = $api->list('invoice', ['per_page' => 50]);
+$list->getItems();       // array of invoices
+$list->getPagination();  // pagination fields
+```
+
+## Multi-Company
+
+Configure multiple companies in `config/fatture-in-cloud-v2.php`:
+
+```php
+'companies' => [
+    'default' => ['id' => env('FCV2_DEFAULT_ID'), 'bearer' => env('FCV2_DEFAULT_BEARER')],
+    'acme'    => ['id' => env('FCV2_ACME_ID'),    'bearer' => env('FCV2_ACME_BEARER')],
+],
+```
+
+Switch at runtime:
+
+```php
+$acmeClients = FIC::forCompany('acme')->clients()->list();
+```
+
+## Enums
+
+String-backed PHP enums are available for document types:
+
+```php
+use OfflineAgency\LaravelFattureInCloudV2\Enums\IssuedDocumentType;
+use OfflineAgency\LaravelFattureInCloudV2\Enums\ReceivedDocumentType;
+use OfflineAgency\LaravelFattureInCloudV2\Enums\ReceiptType;
+
+$invoices = FIC::issuedDocuments()->list(IssuedDocumentType::Invoice);
+$expenses = FIC::receivedDocuments()->list(ReceivedDocumentType::Expense);
+```
+
+Backward compatible: string values (`'invoice'`, `'expense'`) still accepted.
+
+## Artisan Commands
+
+```bash
+# Test API connection (accepts --company=name)
+php artisan fic:test-connection
+php artisan fic:test-connection --company=acme
+
+# List all API resources and methods
+php artisan fic:api-status
 ```
 
 ## Features

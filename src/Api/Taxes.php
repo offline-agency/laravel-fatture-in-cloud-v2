@@ -13,6 +13,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\TaxesList;
 use OfflineAgency\LaravelFattureInCloudV2\Enums\ReceivedDocumentType;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Taxes
+ */
 class Taxes extends Api
 {
     use ListTrait;

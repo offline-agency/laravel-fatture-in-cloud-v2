@@ -15,6 +15,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocu
 use OfflineAgency\LaravelFattureInCloudV2\Enums\ReceivedDocumentType;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Received-Documents
+ */
 class ReceivedDocument extends Api
 {
     use ListTrait;

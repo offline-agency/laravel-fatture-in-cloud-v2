@@ -13,6 +13,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovement;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovementList;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Products
+ */
 class Product extends Api
 {
     use ListTrait;

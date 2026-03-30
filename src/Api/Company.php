@@ -7,6 +7,9 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Company\Company as CompanyEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Companies
+ */
 class Company extends Api
 {
     /**

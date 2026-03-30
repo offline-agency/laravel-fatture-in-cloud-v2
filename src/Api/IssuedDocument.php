@@ -17,6 +17,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument
 use OfflineAgency\LaravelFattureInCloudV2\Enums\IssuedDocumentType;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Issued-Documents
+ */
 class IssuedDocument extends Api
 {
     use ListTrait;

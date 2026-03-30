@@ -10,6 +10,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\PriceList\PriceList as PriceListEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\PriceList\PriceListList;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Settings
+ */
 class PriceList extends Api
 {
     public function list(): PriceListList|Error
