@@ -275,23 +275,17 @@ describe('Issued Document Entity', function () {
         expect($response)->toBeInstanceOf(IssuedDocumentTotals::class);
     });
 
-    it('validates on get new totals - missing data', function () {
+    it('validates required fields on get new totals', function (array $body, string $expectedKey) {
         $api = new IssuedDocument();
-        $response = $api->getNewTotals([]);
+        $response = $api->getNewTotals($body);
 
         expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data');
-    });
-
-    it('validates data.entity.name on get new totals', function () {
-        $api = new IssuedDocument();
-        $response = $api->getNewTotals([
-            'data' => ['type' => 'invoice'],
-        ]);
-
-        expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data.entity.name');
-    });
+            ->and($response->messages())->toHaveKey($expectedKey);
+    })->with([
+        'missing data' => [[], 'data'],
+        'missing entity name' => [['data' => ['type' => 'invoice']], 'data.entity.name'],
+        'invalid type' => [['data' => ['type' => 'invalid_type', 'entity' => ['name' => 'Test']]], 'data.type'],
+    ]);
 
     it('handles error on get new totals', function () {
         Http::fake([
@@ -646,16 +640,6 @@ describe('Issued Document Entity', function () {
             ->messages()->toHaveKey('data.type');
     });
 
-    it('validates data.type on get new totals', function () {
-        $api = new IssuedDocument();
-        $response = $api->getNewTotals([
-            'data' => ['type' => 'invalid_type', 'entity' => ['name' => 'Test']],
-        ]);
-
-        expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data.type');
-    });
-
     it('handles null constructor parameter', function () {
         $entity = new IssuedDocumentEntity(null);
 
@@ -787,4 +771,4 @@ describe('Issued Document Entity', function () {
         expect($response)->toBeInstanceOf(IssuedDocumentEntity::class)
             ->and($response->id)->toBe($mergedId);
     });
-});
+})->covers(IssuedDocument::class);

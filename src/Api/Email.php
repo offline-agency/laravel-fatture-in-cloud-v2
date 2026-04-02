@@ -7,6 +7,9 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Api;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Email\EmailList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Emails
+ */
 class Email extends Api
 {
     /**
@@ -14,7 +17,6 @@ class Email extends Api
      */
     public function list(): EmailList|Error
     {
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/emails',
         );

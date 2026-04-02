@@ -142,37 +142,18 @@ describe('Archive', function () {
         expect($response->category)->toEqual('category');
     });
 
-    it('validates on create archive document', function () {
+    it('validates required fields on create archive document', function (array $body, string $expectedKey) {
         $api = new Archive();
-        $response = $api->create([]);
+        $response = $api->create($body);
 
         expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data');
-    });
-
-    it('validates data.date on create archive document', function () {
-        $api = new Archive();
-        $response = $api->create(['data' => ['description' => 'Doc', 'category' => 'cat']]);
-
-        expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data.date');
-    });
-
-    it('validates data.description on create archive document', function () {
-        $api = new Archive();
-        $response = $api->create(['data' => ['date' => '2024-01-01', 'category' => 'cat']]);
-
-        expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data.description');
-    });
-
-    it('validates data.category on create archive document', function () {
-        $api = new Archive();
-        $response = $api->create(['data' => ['date' => '2024-01-01', 'description' => 'Doc']]);
-
-        expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data.category');
-    });
+            ->and($response->messages())->toHaveKey($expectedKey);
+    })->with([
+        'missing data' => [[], 'data'],
+        'missing date' => [['data' => ['description' => 'Doc', 'category' => 'cat']], 'data.date'],
+        'missing description' => [['data' => ['date' => '2024-01-01', 'category' => 'cat']], 'data.description'],
+        'missing category' => [['data' => ['date' => '2024-01-01', 'description' => 'Doc']], 'data.category'],
+    ]);
 
     it('handles error on create archive document', function () {
         Http::fake([
@@ -206,37 +187,18 @@ describe('Archive', function () {
             ->and($response->description)->toBe('Updated Doc');
     });
 
-    it('validates on edit archive document', function () {
+    it('validates required fields on edit archive document', function (array $body, string $expectedKey) {
         $api = new Archive();
-        $response = $api->edit(1, []);
+        $response = $api->edit(1, $body);
 
         expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data');
-    });
-
-    it('validates data.date on edit archive document', function () {
-        $api = new Archive();
-        $response = $api->edit(1, ['data' => ['description' => 'Doc', 'category' => 'cat']]);
-
-        expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data.date');
-    });
-
-    it('validates data.description on edit archive document', function () {
-        $api = new Archive();
-        $response = $api->edit(1, ['data' => ['date' => '2024-01-01', 'category' => 'cat']]);
-
-        expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data.description');
-    });
-
-    it('validates data.category on edit archive document', function () {
-        $api = new Archive();
-        $response = $api->edit(1, ['data' => ['date' => '2024-01-01', 'description' => 'Doc']]);
-
-        expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data.category');
-    });
+            ->and($response->messages())->toHaveKey($expectedKey);
+    })->with([
+        'missing data' => [[], 'data'],
+        'missing date' => [['data' => ['description' => 'Doc', 'category' => 'cat']], 'data.date'],
+        'missing description' => [['data' => ['date' => '2024-01-01', 'category' => 'cat']], 'data.description'],
+        'missing category' => [['data' => ['date' => '2024-01-01', 'description' => 'Doc']], 'data.category'],
+    ]);
 
     it('handles error on edit archive document', function () {
         Http::fake([
@@ -401,4 +363,4 @@ describe('Archive', function () {
         expect($entity->id)->toBeNull()
             ->and($entity->description)->toBeNull();
     });
-});
+})->covers(Archive::class);

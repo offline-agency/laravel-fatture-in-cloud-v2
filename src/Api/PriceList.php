@@ -10,11 +10,13 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\PriceList\PriceList as PriceListEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\PriceList\PriceListList;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Settings
+ */
 class PriceList extends Api
 {
     public function list(): PriceListList|Error
     {
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/settings/pricelists',
         );
@@ -30,7 +32,6 @@ class PriceList extends Api
 
     public function detail(int $priceListId): PriceListEntity|Error
     {
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/settings/pricelists/'.$priceListId,
         );
@@ -46,7 +47,6 @@ class PriceList extends Api
 
     public function delete(int $priceListId): string|Error
     {
-        /** @var object $response */
         $response = $this->destroy(
             'c/'.$this->companyId.'/settings/pricelists/'.$priceListId
         );
@@ -58,6 +58,9 @@ class PriceList extends Api
         return 'Price list deleted';
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function create(array $body = []): PriceListEntity|Error|MessageBag
     {
         $validator = Validator::make($body, [
@@ -69,7 +72,6 @@ class PriceList extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/settings/pricelists',
             $body
@@ -84,6 +86,9 @@ class PriceList extends Api
         return new PriceListEntity($priceList);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function edit(int $priceListId, array $body = []): PriceListEntity|Error|MessageBag
     {
         $validator = Validator::make($body, [
@@ -95,7 +100,6 @@ class PriceList extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->put(
             'c/'.$this->companyId.'/settings/pricelists/'.$priceListId,
             $body

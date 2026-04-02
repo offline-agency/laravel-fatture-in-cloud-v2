@@ -13,10 +13,16 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovement;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovementList;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Products
+ */
 class Product extends Api
 {
     use ListTrait;
 
+    /**
+     * @param  array<string, mixed>  $additionalData
+     */
     public function list(array $additionalData = []): ProductList|Error
     {
         $additionalData = $this->data($additionalData, [
@@ -28,7 +34,6 @@ class Product extends Api
             'q',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/products',
             $additionalData
@@ -44,6 +49,7 @@ class Product extends Api
     }
 
     /**
+     * @param  array<string, mixed>  $additionalData
      * @return array<ProductEntity>|Error
      */
     public function all(array $additionalData = []): array|Error
@@ -66,6 +72,9 @@ class Product extends Api
         }, $allProducts);
     }
 
+    /**
+     * @param  array<string, mixed>  $additionalData
+     */
     public function detail(int $productId, array $additionalData = []): ProductEntity|Error
     {
         $additionalData = $this->data($additionalData, [
@@ -73,7 +82,6 @@ class Product extends Api
             'fieldset',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/products/'.$productId,
             $additionalData
@@ -90,7 +98,6 @@ class Product extends Api
 
     public function delete(int $productId): string|Error
     {
-        /** @var object $response */
         $response = $this->destroy(
             'c/'.$this->companyId.'/products/'.$productId
         );
@@ -102,6 +109,9 @@ class Product extends Api
         return 'Product deleted';
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function create(array $body = []): ProductEntity|Error|MessageBag
     {
         $validator = Validator::make($body, [
@@ -115,7 +125,6 @@ class Product extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/products',
             $body
@@ -130,6 +139,9 @@ class Product extends Api
         return new ProductEntity($product);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function edit(int $productId, array $body = []): ProductEntity|Error|MessageBag
     {
         $validator = Validator::make($body, [
@@ -143,7 +155,6 @@ class Product extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->put(
             'c/'.$this->companyId.'/products/'.$productId,
             $body
@@ -158,9 +169,11 @@ class Product extends Api
         return new ProductEntity($product);
     }
 
+    /**
+     * @param  array<string, mixed>  $additionalData
+     */
     public function listStockMovements(int $productId, array $additionalData = []): StockMovementList|Error
     {
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/products/'.$productId.'/stock',
             $additionalData
@@ -175,6 +188,9 @@ class Product extends Api
         return new StockMovementList($stockMovements);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function createStockMovement(int $productId, array $body = []): StockMovement|Error|MessageBag
     {
         $validator = Validator::make($body, [
@@ -186,7 +202,6 @@ class Product extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/products/'.$productId.'/stock',
             $body
@@ -203,7 +218,6 @@ class Product extends Api
 
     public function deleteStockMovement(int $productId, int $stockMovementId): string|Error
     {
-        /** @var object $response */
         $response = $this->destroy(
             'c/'.$this->companyId.'/products/'.$productId.'/stock/'.$stockMovementId
         );
@@ -215,6 +229,9 @@ class Product extends Api
         return 'Stock movement deleted';
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function editStockMovement(int $productId, int $stockMovementId, array $body = []): StockMovement|Error|MessageBag
     {
         $validator = Validator::make($body, [
@@ -226,7 +243,6 @@ class Product extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->put(
             'c/'.$this->companyId.'/products/'.$productId.'/stock/'.$stockMovementId,
             $body

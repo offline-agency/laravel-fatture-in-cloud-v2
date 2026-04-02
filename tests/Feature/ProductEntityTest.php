@@ -543,4 +543,4 @@ describe('Product Entity', function () {
         expect($entity->id)->toBeNull()
             ->and($entity->date)->toBeNull();
     });
-});
+})->covers(Product::class);

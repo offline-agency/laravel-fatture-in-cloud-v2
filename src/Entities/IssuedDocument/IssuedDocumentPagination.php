@@ -31,7 +31,7 @@ readonly class IssuedDocumentPagination extends Pagination
 
     public function goToPrevPage(): IssuedDocumentList|Error|null
     {
-        if (! $this->hasPrevPage()) {
+        if (is_null($this->prevPageUrl)) {
             return null;
         }
 
@@ -40,7 +40,7 @@ readonly class IssuedDocumentPagination extends Pagination
 
     public function goToNextPage(): IssuedDocumentList|Error|null
     {
-        if (! $this->hasNextPage()) {
+        if (is_null($this->nextPageUrl)) {
             return null;
         }
 
@@ -51,17 +51,23 @@ readonly class IssuedDocumentPagination extends Pagination
 
     private function changePage(string $url): IssuedDocumentList|Error
     {
-        $queryParams = $this->getParsedQueryParams($url);
+        $queryParams = $this->getQueryParams($url);
+
+        $type = Arr::get($queryParams, 'type', '');
+        unset($queryParams['type']);
 
         $issuedDocument = new IssuedDocument();
 
         return $issuedDocument->list(
-            $queryParams->type,
-            (array) $queryParams->additional_data
+            is_string($type) ? $type : '',
+            $queryParams
         );
     }
 
-    public function getParsedQueryParams(string $url): object
+    /**
+     * @return \stdClass&object{type: mixed, additional_data: array<int|string, mixed>}
+     */
+    public function getParsedQueryParams(string $url): \stdClass
     {
         $queryParams = $this->getQueryParams($url);
 

@@ -120,4 +120,4 @@ describe('Email', function () {
         expect($entity->id)->toBeNull()
             ->and($entity->status)->toBeNull();
     });
-});
+})->covers(Email::class);

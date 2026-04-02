@@ -113,4 +113,4 @@ describe('Situation', function () use ($situationData) {
         expect($entity->quoteNumber)->toBe(0.0)
             ->and($entity->invoiceNumber)->toBe(0.0);
     });
-});
+})->covers(Situation::class);

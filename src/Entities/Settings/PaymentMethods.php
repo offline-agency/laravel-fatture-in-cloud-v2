@@ -1,150 +1,49 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Settings;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
 
-class PaymentMethods extends AbstractEntity
+readonly class PaymentMethods extends AbstractEntity
 {
-    /**
-     * @var int|null
-     */
-    public $id;
+    use CastsFromMixed;
 
-    /**
-     * @var string|null
-     */
-    public $name;
+    public ?int $id;
 
-    /**
-     * @var string|null
-     */
-    public $type;
+    public ?string $name;
 
-    /**
-     * @var bool|null
-     */
-    public $is_default;
+    public ?string $type;
 
-    /**
-     * @var array
-     */
-    public $default_payment_account = [
-        'id' => null,
-        'name' => null,
-        'type' => null,
-        'iban' => null,
-        'sia' => null,
-        'cuc' => null,
-        'virtual' => null,
-    ];
+    public ?bool $isDefault;
 
-    /**
-     * @var array
-     */
-    public $details = [
-        [
-            'title' => null,
-            'description' => null,
-        ],
-    ];
+    public mixed $defaultPaymentAccount;
 
-    /**
-     * @var string|null
-     */
-    public $bank_iban;
+    public mixed $details;
 
-    /**
-     * @var string|null
-     */
-    public $bank_name;
+    public ?string $bankIban;
 
-    /**
-     * @var string|null
-     */
-    public $bank_beneficiary;
+    public ?string $bankName;
 
-    /**
-     * @var string|null
-     */
-    public $ei_payment_method;
+    public ?string $bankBeneficiary;
 
-    //    /**
-    //     * PaymentMethods constructor.
-    //     * @param array|object|null $data
-    //     */
-    //    public function __construct($data = null)
-    //    {
-    //        if ($data !== null) {
-    //            $this->fill((array)$data);
-    //        }
-    //    }
-    //
-    //    /**
-    //     * Fill the entity with an array of data.
-    //     *
-    //     * @param array $data
-    //     */
-    //    public function fill(array $data)
-    //    {
-    //        $this->id = isset($data['id']) ? (int)$data['id'] : null;
-    //        $this->name = $data['name'] ?? null;
-    //        $this->type = $data['type'] ?? null;
-    //        $this->is_default = $data['is_default'] ?? null;
-    //        $this->default_payment_account = $data['default_payment_account'] ?? [
-    //            'id' => null,
-    //            'name' => null,
-    //            'type' => null,
-    //            'iban' => null,
-    //            'sia' => null,
-    //            'cuc' => null,
-    //            'virtual' => null,
-    //        ];
-    //        $this->details = $data['details'] ?? [
-    //            [
-    //                'title' => null,
-    //                'description' => null,
-    //            ],
-    //        ];
-    //        $this->bank_iban = $data['bank_iban'] ?? null;
-    //        $this->bank_name = $data['bank_name'] ?? null;
-    //        $this->bank_beneficiary = $data['bank_beneficiary'] ?? null;
-    //        $this->ei_payment_method = $data['ei_payment_method'] ?? null;
-    //    }
-    //
-    //    /**
-    //     * Save the entity to the database.
-    //     * Placeholder method, implement your own logic.
-    //     */
+    public ?string $eiPaymentMethod;
 
-    /*public function find($id): ?array
+    public function __construct(mixed $parameters = null)
     {
-        if ($id == 1) {
-            return [
-                'data' => [
-                    'id' => 1,
-                    'name' => 'Test Payment Method',
-                    'type' => 'credit_card',
-                    'is_default' => true,
-                    'default_payment_account' => [
-                        'id' => 1,
-                        'name' => 'Default Account',
-                        'type' => 'bank_account',
-                        'iban' => 'IT60X0542811101000000123456',
-                        'sia' => 'ABCDEF',
-                        'cuc' => 'XYZ123',
-                        'virtual' => false
-                    ],
-                    'details' => [
-                        ['title' => 'Detail 1', 'description' => 'Description 1']
-                    ],
-                    'bank_iban' => 'IT60X0542811101000000123456',
-                    'bank_name' => 'Test Bank',
-                    'bank_beneficiary' => 'Test Beneficiary',
-                    'ei_payment_method' => 'ei_method',
-                ]
-            ];
-        }
-        return null;
-    }*/
+        $parameters = self::normalizeParameters($parameters);
+
+        $this->id = self::nullableInt($parameters, 'id');
+        $this->name = self::nullableString($parameters, 'name');
+        $this->type = self::nullableString($parameters, 'type');
+        $this->isDefault = self::nullableBool($parameters, 'is_default');
+        $this->defaultPaymentAccount = self::mixedValue($parameters, 'default_payment_account');
+        $this->details = self::mixedValue($parameters, 'details');
+        $this->bankIban = self::nullableString($parameters, 'bank_iban');
+        $this->bankName = self::nullableString($parameters, 'bank_name');
+        $this->bankBeneficiary = self::nullableString($parameters, 'bank_beneficiary');
+        $this->eiPaymentMethod = self::nullableString($parameters, 'ei_payment_method');
+    }
 }

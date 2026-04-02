@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Product;
 
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
+
 readonly class StockMovement
 {
+    use CastsFromMixed;
+
     public ?int $id;
 
     public ?string $date;
@@ -18,18 +22,12 @@ readonly class StockMovement
 
     public function __construct(mixed $parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        if (! is_array($parameters)) {
-            $parameters = [];
-        }
-
-        $this->id = $parameters['id'] ?? null;
-        $this->date = $parameters['date'] ?? null;
-        $this->amount = isset($parameters['amount']) ? (float) $parameters['amount'] : null;
-        $this->description = $parameters['description'] ?? null;
-        $this->type = $parameters['type'] ?? null;
+        $this->id = self::nullableInt($parameters, 'id');
+        $this->date = self::nullableString($parameters, 'date');
+        $this->amount = self::nullableFloat($parameters, 'amount');
+        $this->description = self::nullableString($parameters, 'description');
+        $this->type = self::nullableString($parameters, 'type');
     }
 }

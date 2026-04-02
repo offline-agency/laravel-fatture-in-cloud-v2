@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\User;
 
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
+
 readonly class Company
 {
+    use CastsFromMixed;
+
     public ?int $id;
 
     public ?string $name;
@@ -36,27 +40,21 @@ readonly class Company
 
     public function __construct(mixed $parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        if (! is_array($parameters)) {
-            $parameters = [];
-        }
-
-        $this->id = $parameters['id'] ?? null;
-        $this->name = $parameters['name'] ?? null;
-        $this->taxCode = $parameters['tax_code'] ?? null;
-        $this->type = $parameters['type'] ?? null;
-        $this->accessToken = $parameters['access_token'] ?? null;
-        $this->connectionId = isset($parameters['connection_id']) ? (int) $parameters['connection_id'] : null;
-        $this->controlledCompanies = $parameters['controlled_companies'] ?? null;
-        $this->alias = $parameters['alias'] ?? null;
-        $this->vatNumber = $parameters['vat_number'] ?? null;
-        $this->fic = $parameters['fic'] ?? null;
-        $this->dic = $parameters['dic'] ?? null;
-        $this->ficPlan = $parameters['fic_plan'] ?? null;
-        $this->ficLicenseExpire = $parameters['fic_license_expire'] ?? null;
-        $this->permissions = $parameters['permissions'] ?? null;
+        $this->id = self::nullableInt($parameters, 'id');
+        $this->name = self::nullableString($parameters, 'name');
+        $this->taxCode = self::nullableString($parameters, 'tax_code');
+        $this->type = self::nullableString($parameters, 'type');
+        $this->accessToken = self::nullableString($parameters, 'access_token');
+        $this->connectionId = self::nullableInt($parameters, 'connection_id');
+        $this->controlledCompanies = self::mixedValue($parameters, 'controlled_companies');
+        $this->alias = self::nullableString($parameters, 'alias');
+        $this->vatNumber = self::nullableString($parameters, 'vat_number');
+        $this->fic = self::nullableBool($parameters, 'fic');
+        $this->dic = self::nullableBool($parameters, 'dic');
+        $this->ficPlan = self::nullableString($parameters, 'fic_plan');
+        $this->ficLicenseExpire = self::nullableString($parameters, 'fic_license_expire');
+        $this->permissions = self::mixedValue($parameters, 'permissions');
     }
 }

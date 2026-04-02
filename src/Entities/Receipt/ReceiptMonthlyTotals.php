@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Receipt;
 
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
+
 readonly class ReceiptMonthlyTotals
 {
+    use CastsFromMixed;
+
     public ?float $net;
 
     public ?float $gross;
@@ -14,12 +18,10 @@ readonly class ReceiptMonthlyTotals
 
     public function __construct(mixed $parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        $this->net = $parameters['net'] ?? null;
-        $this->gross = $parameters['gross'] ?? null;
-        $this->count = $parameters['count'] ?? null;
+        $this->net = self::nullableFloat($parameters, 'net');
+        $this->gross = self::nullableFloat($parameters, 'gross');
+        $this->count = self::nullableInt($parameters, 'count');
     }
 }

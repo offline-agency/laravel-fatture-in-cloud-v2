@@ -77,4 +77,4 @@ describe('FattureInCloud', function () {
         expect($fatture->getCompanyId())->toBe('')
             ->and($fatture->getAccessToken())->toBe('');
     });
-});
+})->covers(FattureInCloud::class);

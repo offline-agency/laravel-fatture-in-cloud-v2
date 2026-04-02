@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument;
 
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
+
 readonly class IssuedDocumentPreCreateInfo
 {
+    use CastsFromMixed;
+
     public mixed $numerations;
 
     public mixed $dnNumerations;
@@ -40,25 +44,23 @@ readonly class IssuedDocumentPreCreateInfo
 
     public function __construct(mixed $parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        $this->numerations = $parameters['numerations'] ?? null;
-        $this->dnNumerations = $parameters['dn_numerations'] ?? null;
-        $this->defaultValues = $parameters['default_values'] ?? null;
-        $this->extraDataDefaultValues = $parameters['extra_data_default_values'] ?? null;
-        $this->itemsDefaultValues = $parameters['items_default_values'] ?? null;
-        $this->countriesList = $parameters['countries_list'] ?? null;
-        $this->currenciesList = $parameters['currencies_list'] ?? null;
-        $this->templatesList = $parameters['templates_list'] ?? null;
-        $this->dnTemplatesList = $parameters['dn_templates_list'] ?? null;
-        $this->aiTemplatesList = $parameters['ai_templates_list'] ?? null;
-        $this->paymentMethodsList = $parameters['payment_methods_list'] ?? null;
-        $this->paymentAccountsList = $parameters['payment_accounts_list'] ?? null;
-        $this->vatTypesList = $parameters['vat_types_list'] ?? null;
-        $this->measuresList = $parameters['measures_list'] ?? null;
-        $this->languagesList = $parameters['languages_list'] ?? null;
-        $this->eiStructure = $parameters['ei_structure'] ?? null;
+        $this->numerations = self::mixedValue($parameters, 'numerations');
+        $this->dnNumerations = self::mixedValue($parameters, 'dn_numerations');
+        $this->defaultValues = self::mixedValue($parameters, 'default_values');
+        $this->extraDataDefaultValues = self::mixedValue($parameters, 'extra_data_default_values');
+        $this->itemsDefaultValues = self::mixedValue($parameters, 'items_default_values');
+        $this->countriesList = self::mixedValue($parameters, 'countries_list');
+        $this->currenciesList = self::mixedValue($parameters, 'currencies_list');
+        $this->templatesList = self::mixedValue($parameters, 'templates_list');
+        $this->dnTemplatesList = self::mixedValue($parameters, 'dn_templates_list');
+        $this->aiTemplatesList = self::mixedValue($parameters, 'ai_templates_list');
+        $this->paymentMethodsList = self::mixedValue($parameters, 'payment_methods_list');
+        $this->paymentAccountsList = self::mixedValue($parameters, 'payment_accounts_list');
+        $this->vatTypesList = self::mixedValue($parameters, 'vat_types_list');
+        $this->measuresList = self::mixedValue($parameters, 'measures_list');
+        $this->languagesList = self::mixedValue($parameters, 'languages_list');
+        $this->eiStructure = self::mixedValue($parameters, 'ei_structure');
     }
 }

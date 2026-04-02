@@ -30,8 +30,7 @@
         "laravel/pint": "^1.29",
         "orchestra/testbench": "^9.0|^10.0|^11.0",
         "pestphp/pest": "^3.7",
-        "phpstan/phpstan": "^2.1",
-        "phpunit/phpunit": "^11.5|^12.0"
+        "phpstan/phpstan": "^2.1"
     },
     "autoload": {
         "psr-4": {
@@ -44,10 +43,16 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/pest",
-        "test-coverage": "vendor/bin/pest --coverage-html coverage",
+        "test": "vendor/bin/pest --parallel",
+        "test:coverage": "vendor/bin/pest --parallel --coverage --min=80",
         "format": "vendor/bin/pint",
-        "format:test": "vendor/bin/pint --test"
+        "format:test": "vendor/bin/pint --test",
+        "analyse": "vendor/bin/phpstan analyse --no-progress",
+        "check": [
+            "@format:test",
+            "@analyse",
+            "@test"
+        ]
     },
     "config": {
         "sort-packages": true,

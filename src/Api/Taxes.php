@@ -10,31 +10,44 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\Taxes as TaxesEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\TaxesAttachment;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes\TaxesList;
+use OfflineAgency\LaravelFattureInCloudV2\Enums\ReceivedDocumentType;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Taxes
+ */
 class Taxes extends Api
 {
     use ListTrait;
 
+    /**
+     * @deprecated Use ReceivedDocumentType enum instead.
+     *
+     * @var array<string>
+     */
     public const DOCUMENT_TYPES = [
         'expense',
         'passive_credit_note',
         'passive_delivery_note',
     ];
 
+    /**
+     * @param  array<string, mixed>  $additionalData
+     */
     public function list(
-        string $type,
+        ReceivedDocumentType|string $type,
         array $additionalData = []
     ): TaxesList|Error {
+        $typeValue = $type instanceof ReceivedDocumentType ? $type->value : $type;
+
         $additionalData = array_merge($additionalData, [
-            'type' => $type,
+            'type' => $typeValue,
         ]);
 
         $additionalData = $this->data($additionalData, [
             'type', 'fields', 'fieldset', 'sort', 'page', 'per_page', 'q',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/taxes',
             $additionalData
@@ -49,12 +62,18 @@ class Taxes extends Api
         return new TaxesList($taxesResponse);
     }
 
+    /**
+     * @param  array<string, mixed>  $additionalData
+     * @return array<TaxesEntity>|Error
+     */
     public function all(
-        string $type,
+        ReceivedDocumentType|string $type,
         array $additionalData = []
     ): array|Error {
+        $typeValue = $type instanceof ReceivedDocumentType ? $type->value : $type;
+
         $additionalData = array_merge($additionalData, [
-            'type' => $type,
+            'type' => $typeValue,
         ]);
 
         $allDocuments = $this->getAll([
@@ -70,6 +89,9 @@ class Taxes extends Api
         }, $allDocuments);
     }
 
+    /**
+     * @param  array<string, mixed>  $additionalData
+     */
     public function detail(
         int $documentId,
         array $additionalData = []
@@ -78,7 +100,6 @@ class Taxes extends Api
             'fields', 'fieldset',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/taxes/'.$documentId,
             $additionalData
@@ -96,7 +117,6 @@ class Taxes extends Api
     public function bin(
         int $documentId
     ): TaxesEntity|Error {
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/bin/taxes/'.$documentId
         );
@@ -113,7 +133,6 @@ class Taxes extends Api
     public function delete(
         int $documentId
     ): string|Error {
-        /** @var object $response */
         $response = $this->destroy(
             'c/'.$this->companyId.'/taxes/'.$documentId
         );
@@ -150,7 +169,6 @@ class Taxes extends Api
 
         $body = $this->normalizeBodyDate($body, 'data.due_date');
 
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/taxes',
             $body
@@ -165,6 +183,9 @@ class Taxes extends Api
         return new TaxesEntity($taxes);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function edit(
         int $documentId,
         array $body = []
@@ -178,11 +199,10 @@ class Taxes extends Api
             return $validator->errors();
         }
 
-        if (isset($body['data']['due_date'])) {
+        if (is_array($body['data'] ?? null) && isset($body['data']['due_date'])) {
             $body = $this->normalizeBodyDate($body, 'data.due_date');
         }
 
-        /** @var object $response */
         $response = $this->put(
             'c/'.$this->companyId.'/taxes/'.$documentId,
             $body
@@ -197,6 +217,9 @@ class Taxes extends Api
         return new TaxesEntity($taxes);
     }
 
+    /**
+     * @param  array<string, mixed>  $additionalData
+     */
     public function binDetail(
         int $documentId,
         array $additionalData = []
@@ -212,7 +235,9 @@ class Taxes extends Api
             if (
                 ! $document instanceof Error
                 && $document->type === 'proforma'
-                && isset($document->merged_in)
+                && is_object($document->merged_in)
+                && isset($document->merged_in->id)
+                && is_int($document->merged_in->id)
             ) {
                 $document = $this->detail(
                     $document->merged_in->id,
@@ -224,6 +249,9 @@ class Taxes extends Api
         return $document;
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function attachment(
         array $body = []
     ): TaxesAttachment|Error|MessageBag {
@@ -236,7 +264,6 @@ class Taxes extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/taxes/attachment',
             $body,
@@ -255,7 +282,6 @@ class Taxes extends Api
     public function deleteAttachment(
         int $documentId
     ): string|Error {
-        /** @var object $response */
         $response = $this->destroy(
             'c/'.$this->companyId.'/taxes/'.$documentId.'/attachment'
         );

@@ -14,12 +14,21 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocument
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentPreCreateInfo;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentScheduleEmail;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument\IssuedDocumentTotals;
+use OfflineAgency\LaravelFattureInCloudV2\Enums\IssuedDocumentType;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Issued-Documents
+ */
 class IssuedDocument extends Api
 {
     use ListTrait;
 
+    /**
+     * @deprecated Use IssuedDocumentType enum instead.
+     *
+     * @var array<string>
+     */
     public const DOCUMENT_TYPES = [
         'invoice',
         'quote',
@@ -34,12 +43,18 @@ class IssuedDocument extends Api
         'self_supplier_invoice',
     ];
 
+    /**
+     * @param  array<string, mixed>  $additional_data
+     * @param  array<string, mixed>  $additional_data
+     */
     public function list(
-        string $type,
-        ?array $additional_data = []
+        IssuedDocumentType|string $type,
+        array $additional_data = []
     ): IssuedDocumentList|Error {
+        $typeValue = $type instanceof IssuedDocumentType ? $type->value : $type;
+
         $additional_data = array_merge($additional_data, [
-            'type' => $type,
+            'type' => $typeValue,
         ]);
 
         $additional_data = $this->data($additional_data, [
@@ -61,14 +76,17 @@ class IssuedDocument extends Api
     }
 
     /**
+     * @param  array<string, mixed>  $additional_data
      * @return array<IssuedDocumentEntity>|Error
      */
     public function all(
-        string $type,
-        ?array $additional_data = []
+        IssuedDocumentType|string $type,
+        array $additional_data = []
     ): array|Error {
+        $typeValue = $type instanceof IssuedDocumentType ? $type->value : $type;
+
         $additional_data = array_merge($additional_data, [
-            'type' => $type,
+            'type' => $typeValue,
         ]);
 
         $all_documents = $this->getAll([
@@ -82,9 +100,13 @@ class IssuedDocument extends Api
             }, $all_documents);
     }
 
+    /**
+     * @param  array<string, mixed>  $additional_data
+     * @param  array<string, mixed>  $additional_data
+     */
     public function detail(
         int $document_id,
-        ?array $additional_data = []
+        array $additional_data = []
     ): IssuedDocumentEntity|Error {
         $additional_data = $this->data($additional_data, [
             'fields', 'fieldset',
@@ -170,6 +192,9 @@ class IssuedDocument extends Api
         return new IssuedDocumentEntity($issued_document);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function edit(
         int $document_id,
         array $body = []
@@ -199,6 +224,9 @@ class IssuedDocument extends Api
         return new IssuedDocumentEntity($issued_document);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function getNewTotals(
         array $body
     ): IssuedDocumentTotals|Error|MessageBag {
@@ -228,6 +256,9 @@ class IssuedDocument extends Api
         return new IssuedDocumentTotals($issued_document);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function getExistingTotals(
         int $document_id,
         array $body = []
@@ -256,12 +287,14 @@ class IssuedDocument extends Api
     }
 
     public function preCreateInfo(
-        string $type
+        IssuedDocumentType|string $type
     ): IssuedDocumentPreCreateInfo|Error {
+        $typeValue = $type instanceof IssuedDocumentType ? $type->value : $type;
+
         $response = $this->get(
             'c/'.$this->companyId.'/issued_documents/info',
             [
-                'type' => $type,
+                'type' => $typeValue,
             ]
         );
 
@@ -290,6 +323,9 @@ class IssuedDocument extends Api
         return new IssuedDocumentEmail($email);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function attachment(
         array $body = []
     ): IssuedDocumentAttachment|Error|MessageBag {
@@ -331,6 +367,9 @@ class IssuedDocument extends Api
         return 'Attachment deleted';
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function scheduleEmail(
         int $document_id,
         array $body = []
@@ -369,9 +408,13 @@ class IssuedDocument extends Api
         return new IssuedDocumentScheduleEmail($schedule_email);
     }
 
+    /**
+     * @param  array<string, mixed>  $additional_data
+     * @param  array<string, mixed>  $additional_data
+     */
     public function binDetail(
         int $document_id,
-        ?array $additional_data = []
+        array $additional_data = []
     ): IssuedDocumentEntity|Error {
         $document = $this->detail(
             $document_id,
@@ -384,7 +427,9 @@ class IssuedDocument extends Api
             if (
                 ! $document instanceof Error
                 && $document->type === 'proforma'
-                && ! is_null($document->merged_in)
+                && is_object($document->merged_in)
+                && isset($document->merged_in->id)
+                && is_int($document->merged_in->id)
             ) {
                 $document = $this->detail(
                     $document->merged_in->id,

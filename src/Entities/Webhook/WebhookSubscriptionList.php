@@ -11,7 +11,7 @@ readonly class WebhookSubscriptionList
      */
     public array $items;
 
-    public function __construct(object $webhookResponse)
+    public function __construct(\stdClass $webhookResponse)
     {
         $this->items = array_map(function ($webhook) {
             return new WebhookSubscription($webhook);

@@ -151,4 +151,12 @@ describe('Info List Entities', function () {
 
         expect($list->hasItems())->toBeFalse();
     });
-});
+})->covers(
+    InfoArchiveCategoriesList::class,
+    InfoCostCentersList::class,
+    InfoPaymentAccountsList::class,
+    InfoPaymentMethodsList::class,
+    InfoProductsCategoriesList::class,
+    InfoReceivedDocumentCategoriesList::class,
+    InfoRevenueCentersList::class,
+);

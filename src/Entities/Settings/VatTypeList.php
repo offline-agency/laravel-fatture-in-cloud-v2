@@ -11,7 +11,7 @@ readonly class VatTypeList
      */
     public array $items;
 
-    public function __construct(object $vatTypeResponse)
+    public function __construct(\stdClass $vatTypeResponse)
     {
         $this->items = array_map(function ($vatType) {
             return new VatType($vatType);

@@ -6,26 +6,5 @@ parameters:
     paths:
         - src/
 
-    level: 6
+    level: 9
 
-    ignoreErrors:
-        # ListTrait uses $this->getItems(), $this->data(), $this->get() which are
-        # defined on the concrete classes that use the trait. PHPStan cannot verify
-        # these dynamic dispatch patterns without explicit interfaces or abstracts.
-        - identifier: method.notFound
-          path: src/Traits/ListTrait.php
-
-        # Widespread throughout the codebase: array parameters lack generic types
-        # (e.g. array<string, mixed>). A dedicated refactor of all array signatures
-        # to proper generics is tracked as a follow-up task.
-        - identifier: missingType.iterableValue
-
-        # Legacy entity list classes (TaxesList, ReceivedDocumentList, InfoList
-        # variants) predate the readonly refactoring and use untyped properties
-        # and constructor parameters. Migration is tracked separately.
-        - identifier: missingType.property
-        - identifier: missingType.parameter
-
-        # Unused properties in legacy list entity classes (pagination property
-        # declared but superseded by ListTrait-based pagination).
-        - identifier: property.unused

@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Info;
 
-use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
-
-class InfoList
+readonly class InfoList
 {
-    use ListTrait;
+    /**
+     * @var array<mixed>
+     */
+    private array $items;
 
-    private $items;
-
-    private $pagination;
-
-    public function __construct($client_response, string $className)
+    public function __construct(\stdClass $clientResponse, string $className)
     {
-        $this->setItems($client_response, $className);
+        $this->items = array_map(function ($client) use ($className) {
+            return new $className($client);
+        }, $clientResponse->data);
     }
 
     /**
@@ -27,12 +26,8 @@ class InfoList
         return $this->items;
     }
 
-    private function setItems(
-        $client_response,
-        string $className
-    ): void {
-        $this->items = array_map(function ($client) use ($className) {
-            return new $className($client);
-        }, $client_response->data);
+    public function hasItems(): bool
+    {
+        return count($this->items) > 0;
     }
 }

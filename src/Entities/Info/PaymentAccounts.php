@@ -5,41 +5,36 @@ declare(strict_types=1);
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Info;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
 
-class PaymentAccounts extends AbstractEntity
+readonly class PaymentAccounts extends AbstractEntity
 {
-    /**
-     * @var int
-     */
-    public $id;
+    use CastsFromMixed;
 
-    /**
-     * @var string
-     */
-    public $name;
+    public ?int $id;
 
-    /**
-     * @var string
-     */
-    public $type;
+    public ?string $name;
 
-    /**
-     * @var string
-     */
-    public $iban;
+    public ?string $type;
 
-    /**
-     * @var string
-     */
-    public $sia;
+    public ?string $iban;
 
-    /**
-     * @var string
-     */
-    public $cuc;
+    public ?string $sia;
 
-    /**
-     * @var bool
-     */
-    public $virtual;
+    public ?string $cuc;
+
+    public ?bool $virtual;
+
+    public function __construct(mixed $parameters = null)
+    {
+        $parameters = self::normalizeParameters($parameters);
+
+        $this->id = self::nullableInt($parameters, 'id');
+        $this->name = self::nullableString($parameters, 'name');
+        $this->type = self::nullableString($parameters, 'type');
+        $this->iban = self::nullableString($parameters, 'iban');
+        $this->sia = self::nullableString($parameters, 'sia');
+        $this->cuc = self::nullableString($parameters, 'cuc');
+        $this->virtual = self::nullableBool($parameters, 'virtual');
+    }
 }

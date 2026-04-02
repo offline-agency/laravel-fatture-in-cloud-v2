@@ -699,4 +699,4 @@ describe('Received Document Entity', function () {
         expect($entity->amount_due)->toBeNull()
             ->and($entity->payments_sum)->toBeNull();
     });
-});
+})->covers(ReceivedDocument::class);

@@ -8,6 +8,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\User\CompanyList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\User\User as UserEntity;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/User
+ */
 class User extends Api
 {
     /**
@@ -15,7 +18,6 @@ class User extends Api
      */
     public function userInfo(): UserEntity|Error
     {
-        /** @var object $response */
         $response = $this->get(
             'user/info',
         );
@@ -47,7 +49,6 @@ class User extends Api
             'fieldset',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'user/companies',
             $additionalData
