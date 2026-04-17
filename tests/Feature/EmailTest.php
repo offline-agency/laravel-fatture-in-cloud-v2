@@ -114,10 +114,25 @@ describe('Email', function () {
             ->and($email->subject)->toBe('Invoice #1');
     });
 
+    it('handles object constructor parameter', function () {
+    $obj = (object)['id' => 5, 'status' => 'sent'];
+    $entity = new EmailEntity($obj);
+
+        expect($entity->id)->toBe(5)
+            ->and($entity->status)->toBe('sent');
+    });
+
     it('handles null constructor parameter', function () {
         $entity = new EmailEntity(null);
 
         expect($entity->id)->toBeNull()
             ->and($entity->status)->toBeNull();
+    });
+
+    it('handles null EmailList constructor', function () {
+    $list = new EmailList((object)['data' => []]);
+
+        expect($list->hasItems())->toBeFalse()
+            ->and($list->getItems())->toBeArray()->toHaveCount(0);
     });
 });
