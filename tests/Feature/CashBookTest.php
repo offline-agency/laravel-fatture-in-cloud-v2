@@ -345,6 +345,21 @@ describe('Cashbook', function () {
         expect($cashbookList->getPagination()->goToNextPage())->toBeInstanceOf(CashbookList::class);
     });
 
+    it('returns a message bag when the next page url lacks the date range', function () {
+        $cashbookList = new CashbookList(json_decode(json_encode([
+            'data' => [['id' => 1, 'kind' => 'cashbook']],
+            // Cashbook::list() requires date_from and date_to, so a page URL
+            // without them cannot be followed: changePage() short-circuits.
+            'next_page_url' => 'https://fake_url/cashbook?per_page=10&page=2',
+        ])));
+
+        $response = $cashbookList->getPagination()->goToNextPage();
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('date_from')
+            ->messages()->toHaveKey('date_to');
+    });
+
     it('returns null navigating cashbook to next page when no next page url', function () {
         $cashbookList = new CashbookList(json_decode(json_encode([
             'data' => [['id' => 1]],

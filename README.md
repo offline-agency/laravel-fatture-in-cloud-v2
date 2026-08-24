@@ -19,13 +19,16 @@
 
 ## Requirements
 
-- PHP ^8.4 (includes 8.5)
-- Laravel ^11.0|^12.0|^13.0
+- PHP ^8.5
+- Laravel ^13.0
 
-| PHP | Laravel 11 | Laravel 12 | Laravel 13 |
-|-----|:----------:|:----------:|:----------:|
-| 8.4 | ✅ | ✅ | ✅ |
-| 8.5 | ✅ | ✅ | ✅ |
+| PHP | Laravel 13 |
+|-----|:----------:|
+| 8.5 | ✅ |
+
+> Support for PHP 8.4 and Laravel 11/12 was dropped in 4.0.0. Adopting Pest 5
+> requires PHPUnit `^13.3`, which Testbench 9 (Laravel 11) does not support.
+> Use the `3.x` releases if you need Laravel 11/12 or PHP 8.4.
 
 ### API Granularization (Breaking Changes)
 The monolithic `Settings` and `Setting` classes have been split into granular resources to improve maintainability and strictly follow the Single Responsibility Principle:
@@ -41,7 +44,7 @@ All entities (e.g., `Client`, `IssuedDocument`, `PriceList`) have been refactore
 - Constructors ensure safe data mapping from API responses.
 
 ### Modern testing suite
-- Switched from PHPUnit to **Pest PHP** for a more expressive and modern testing experience.
+- Switched from PHPUnit to **Pest PHP** for a more expressive and modern testing experience (Pest `^5.0`, PHPUnit `^13.3`).
 - Automated code styling with **Laravel Pint**.
 
 ### Architecture

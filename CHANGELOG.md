@@ -2,11 +2,18 @@
 
 All notable changes to `laravel-fatture-in-cloud-v2` will be documented in this file.
 
-## [3.1.0] - YYYY-MM-DD
+## [4.0.0] - YYYY-MM-DD
 
 ### Added
 - Support for **Laravel 13** (illuminate `^13.0`, Testbench `^11.0`).
-- Laravel 13 row in CI matrix (PHP 8.4/8.5).
+
+### Changed
+- **BREAKING**: Minimum PHP bumped to **8.5** (`php: ^8.5`).
+- **BREAKING**: Dropped support for **Laravel 11 and 12**; the package now requires `illuminate/* ^13.0` and `orchestra/testbench ^11.0`.
+- **BREAKING**: Test suite upgraded to **Pest `^5.0`**, which requires **PHPUnit `^13.3`**. Because Testbench 9 (Laravel 11) caps PHPUnit at 12, Laravel 11 could not be kept.
+- CI matrix reduced to a single job (PHP 8.5 / Laravel 13); Pint and PHPStan now run unconditionally.
+- `phpunit.xml` now references the PHPUnit 13.3 schema.
+- `pint.json`: renamed the deprecated `new_with_braces` rule to `new_with_parentheses` (Pint `^1.30`), preserving the existing `new Foo()` style.
 
 ## [3.0.0] - 2026-03-28
 
