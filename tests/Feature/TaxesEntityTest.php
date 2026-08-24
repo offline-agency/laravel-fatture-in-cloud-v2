@@ -234,6 +234,36 @@ describe('Taxes Entity', function () {
         expect($response)->toBeInstanceOf(Error::class);
     });
 
+    it('normalizes due_date when editing a tax entry', function () {
+        $documentId = 1;
+
+        Http::fake([
+            'c/*/taxes/'.$documentId => Http::response([
+                'data' => [
+                    'id' => $documentId,
+                    'type' => 'expense',
+                    'entity' => ['name' => 'Updated S.R.L'],
+                ],
+            ], 200),
+        ]);
+
+        $api = new Taxes();
+        $response = $api->edit($documentId, [
+            'data' => [
+                'entity' => ['name' => 'Updated S.R.L'],
+                // Deliberately not zero-padded: edit() must normalize it
+                // before the request leaves.
+                'due_date' => '2026-8-24',
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(TaxesEntity::class);
+
+        Http::assertSent(function ($request) {
+            return $request['data']['due_date'] === '2026-08-24';
+        });
+    });
+
     it('edits a tax entry', function () {
         $documentId = 1;
 
