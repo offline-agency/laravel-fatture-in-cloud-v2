@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-fatture-in-cloud-v2` will be documented in this file.
 
+## [Unreleased]
+
+### Added
+- Support for **PHP 8.6** (the existing `php: ^8.4` constraint already allows it).
+- PHP 8.6 row in CI matrix.
+
+### Changed
+- `composer.lock`: updated `brianium/paratest` (7.8.6), `nette/schema` (1.4.0), `nette/utils` (4.1.6), `pestphp/pest` (3.8.7) and `phpunit/phpunit` (11.5.56), whose previously locked releases capped PHP at 8.5.
+
+### Fixed
+- Removed deprecated `ReflectionMethod::setAccessible()` calls from the test suite.
+
 ## [3.1.0] - YYYY-MM-DD
 
 ### Added

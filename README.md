@@ -19,13 +19,19 @@
 
 ## Requirements
 
-- PHP ^8.4 (includes 8.5)
+- PHP ^8.4 (includes 8.5 and 8.6)
 - Laravel ^11.0|^12.0|^13.0
 
 | PHP | Laravel 11 | Laravel 12 | Laravel 13 |
 |-----|:----------:|:----------:|:----------:|
 | 8.4 | ✅ | ✅ | ✅ |
 | 8.5 | ✅ | ✅ | ✅ |
+| 8.6 | ⚠️ | ✅ | ✅ |
+
+> ⚠️ Laravel 11 is end-of-life: every `laravel/framework` 11.x release is flagged by
+> security advisories, so Composer refuses to install it and it cannot be tested on
+> PHP 8.6. On PHP 8.6, Laravel 12 emits an `spl_object_hash()` deprecation from its
+> own container; this does not affect the package.
 
 ### API Granularization (Breaking Changes)
 The monolithic `Settings` and `Setting` classes have been split into granular resources to improve maintainability and strictly follow the Single Responsibility Principle:
