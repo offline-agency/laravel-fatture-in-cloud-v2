@@ -42,7 +42,6 @@ describe('Api throttle', function () {
 
         $api = new Client();
         $method = new ReflectionMethod($api, 'waitThrottle');
-        $method->setAccessible(true);
         $method->invoke($api, 500);
 
         expect(true)->toBeTrue();

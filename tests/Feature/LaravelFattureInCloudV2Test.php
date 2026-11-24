@@ -39,7 +39,6 @@ describe('LaravelFattureInCloudV2Facade', function () {
     it('facade accessor returns correct key', function () {
         $reflection = new ReflectionClass(LaravelFattureInCloudV2Facade::class);
         $method = $reflection->getMethod('getFacadeAccessor');
-        $method->setAccessible(true);
 
         expect($method->invoke(null))->toBe('laravel-fatture-in-cloud-v2');
     });
