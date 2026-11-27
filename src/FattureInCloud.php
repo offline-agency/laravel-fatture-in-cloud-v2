@@ -9,6 +9,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use OfflineAgency\LaravelFattureInCloudV2\Contracts\ConnectorInterface;
+use OfflineAgency\LaravelFattureInCloudV2\Exceptions\ConfigurationException;
 
 class FattureInCloud implements ConnectorInterface
 {
@@ -18,6 +19,12 @@ class FattureInCloud implements ConnectorInterface
 
     protected string $baseUrl;
 
+    /** Config key of the resolved company, or null when none was found. */
+    protected ?string $companyName = null;
+
+    /**
+     * @throws ConfigurationException when $companyName is given but not configured
+     */
     public function __construct(?string $companyId = null, ?string $accessToken = null, ?string $companyName = null)
     {
         // Resolution order: explicit param → named company → default company → first company in list
@@ -28,14 +35,14 @@ class FattureInCloud implements ConnectorInterface
         $this->companyId = $companyId ?? (is_scalar($rawId) ? (string) $rawId : '');
         $this->accessToken = $accessToken ?? (is_scalar($rawBearer) ? (string) $rawBearer : '');
         $this->baseUrl = is_string($rawBaseUrl) ? $rawBaseUrl : 'https://api-v2.fattureincloud.it/';
-        // TODO: Consider throwing an InvalidArgumentException (or logging a warning) when both
-        // companyId and accessToken remain empty after resolution, to surface misconfiguration early.
     }
 
     /**
      * Resolve company config: explicit name, or default, or first in list (so project can use e.g. companies.takeathome only).
      *
      * @return array<string, mixed>|null
+     *
+     * @throws ConfigurationException
      */
     private function resolveCompany(?string $companyName): ?array
     {
@@ -45,17 +52,32 @@ class FattureInCloud implements ConnectorInterface
         if ($companyName !== null && $companyName !== '') {
             $named = Arr::get($companies, $companyName);
 
-            return is_array($named) ? self::toStringKeyedArray($named) : null;
+            if (! is_array($named)) {
+                throw ConfigurationException::unknownCompany($companyName);
+            }
+
+            $this->companyName = $companyName;
+
+            return self::toStringKeyedArray($named);
         }
 
         $default = Arr::get($companies, 'default');
         if (is_array($default) && $this->isValidCompany(self::toStringKeyedArray($default))) {
+            $this->companyName = 'default';
+
             return self::toStringKeyedArray($default);
         }
 
-        $first = Arr::first($companies);
+        $firstKey = array_key_first($companies);
+        $first = $firstKey !== null ? $companies[$firstKey] : null;
 
-        return is_array($first) ? self::toStringKeyedArray($first) : null;
+        if (! is_array($first)) {
+            return null;
+        }
+
+        $this->companyName = (string) $firstKey;
+
+        return self::toStringKeyedArray($first);
     }
 
     /**
@@ -97,8 +119,19 @@ class FattureInCloud implements ConnectorInterface
         return $this->baseUrl;
     }
 
+    /**
+     * @throws ConfigurationException when the company ID or access token is empty
+     */
     public function getRequest(): PendingRequest
     {
+        if ($this->companyId === '') {
+            throw ConfigurationException::missingCredential('id', $this->companyName);
+        }
+
+        if ($this->accessToken === '') {
+            throw ConfigurationException::missingCredential('bearer', $this->companyName);
+        }
+
         return Http::withToken($this->accessToken)
             ->acceptJson()
             ->baseUrl($this->baseUrl);

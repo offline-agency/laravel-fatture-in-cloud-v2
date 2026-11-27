@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2;
 
+use Illuminate\Http\Client\PendingRequest;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Archive;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Cashbook;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Client;
@@ -47,6 +48,30 @@ class FattureInCloudManager implements FattureInCloudManagerInterface
     public function getConnector(): ConnectorInterface
     {
         return $this->connector;
+    }
+
+    /**
+     * Connector accessors, kept on the manager because the facade resolved to the
+     * connector itself in 3.0.x (e.g. `LaravelFattureInCloudV2Facade::getCompanyId()`).
+     */
+    public function getCompanyId(): string
+    {
+        return $this->connector->getCompanyId();
+    }
+
+    public function getAccessToken(): string
+    {
+        return $this->connector->getAccessToken();
+    }
+
+    public function getBaseUrl(): string
+    {
+        return $this->connector->getBaseUrl();
+    }
+
+    public function getRequest(): PendingRequest
+    {
+        return $this->connector->getRequest();
     }
 
     public function archive(): Archive

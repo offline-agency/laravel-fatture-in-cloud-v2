@@ -30,14 +30,23 @@ return [
     | Limits
     |--------------------------------------------------------------------------
     |
-    | It is necessary to handle rate limiting
-    | All values must be in ms
+    | Only HTTP 429 (short-term rate limit: 300 requests / 5 minutes per
+    | company) is retried. HTTP 403 is never retried: Fatture in Cloud uses it
+    | for missing scopes, expired licenses and exhausted hourly/monthly quotas.
+    |
+    | The wait comes from the Retry-After header when present, otherwise from
+    | an exponential backoff starting at `retry_delay`. If the required wait is
+    | longer than `max_wait`, the request fails immediately instead of
+    | blocking your web request or queue worker.
+    |
+    | All durations are in milliseconds.
+    |
+    | https://developers.fattureincloud.it/docs/basics/limits-and-quotas/
     |
     */
     'limits' => [
-        'default' => 300000,
-        '403' => 300000,
-        '429' => 3600000,
-        'max_retries' => 3,
+        'max_retries' => 3,      // total attempts, including the first one
+        'retry_delay' => 1000,   // ms, doubled on each attempt
+        'max_wait' => 60000,     // ms, longest single wait allowed
     ],
 ];

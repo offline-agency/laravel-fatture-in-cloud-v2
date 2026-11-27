@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2;
 
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Facade;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Archive;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Cashbook;
@@ -28,6 +29,10 @@ use OfflineAgency\LaravelFattureInCloudV2\Api\Webhook;
 
 /**
  * @method static FattureInCloudManager forCompany(?string $companyName)
+ * @method static string getCompanyId()
+ * @method static string getAccessToken()
+ * @method static string getBaseUrl()
+ * @method static PendingRequest getRequest()
  * @method static Archive archive()
  * @method static Cashbook cashbook()
  * @method static Client clients()

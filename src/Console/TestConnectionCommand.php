@@ -7,6 +7,7 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Console;
 use Illuminate\Console\Command;
 use OfflineAgency\LaravelFattureInCloudV2\Api\User;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
+use OfflineAgency\LaravelFattureInCloudV2\Exceptions\ConfigurationException;
 use OfflineAgency\LaravelFattureInCloudV2\FattureInCloud;
 
 class TestConnectionCommand extends Command
@@ -20,9 +21,13 @@ class TestConnectionCommand extends Command
         /** @var string|null $companyName */
         $companyName = $this->option('company');
 
-        $connector = new FattureInCloud(companyName: $companyName);
-        $userApi = new User($connector);
-        $result = $userApi->userInfo();
+        try {
+            $result = (new User(new FattureInCloud(companyName: $companyName)))->userInfo();
+        } catch (ConfigurationException $e) {
+            $this->error($e->getMessage());
+
+            return self::FAILURE;
+        }
 
         if ($result instanceof Error) {
             $this->error('Connection failed!');

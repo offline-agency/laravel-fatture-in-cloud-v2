@@ -44,4 +44,13 @@ describe('fic:test-connection', function () {
             ->expectsOutputToContain('Connection failed')
             ->assertFailed();
     });
+    it('shows a clear message when the company is not configured', function () {
+        Http::fake();
+
+        $this->artisan('fic:test-connection', ['--company' => 'missing'])
+            ->expectsOutputToContain("Company 'missing' is not configured")
+            ->assertFailed();
+
+        Http::assertNothingSent();
+    });
 })->covers(TestConnectionCommand::class);
