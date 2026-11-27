@@ -1,269 +1,298 @@
-# Laravel Fatture in Cloud v2
+# Laravel Fatture in Cloud
 
-[![Latest Stable Version](https://poser.pugx.org/offline-agency/laravel-fatture-in-cloud-v2/v/stable)](https://packagist.org/packages/offline-agency/laravel-fatture-in-cloud-v2)
-[![MIT Licensed](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![run-tests](https://github.com/offline-agency/laravel-fatture-in-cloud-v2/actions/workflows/main.yml/badge.svg)](https://github.com/offline-agency/laravel-fatture-in-cloud-v2/actions/workflows/main.yml)
-[![codecov](https://codecov.io/gh/offline-agency/laravel-fatture-in-cloud-v2/branch/master/graph/badge.svg?token=02NPUBvT9i)](https://codecov.io/gh/offline-agency/laravel-fatture-in-cloud-v2)
-[![Laravel Pint](https://img.shields.io/badge/code%20style-pint-orange)](https://github.com/laravel/pint)
-[![PHPStan Level 9](https://img.shields.io/badge/PHPStan-level%209-brightgreen)](https://phpstan.org/)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/offline-agency/laravel-fatture-in-cloud-v2.svg?style=flat-square)](https://packagist.org/packages/offline-agency/laravel-fatture-in-cloud-v2)
+[![Tests](https://img.shields.io/github/actions/workflow/status/offline-agency/laravel-fatture-in-cloud-v2/main.yml?branch=main&label=tests&style=flat-square)](https://github.com/offline-agency/laravel-fatture-in-cloud-v2/actions/workflows/main.yml)
+[![Coverage](https://img.shields.io/codecov/c/github/offline-agency/laravel-fatture-in-cloud-v2/main?style=flat-square)](https://codecov.io/gh/offline-agency/laravel-fatture-in-cloud-v2)
+[![PHPStan Level 9](https://img.shields.io/badge/PHPStan-level%209-brightgreen?style=flat-square)](phpstan.neon)
+[![PHP Version](https://img.shields.io/packagist/dependency-v/offline-agency/laravel-fatture-in-cloud-v2/php?style=flat-square)](composer.json)
+[![Laravel](https://img.shields.io/badge/Laravel-12%20%7C%2013-FF2D20?style=flat-square&logo=laravel&logoColor=white)](composer.json)
 [![Total Downloads](https://img.shields.io/packagist/dt/offline-agency/laravel-fatture-in-cloud-v2.svg?style=flat-square)](https://packagist.org/packages/offline-agency/laravel-fatture-in-cloud-v2)
-![Laravel Fatture in Cloud v2](https://banners.beyondco.de/Laravel%20Fatture%20in%20Cloud%20v2.png?theme=dark&packageManager=composer+require&packageName=offline-agency%2Flaravel-fatture-in-cloud-v2&pattern=autumn&style=style_1&description=A+simple+laravel+integration+with+Fatture+in+Cloud+APIs+v2&md=1&showWatermark=0&fontSize=100px&images=currency-euro&widths=200)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE.md)
 
-🔙 This is the documentation for the API v2. You can find the package for the API v1 [here](https://docs.offlineagency.com/laravel-fatture-in-cloud/#laravel-fatture-in-cloud).
+**A Laravel SDK for the [Fatture in Cloud](https://www.fattureincloud.it/) API v2.** Create and send invoices, manage e-invoicing (fatturazione elettronica / SDI), clients, suppliers, products, receipts and more, with typed entities, a fluent facade and built-in handling of API rate limits.
 
-### Warning for integrators
+> 🇮🇹 Pacchetto Laravel per integrare le API v2 di Fatture in Cloud: fatture, fatturazione elettronica, clienti, fornitori, prodotti, corrispettivi e altro.
 
-- **Keep your copy up to date:** Check the [official laravel-fatture-in-cloud-v2](https://github.com/offline-agency/laravel-fatture-in-cloud-v2) package and update your local dependency (e.g. run `composer update offline-agency/laravel-fatture-in-cloud-v2` or pull the latest from the repository).
-- **Response variables are camelCase:** Entity properties use **camelCase** (e.g. `amountGross`, `amountNet`, `amountVat`), not snake_case (`amount_gross`, `amount_net`, `amount_vat`). If you have existing code that reads response data, update it to use the new property names. Use the entity classes in this package as the reference—for example, [`IssuedDocument`](src/Entities/IssuedDocument/IssuedDocument.php) for issued documents. Examples: `amount_gross` → `amountGross`, `amount_net` → `amountNet`, `created_at` → `createdAt`.
-- **Config:** Check the package config [`config/fatture-in-cloud-v2.php`](config/fatture-in-cloud-v2.php) and update your project’s config to match, especially **`baseUrl`**. Use the root API URL only (no extra path segments).
+```php
+use OfflineAgency\LaravelFattureInCloudV2\Enums\IssuedDocumentType;
+use OfflineAgency\LaravelFattureInCloudV2\LaravelFattureInCloudV2Facade as FIC;
+
+$invoices = FIC::issuedDocuments()->all(IssuedDocumentType::Invoice); // every page, as typed entities
+
+foreach ($invoices as $invoice) {
+    echo $invoice->number.' - '.$invoice->amountGross;
+}
+```
+
+## Why this package
+
+- **Laravel-native.** Built on Laravel's HTTP client, so `Http::fake()` works in your tests. Config file, facade, container bindings and Artisan commands included.
+- **Typed, readonly entities.** Responses are mapped to strictly typed PHP objects, not raw arrays. The codebase passes PHPStan at level 9.
+- **Every page in one call.** `all()` follows the API's pagination for you; `list()` gives you a page plus navigation helpers.
+- **Rate limits handled.** HTTP 429 responses are retried using the API's `Retry-After` header, with a cap so a worker is never blocked for long.
+- **Multiple companies.** Configure several Fatture in Cloud companies and switch at runtime with `forCompany()`.
+- **AI-assistant ready.** Ships [Laravel Boost](https://laravel.com/docs/boost) guidelines and an e-invoicing skill, so AI coding assistants write correct code for this package.
+- **Broad API coverage.** 20 resource groups of the API v2, from issued documents and e-invoices to webhooks (see [API coverage](#api-coverage)).
 
 ## Requirements
 
-- PHP ^8.4 (includes 8.5)
-- Laravel ^11.0|^12.0|^13.0
+| PHP | Laravel 12 | Laravel 13 |
+|-----|:----------:|:----------:|
+| 8.4 | ✅ | ✅ |
+| 8.5 | ✅ | ✅ |
+| 8.6 | ✅¹ | ✅ |
 
-| PHP | Laravel 11 | Laravel 12 | Laravel 13 |
-|-----|:----------:|:----------:|:----------:|
-| 8.4 | ✅ | ✅ | ✅ |
-| 8.5 | ✅ | ✅ | ✅ |
+¹ Installs and runs, but isn't in the CI matrix: Laravel 12's test tooling (Pest 4 / paratest) doesn't support PHP 8.6 yet.
 
-### API Granularization (Breaking Changes)
-The monolithic `Settings` and `Setting` classes have been split into granular resources to improve maintainability and strictly follow the Single Responsibility Principle:
-- `Settings` -> Split into `VatType`, `PaymentAccount`, and `PaymentMethod`.
-- `ArchiveDocument` -> Renamed to `Archive`.
-- `Cashbooks` -> Renamed to `Cashbook`.
-- New classes added: `Email`, `Situation`, `PriceList`, and `Webhook`.
+On Laravel 11? Composer installs 3.0.x automatically. For older PHP or Laravel versions, see the 2.x requirements in [UPGRADE.md](UPGRADE.md).
 
-### Strictly Typed & Readonly Entities
-All entities (e.g., `Client`, `IssuedDocument`, `PriceList`) have been refactored to be **readonly** classes with **strict types**.
-- Properties are now immutable.
-- Usage of `mixed` types has been minimized in favor of strict `string`, `int`, `float`, `bool`, etc.
-- Constructors ensure safe data mapping from API responses.
+## Installation
 
-### Modern testing suite
-- Switched from PHPUnit to **Pest PHP** for a more expressive and modern testing experience.
-- Automated code styling with **Laravel Pint**.
+```bash
+composer require offline-agency/laravel-fatture-in-cloud-v2
+```
 
-### Architecture
-- The package now utilizes a central `FattureInCloud` connector for better state management.
-- API interactions are handled via the native Laravel `Http` client.
+Add your company ID and access token to `.env`. You can create a token in Fatture in Cloud following the [manual authentication guide](https://developers.fattureincloud.it/docs/authentication/manual-authentication/):
 
-## Quick Start
+```dotenv
+FCV2_DEFAULT_ID=123456
+FCV2_DEFAULT_BEARER=a/your-access-token
+```
 
-This package provides a simple Laravel integration with [Fatture in Cloud APIs v2](https://developers.fattureincloud.it/).
+Check that everything works:
 
-See the [documentation](https://docs.offlineagency.com/laravel-fatture-in-cloud-v2/) for detailed installation and usage instructions.
+```bash
+php artisan fic:test-connection
+```
+
+Optionally publish the config file to `config/fatture-in-cloud-v2.php`:
+
+```bash
+php artisan vendor:publish --provider="OfflineAgency\LaravelFattureInCloudV2\LaravelFattureInCloudV2ServiceProvider"
+```
+
+## Usage
+
+Access every API resource through the facade:
 
 ```php
-// 1. Via Facade (recommended)
 use OfflineAgency\LaravelFattureInCloudV2\LaravelFattureInCloudV2Facade as FIC;
-use OfflineAgency\LaravelFattureInCloudV2\Enums\IssuedDocumentType;
 
-$clients = FIC::clients()->list();
-$invoices = FIC::issuedDocuments()->list(IssuedDocumentType::Invoice);
+$client = FIC::clients()->detail(42);
 
-// 2. Via Dependency Injection
+$invoice = FIC::issuedDocuments()->create([
+    'data' => [
+        'type' => 'invoice',
+        'entity' => ['name' => 'Mario Rossi S.r.l.'],
+        'date' => now(), // Carbon/DateTime or any parseable string, sent as Y-m-d
+        'items_list' => [
+            ['name' => 'Consulting', 'qty' => 1, 'net_price' => 500],
+        ],
+    ],
+]);
+```
+
+The request body follows the [Fatture in Cloud API reference](https://developers.fattureincloud.it/api-reference).
+
+You can also inject the manager or instantiate API classes directly:
+
+```php
 use OfflineAgency\LaravelFattureInCloudV2\Contracts\FattureInCloudManagerInterface;
 
 public function __construct(private FattureInCloudManagerInterface $fic) {}
-$this->fic->issuedDocuments()->list(IssuedDocumentType::Invoice);
 
-// 3. Direct instantiation (still works)
-$api = new \OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument();
-$list = $api->list('invoice', ['per_page' => 50]);
-$list->getItems();       // array of invoices
-$list->getPagination();  // pagination fields
+$this->fic->products()->list(['per_page' => 50]);
+
+// or
+$products = (new \OfflineAgency\LaravelFattureInCloudV2\Api\Product())->list();
 ```
 
-## Multi-Company
+### Handling errors
 
-Configure multiple companies in `config/fatture-in-cloud-v2.php`:
+Methods return the entity on success. They don't throw on API errors; instead they return:
+
+- an `Entities\Error` when the API answers with an error (4xx/5xx), with the API payload in `$error->error`;
+- an `Illuminate\Support\MessageBag` when the request body fails local validation, before anything is sent.
 
 ```php
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
+use Illuminate\Support\MessageBag;
+
+$result = FIC::clients()->create(['data' => ['name' => 'ACME']]);
+
+if ($result instanceof MessageBag) {
+    // invalid input, nothing was sent
+} elseif ($result instanceof Error) {
+    // API error, e.g. $result->error->message
+} else {
+    // $result is a typed Client entity
+}
+```
+
+Configuration problems (an unknown company name, or a missing company ID or token) throw an `Exceptions\ConfigurationException` with a message telling you what to set, before any request is sent.
+
+### Pagination
+
+`all()` returns every result across all pages. `list()` returns one page with navigation helpers:
+
+```php
+$page = FIC::issuedDocuments()->list(IssuedDocumentType::Invoice, ['per_page' => 50]);
+
+$page->getItems();                         // invoices on this page
+$page->getPagination()->hasNextPage();     // bool
+$next = $page->getPagination()->goToNextPage();
+// also: hasPrevPage(), goToPrevPage(), goToFirstPage(), goToLastPage(), isSinglePage()
+```
+
+### Multiple companies
+
+```php
+// config/fatture-in-cloud-v2.php
 'companies' => [
     'default' => ['id' => env('FCV2_DEFAULT_ID'), 'bearer' => env('FCV2_DEFAULT_BEARER')],
     'acme'    => ['id' => env('FCV2_ACME_ID'),    'bearer' => env('FCV2_ACME_BEARER')],
 ],
 ```
 
-Switch at runtime:
-
 ```php
 $acmeClients = FIC::forCompany('acme')->clients()->list();
 ```
 
-## Enums
+Have a token from somewhere else (for example an OAuth2 flow)? Pass it directly:
 
-String-backed PHP enums are available for document types:
+```php
+use OfflineAgency\LaravelFattureInCloudV2\FattureInCloud;
+use OfflineAgency\LaravelFattureInCloudV2\FattureInCloudManager;
+
+$fic = new FattureInCloudManager(new FattureInCloud(companyId: '123456', accessToken: $token));
+```
+
+### Enums
+
+String-backed enums are available for document types. Plain strings (`'invoice'`, `'expense'`) still work.
 
 ```php
 use OfflineAgency\LaravelFattureInCloudV2\Enums\IssuedDocumentType;
 use OfflineAgency\LaravelFattureInCloudV2\Enums\ReceivedDocumentType;
-use OfflineAgency\LaravelFattureInCloudV2\Enums\ReceiptType;
 
-$invoices = FIC::issuedDocuments()->list(IssuedDocumentType::Invoice);
-$expenses = FIC::receivedDocuments()->list(ReceivedDocumentType::Expense);
+FIC::issuedDocuments()->list(IssuedDocumentType::CreditNote);
+FIC::receivedDocuments()->list(ReceivedDocumentType::Expense);
 ```
 
-Backward compatible: string values (`'invoice'`, `'expense'`) still accepted.
+### Deleted documents
 
-## Artisan Commands
-
-```bash
-# Test API connection (accepts --company=name)
-php artisan fic:test-connection
-php artisan fic:test-connection --company=acme
-
-# List all API resources and methods
-php artisan fic:api-status
-```
-
-## Features
-
-### All [![HOT](https://img.shields.io/static/v1.svg?label=&message=HOT&color=red)]()
-This package provide `all()` method that allow you to get an array of all results without pagination. It's implemented for all endpoint that provide a list method with pagination. Let's see an example:
+`bin()` returns a deleted issued document. This is useful, for example, after converting a proforma into an invoice, which deletes the proforma:
 
 ```php
-$issued_documents = new \OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument();
-$issued_document_list = $issued_documents->all('invoice');
+$proforma = FIC::issuedDocuments()->bin($documentId);
 ```
 
-### Pagination
-This package provides a pagination system that allow you to move between pages using simple methods:
+### Rate limits
 
-```php
-$issued_documents = new \OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument();
-$issued_document_list = $issued_documents->list('invoice');
+Fatture in Cloud allows [300 requests every 5 minutes per company, plus hourly and monthly quotas](https://developers.fattureincloud.it/docs/basics/limits-and-quotas/).
 
-// check if the response has more than one page
-$issued_document_list->getPagination()->isSinglePage();
-
-// check if the document has a next page
-$issued_document_list->getPagination()->hasNextPage();
-
-// check if the document has a previous page
-$issued_document_list->getPagination()->hasPrevPage();
-
-// return documents of the next page
-$issued_document_list->getPagination()->goToNextPage();
-
-// return documents of the previous page
-$issued_document_list->getPagination()->goToPrevPage();
-
-// return documents of the first page
-$issued_document_list->getPagination()->goToFirstPage();
-
-// return documents of the last page
-$issued_document_list->getPagination()->goToLastPage();
-```
-
-### Bin [![HOT](https://img.shields.io/static/v1.svg?label=&message=HOT&color=red)]()
-This package provides bin() method for deleted issued documents that allow you to get its detail. This is very useful, for example, when you convert a
-proforma into an invoice (deleting the proforma) and you need old document's detail. Let's see an example:
-
-```php
-$issued_documents = new \OfflineAgency\LaravelFattureInCloudV2\Api\IssuedDocument();
-$response = $issued_documents->bin($document_id);
-```
-
-### Rate limit [![HOT](https://img.shields.io/static/v1.svg?label=&message=HOT&color=red)]()
-This     package provides a method to intercept throttle errors (403, 429) and automatically retry.
-You can specify limits on your config, remember to use milliseconds to indicate time:
+- **429 (short-term limit)** is retried automatically. The package waits for the time in the `Retry-After` header, or uses an exponential backoff when the header is missing.
+- If the required wait is longer than `max_wait`, the error is returned immediately instead of blocking your request or queue worker.
+- **403** is never retried: it means a missing permission, an expired license or an exhausted hourly/monthly quota.
 
 ```php
 'limits' => [
-    'default' => 300000,
-    '403' => 300000,
-    '429' => 3600000,
+    'max_retries' => 3,      // total attempts, including the first one
+    'retry_delay' => 1000,   // ms, doubled on each attempt
+    'max_wait' => 60000,     // ms, longest single wait allowed
 ],
+```
+
+### Artisan commands
+
+```bash
+php artisan fic:test-connection              # check credentials for the default company
+php artisan fic:test-connection --company=acme
+php artisan fic:api-status                   # list every API resource and method
+```
+
+## AI assistants (Laravel Boost)
+
+If your app uses [Laravel Boost](https://laravel.com/docs/boost), run `php artisan boost:install` (or `boost:update` if Boost is already installed). Boost picks up this package's resources:
+
+- **Guideline** (`resources/boost/guidelines/core.blade.php`): always loaded; covers the facade, result types, companies, rate limits and testing.
+- **Skill** `fatture-in-cloud-e-invoicing`: loaded when relevant; walks through creating an invoice, previewing totals, verifying the XML, sending it to SDI and tracking its status.
+
+Both are tested: their code examples run against a faked API in this package's test suite.
+
+## Testing your application
+
+Requests go through Laravel's HTTP client, so you can fake the API in your own tests. Set fake credentials first: without them a `ConfigurationException` is thrown before the request reaches the fake.
+
+```php
+use Illuminate\Support\Facades\Http;
+
+config([
+    'fatture-in-cloud-v2.companies.default.id' => '1',
+    'fatture-in-cloud-v2.companies.default.bearer' => 'test-token',
+]);
+
+Http::fake([
+    'api-v2.fattureincloud.it/c/*/entities/clients*' => Http::response([
+        'data' => [['id' => 1, 'name' => 'ACME']],
+    ]),
+]);
+
+$clients = FIC::clients()->all();
 ```
 
 ## API coverage
 
-We are currently work on this package to implement all endpoints. Enable notifications to be notified when new API are released.
+| Resource | Facade accessor | Resource | Facade accessor |
+|---|---|---|---|
+| User | `users()` | Receipts | `receipts()` |
+| Companies | `company()` | Taxes (F24) | `taxes()` |
+| Clients | `clients()` | Archive | `archive()` |
+| Suppliers | `suppliers()` | Cashbook | `cashbook()` |
+| Products & stock | `products()` | Info | `info()` |
+| Issued documents | `issuedDocuments()` | Price lists | `priceLists()` |
+| Issued e-invoices | `issuedEInvoices()` | Webhooks | `webhooks()` |
+| Received documents | `receivedDocuments()` | Situation | `situation()` |
+| Emails | `emails()` | VAT types | `vatTypes()` |
+| Payment accounts | `paymentAccounts()` | Payment methods | `paymentMethods()` |
 
-✅ User
+Run `php artisan fic:api-status` for the full list of methods.
 
-✅ Companies
+## FAQ
 
-✅ Clients
+**Is this the official SDK?**
+No. Fatture in Cloud publishes [`fattureincloud/fattureincloud-php-sdk`](https://github.com/fattureincloud/fattureincloud-php-sdk), a framework-agnostic SDK generated from their OpenAPI spec, with OAuth2 helpers. This package is a Laravel integration: facade, config, container bindings, `Http::fake()` support, auto-pagination and rate-limit handling.
 
-✅ Suppliers
+**Does it support OAuth2?**
+The package authenticates with an access token per company. Tokens created via [manual authentication](https://developers.fattureincloud.it/docs/authentication/manual-authentication/) work out of the box. If you run your own OAuth2 flow, pass the resulting token to `new FattureInCloud(companyId: ..., accessToken: ...)`.
 
-✅ Products
+**Why is it called "v2" if the package is at version 3?**
+"v2" refers to version 2 of the Fatture in Cloud API. The v1 API package is [`offline-agency/laravel-fatture-in-cloud`](https://github.com/offline-agency/laravel-fatture-in-cloud) and is no longer maintained.
 
-✅ Issued Documents
+**Why are entity properties camelCase?**
+Since 3.0, entities use camelCase (`amountGross`, `createdAt`). See [UPGRADE.md](UPGRADE.md) for the full mapping from 2.x.
 
-✅ Issued e-invoices
+## Upgrading
 
-✅ Received Documents
-
-✅ Receipts
-
-✅ Taxes
-
-✅ Archive
-
-✅ Cashbook
-
-✅ Info
-
-✅ Price Lists
-
-✅ Webhooks
-
-✅ Situation
-
-✅ Emails
-
-✅ Stock
-
-✅ Payment Accounts
-
-✅ Payment Methods
-
-✅ VAT Types
-
-## Testing
-
-```bash
-composer test
-```
-
-Unit and Feature tests use mocked HTTP. To run **integration tests** (real HTTP calls to Fatture in Cloud), set in `.env`:
-
-- `FCV2_DEFAULT_ID` – company ID
-- `FCV2_DEFAULT_BEARER` – API bearer token
-
-Then run:
-
-```bash
-php vendor/bin/pest tests/Integration
-```
-
-If these env vars are not set, integration tests are skipped.
+See [UPGRADE.md](UPGRADE.md) and the [CHANGELOG](CHANGELOG.md).
 
 ## Contributing
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+Contributions are welcome. See [CONTRIBUTING](CONTRIBUTING.md); `composer check` runs Pint, PHPStan and the test suite.
 
 ## Security
 
-If you discover any security-related issues, please email <support@offlineagency.com> instead of using the issue
-tracker.
+Please report vulnerabilities privately as described in the [security policy](.github/SECURITY.md).
 
 ## Credits
 
 - [Offline Agency](https://github.com/offline-agency)
 - [Giacomo Fabbian](https://github.com/Giacomo92)
 - [Nicolas Sanavia](https://github.com/SanaviaNicolas)
-- [All Contributors](https://github.com/offline-agency/laravel-fatture-in-cloud-v2/graphs/contributors)
+- [All contributors](https://github.com/offline-agency/laravel-fatture-in-cloud-v2/graphs/contributors)
 
-## About us
-
-Offline Agency is a web design agency based in Padua, Italy. You'll find an overview of our
-projects [on our website](https://offlineagency.it/).
+Offline Agency is a web agency based in Padua, Italy. See our projects [on our website](https://offlineagency.it/).
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The MIT License (MIT). See [License File](LICENSE.md) for more information.

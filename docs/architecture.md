@@ -46,7 +46,7 @@ App → Facade/Manager → Api\Client → Api (base) → FattureInCloud → Lara
 3. **Api method**: `Client::list()` validates params, calls `$this->get($url, $params)`
 4. **Base Api**: `get()` wraps HTTP call in `executeWithRetry()` closure
 5. **Connector**: `FattureInCloud::getRequest()` returns `PendingRequest` with token + baseUrl
-6. **Retry**: On 403/429, exponential backoff up to `max_retries` (default 3)
+6. **Retry**: On 429 only, waits for `Retry-After` (or exponential backoff) up to `max_retries` attempts; 403 is never retried. Empty credentials throw `ConfigurationException` here, before any request is sent
 7. **Response**: `ApiResponse(success, data)` — typed DTO replaces bare object
 8. **Entity**: `new ClientEntity($response->data->data)` — readonly value object
 
@@ -63,18 +63,18 @@ API JSON → `stdClass` via `json_decode` → Entity constructor → camelCase r
 
 ```
 executeWithRetry(closure)
-  ├── attempt 1: call API
-  │   └── 403/429? → waitThrottle(base * 2^0) → retry
-  ├── attempt 2: call API
-  │   └── 403/429? → waitThrottle(base * 2^1) → retry
-  ├── attempt 3 (max): call API
-  │   └── 403/429? → return ApiResponse(success=false)
-  └── 2xx: return ApiResponse(success=true)
+  ├── attempt n: call API
+  │   ├── not 429        → return ApiResponse (403 included: never retried)
+  │   ├── n = max_retries → return ApiResponse(success=false)
+  │   └── 429            → wait = Retry-After (seconds or HTTP date)
+  │                          ?? retry_delay * 2^(n-1), capped at max_wait
+  │                        wait > max_wait (from Retry-After)? → return ApiResponse(success=false)
+  │                        Sleep::for(wait)->milliseconds() → attempt n+1
 ```
 
-Backoff delays (configurable via `config/fatture-in-cloud-v2.php`):
-- 403: base 300ms, then 600ms
-- 429: base 3.6s, then 7.2s
+Defaults (`limits` in `config/fatture-in-cloud-v2.php`, all in milliseconds): `max_retries` 3, `retry_delay` 1000, `max_wait` 60000.
+
+Fatture in Cloud returns 429 for the short-term limit (300 requests / 5 minutes per company) and 403 for missing scopes, expired licenses and exhausted hourly/monthly quotas. See https://developers.fattureincloud.it/docs/basics/limits-and-quotas/.
 
 ## Multi-Company Resolution
 

@@ -36,20 +36,31 @@ Before submitting a pull request:
 - Check the codebase to ensure that your feature doesn't already exist.
 - Check the pull requests to ensure that another person hasn't already submitted the feature or fix.
 
+## Local setup
+
+```bash
+git clone https://github.com/offline-agency/laravel-fatture-in-cloud-v2.git
+cd laravel-fatture-in-cloud-v2
+composer install
+composer check   # Pint (style) + PHPStan level 9 + Pest
+```
+
+Run a single tool with `composer format` (fix style), `composer analyse` or `composer test`.
+
 ## Requirements
 
-If the project maintainer has any additional requirements, you will find them listed here.
+- **[Laravel Pint](https://laravel.com/docs/pint)** for code style. Run `composer format` before pushing.
 
-- **[Laravel Pint](https://laravel.com/docs/11.x/pint)** - We use Pint for code styling. You can run it locally using `composer format`.
+- **[PHPStan](https://phpstan.org/) level 9 with no ignored errors.** Run `composer analyse`. Don't add `@phpstan-ignore` or baseline entries to make it pass.
 
-- **Add tests with Pest!** - Your patch won't be accepted if it doesn't have tests. We use [Pest PHP](https://pestphp.com/) for our testing suite. Run them with `composer test`.
+- **Add tests with [Pest](https://pestphp.com/).** Your patch won't be accepted without tests. Fake HTTP calls with `Http::fake()`; never hit the real API in the default suite.
 
-- **Document any change in behaviour** - Make sure the `README.md` and any other relevant documentation are kept up-to-date.
+- **Document any change in behaviour.** Keep `README.md`, `CHANGELOG.md` and, for breaking changes, `UPGRADE.md` up to date.
 
-- **Consider our release cycle** - We try to follow [SemVer v2.0.0](https://semver.org/). Randomly breaking public APIs is not an option.
+- **Follow [SemVer v2.0.0](https://semver.org/).** Randomly breaking public APIs is not an option.
 
-- **One pull request per feature** - If you want to do more than one thing, send multiple pull requests.
+- **One pull request per feature.** If you want to do more than one thing, send multiple pull requests.
 
-- **Send coherent history** - Make sure each individual commit in your pull request is meaningful. If you had to make multiple intermediate commits while developing, please [squash them](https://www.git-scm.com/book/en/v2/Git-Tools-Rewriting-History#Changing-Multiple-Commit-Messages) before submitting.
+- **Send coherent history.** Make sure each commit in your pull request is meaningful. [Squash](https://www.git-scm.com/book/en/v2/Git-Tools-Rewriting-History#Changing-Multiple-Commit-Messages) intermediate commits before submitting.
 
 **Happy coding**!
