@@ -15,7 +15,7 @@ readonly class ClientList
 
     public ClientPagination $pagination;
 
-    public function __construct(object $clientResponse)
+    public function __construct(\stdClass $clientResponse)
     {
         $this->items = array_map(function ($client) {
             return new ClientEntity($client);

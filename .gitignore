@@ -4,11 +4,11 @@
 .php_cs.cache
 .phpunit.result.cache
 .phpunit.cache/
+phpunit.xml
 build
 composer.lock
 coverage
 coverage.xml
-docs
 psalm.xml
 testbench.yaml
 vendor

@@ -205,4 +205,8 @@ describe('PaymentAccount', function () {
         expect($entity->id)->toBeNull()
             ->and($entity->name)->toBeNull();
     });
-});
+})->covers(
+    PaymentAccount::class,
+    PaymentAccountEntity::class,
+    PaymentAccountList::class,
+);

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Http;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Client;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\Client as ClientEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ClientFakeResponse;
+use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 describe('ListTrait', function () {
     it('parses query params from a URL with a query string', function () {
@@ -33,4 +34,4 @@ describe('ListTrait', function () {
         expect($response)->toBeArray()->toHaveCount(4)
             ->{0}->toBeInstanceOf(ClientEntity::class);
     });
-});
+})->covers(ListTrait::class);

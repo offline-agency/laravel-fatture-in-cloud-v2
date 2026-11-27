@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Company;
 
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
+
 readonly class Company
 {
+    use CastsFromMixed;
+
     public ?int $id;
 
     public ?string $name;
@@ -64,37 +68,35 @@ readonly class Company
 
     public function __construct(mixed $parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        $this->id = $parameters['id'] ?? null;
-        $this->name = $parameters['name'] ?? null;
-        $this->alias = $parameters['alias'] ?? null;
-        $this->vatNumber = $parameters['vat_number'] ?? null;
-        $this->taxCode = $parameters['tax_code'] ?? null;
-        $this->email = $parameters['email'] ?? null;
-        $this->type = $parameters['type'] ?? null;
-        $this->fic = isset($parameters['fic']) ? (bool) $parameters['fic'] : null;
-        $this->ficPlanName = $parameters['fic_plan_name'] ?? null;
-        $this->ficSignupDate = $parameters['fic_signup_date'] ?? null;
-        $this->ficLicenseExpire = $parameters['fic_license_expire'] ?? null;
-        $this->useFic = isset($parameters['use_fic']) ? (bool) $parameters['use_fic'] : null;
-        $this->ficNeedSetup = isset($parameters['fic_need_setup']) ? (bool) $parameters['fic_need_setup'] : null;
-        $this->ficLicenseType = $parameters['fic_license_type'] ?? null;
-        $this->dic = isset($parameters['dic']) ? (bool) $parameters['dic'] : null;
-        $this->dicPlanName = $parameters['dic_plan_name'] ?? null;
-        $this->dicSignupDate = $parameters['dic_signup_date'] ?? null;
-        $this->dicLicenseExpire = $parameters['dic_license_expire'] ?? null;
-        $this->useDic = isset($parameters['use_dic']) ? (bool) $parameters['use_dic'] : null;
-        $this->dicLicenseType = $parameters['dic_license_type'] ?? null;
-        $this->registrationService = $parameters['registration_service'] ?? null;
-        $this->canUseCoupon = isset($parameters['can_use_coupon']) ? (bool) $parameters['can_use_coupon'] : null;
-        $this->accessInfo = $parameters['access_info'] ?? null;
-        $this->planInfo = $parameters['plan_info'] ?? null;
-        $this->isAccountant = isset($parameters['is_accountant']) ? (bool) $parameters['is_accountant'] : null;
-        $this->accountantId = $parameters['accountant_id'] ?? null;
-        $this->ficPaymentSubject = $parameters['fic_payment_subject'] ?? null;
-        $this->dicPaymentSubject = $parameters['dic_payment_subject'] ?? null;
+        $this->id = self::nullableInt($parameters, 'id');
+        $this->name = self::nullableString($parameters, 'name');
+        $this->alias = self::nullableString($parameters, 'alias');
+        $this->vatNumber = self::nullableString($parameters, 'vat_number');
+        $this->taxCode = self::nullableString($parameters, 'tax_code');
+        $this->email = self::nullableString($parameters, 'email');
+        $this->type = self::nullableString($parameters, 'type');
+        $this->fic = self::nullableBool($parameters, 'fic');
+        $this->ficPlanName = self::nullableString($parameters, 'fic_plan_name');
+        $this->ficSignupDate = self::nullableString($parameters, 'fic_signup_date');
+        $this->ficLicenseExpire = self::nullableString($parameters, 'fic_license_expire');
+        $this->useFic = self::nullableBool($parameters, 'use_fic');
+        $this->ficNeedSetup = self::nullableBool($parameters, 'fic_need_setup');
+        $this->ficLicenseType = self::nullableString($parameters, 'fic_license_type');
+        $this->dic = self::nullableBool($parameters, 'dic');
+        $this->dicPlanName = self::nullableString($parameters, 'dic_plan_name');
+        $this->dicSignupDate = self::nullableString($parameters, 'dic_signup_date');
+        $this->dicLicenseExpire = self::nullableString($parameters, 'dic_license_expire');
+        $this->useDic = self::nullableBool($parameters, 'use_dic');
+        $this->dicLicenseType = self::nullableString($parameters, 'dic_license_type');
+        $this->registrationService = self::nullableString($parameters, 'registration_service');
+        $this->canUseCoupon = self::nullableBool($parameters, 'can_use_coupon');
+        $this->accessInfo = self::mixedValue($parameters, 'access_info');
+        $this->planInfo = self::mixedValue($parameters, 'plan_info');
+        $this->isAccountant = self::nullableBool($parameters, 'is_accountant');
+        $this->accountantId = self::nullableInt($parameters, 'accountant_id');
+        $this->ficPaymentSubject = self::nullableString($parameters, 'fic_payment_subject');
+        $this->dicPaymentSubject = self::nullableString($parameters, 'dic_payment_subject');
     }
 }

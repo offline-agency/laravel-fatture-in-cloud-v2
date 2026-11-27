@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Archive;
 
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
+
 readonly class Archive
 {
+    use CastsFromMixed;
+
     public ?int $id;
 
     public ?string $date;
@@ -20,19 +24,13 @@ readonly class Archive
 
     public function __construct(mixed $parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        if (! is_array($parameters)) {
-            $parameters = [];
-        }
-
-        $this->id = $parameters['id'] ?? null;
-        $this->date = $parameters['date'] ?? null;
-        $this->description = $parameters['description'] ?? null;
-        $this->attachmentUrl = $parameters['attachment_url'] ?? null;
-        $this->category = $parameters['category'] ?? null;
-        $this->attachmentToken = $parameters['attachment_token'] ?? null;
+        $this->id = self::nullableInt($parameters, 'id');
+        $this->date = self::nullableString($parameters, 'date');
+        $this->description = self::nullableString($parameters, 'description');
+        $this->attachmentUrl = self::nullableString($parameters, 'attachment_url');
+        $this->category = self::nullableString($parameters, 'category');
+        $this->attachmentToken = self::nullableString($parameters, 'attachment_token');
     }
 }

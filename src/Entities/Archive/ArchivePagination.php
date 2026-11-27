@@ -30,7 +30,7 @@ readonly class ArchivePagination extends Pagination
 
     public function goToPrevPage(): ArchiveList|Error|null
     {
-        if (! $this->hasPrevPage()) {
+        if (is_null($this->prevPageUrl)) {
             return null;
         }
 
@@ -39,7 +39,7 @@ readonly class ArchivePagination extends Pagination
 
     public function goToNextPage(): ArchiveList|Error|null
     {
-        if (! $this->hasNextPage()) {
+        if (is_null($this->nextPageUrl)) {
             return null;
         }
 

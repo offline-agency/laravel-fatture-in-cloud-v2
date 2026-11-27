@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\CashBook;
 
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
+
 readonly class CashbookEntry
 {
+    use CastsFromMixed;
+
     public ?int $id;
 
     public ?string $date;
@@ -30,24 +34,18 @@ readonly class CashbookEntry
 
     public function __construct(mixed $parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        if (! is_array($parameters)) {
-            $parameters = [];
-        }
-
-        $this->id = isset($parameters['id']) ? (int) $parameters['id'] : null;
-        $this->date = $parameters['date'] ?? null;
-        $this->description = $parameters['description'] ?? null;
-        $this->kind = $parameters['kind'] ?? null;
-        $this->type = $parameters['type'] ?? null;
-        $this->entityName = $parameters['entity_name'] ?? null;
-        $this->document = isset($parameters['document']) ? (object) $parameters['document'] : null;
-        $this->amountIn = isset($parameters['amount_in']) ? (float) $parameters['amount_in'] : null;
-        $this->paymentAccountIn = isset($parameters['payment_account_in']) ? (object) $parameters['payment_account_in'] : null;
-        $this->amountOut = isset($parameters['amount_out']) ? (float) $parameters['amount_out'] : null;
-        $this->paymentAccountOut = isset($parameters['payment_account_out']) ? (object) $parameters['payment_account_out'] : null;
+        $this->id = self::nullableInt($parameters, 'id');
+        $this->date = self::nullableString($parameters, 'date');
+        $this->description = self::nullableString($parameters, 'description');
+        $this->kind = self::nullableString($parameters, 'kind');
+        $this->type = self::nullableString($parameters, 'type');
+        $this->entityName = self::nullableString($parameters, 'entity_name');
+        $this->document = self::nullableObject($parameters, 'document');
+        $this->amountIn = self::nullableFloat($parameters, 'amount_in');
+        $this->paymentAccountIn = self::nullableObject($parameters, 'payment_account_in');
+        $this->amountOut = self::nullableFloat($parameters, 'amount_out');
+        $this->paymentAccountOut = self::nullableObject($parameters, 'payment_account_out');
     }
 }

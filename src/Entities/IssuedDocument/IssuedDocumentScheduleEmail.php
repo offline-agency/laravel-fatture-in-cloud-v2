@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedDocument;
 
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
+
 readonly class IssuedDocumentScheduleEmail
 {
+    use CastsFromMixed;
+
     public ?bool $scheduled;
 
     public function __construct(mixed $parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        $this->scheduled = $parameters['scheduled'] ?? null;
+        $this->scheduled = self::nullableBool($parameters, 'scheduled');
     }
 }

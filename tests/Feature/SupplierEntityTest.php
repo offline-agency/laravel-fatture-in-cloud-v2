@@ -339,4 +339,9 @@ describe('Supplier Entity', function () {
         expect($entity->id)->toBeNull()
             ->and($entity->name)->toBeNull();
     });
-});
+})->covers(
+    Supplier::class,
+    SupplierEntity::class,
+    SupplierList::class,
+    SupplierPagination::class,
+);

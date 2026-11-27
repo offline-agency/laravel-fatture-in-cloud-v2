@@ -13,7 +13,7 @@ readonly class ArchiveList
 
     public ArchivePagination $pagination;
 
-    public function __construct(object $archiveResponse)
+    public function __construct(\stdClass $archiveResponse)
     {
         $this->items = array_map(function ($archive) {
             return new Archive($archive);

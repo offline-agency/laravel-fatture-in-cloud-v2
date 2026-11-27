@@ -11,7 +11,7 @@ readonly class StockMovementList
      */
     public array $items;
 
-    public function __construct(object $stockMovementResponse)
+    public function __construct(\stdClass $stockMovementResponse)
     {
         $this->items = array_map(function ($stockMovement) {
             return new StockMovement($stockMovement);

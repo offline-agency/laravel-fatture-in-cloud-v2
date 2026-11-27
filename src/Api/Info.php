@@ -9,15 +9,18 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\InfoList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\PaymentAccount;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\Vat;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Info
+ */
 class Info extends Api
 {
     /**
      * List VAT types. OPTIONAL query: fieldset.
      *
-     * @param  array{fieldset?: string}|null  $additional_data
+     * @param  array{fieldset?: string}  $additional_data
      */
     public function listVatTypes(
-        ?array $additional_data = []
+        array $additional_data = []
     ): InfoList|Error {
         $additional_data = $this->data($additional_data, [
             'fieldset',
@@ -40,10 +43,10 @@ class Info extends Api
     /**
      * List payment accounts. OPTIONAL query: fields, fieldset, sort.
      *
-     * @param  array{fields?: string, fieldset?: string, sort?: string}|null  $additional_data
+     * @param  array{fields?: string, fieldset?: string, sort?: string}  $additional_data
      */
     public function listPaymentAccounts(
-        ?array $additional_data = []
+        array $additional_data = []
     ): InfoList|Error {
         $additional_data = $this->data($additional_data, [
             'fields',

@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedEInvoice;
 
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
+
 readonly class IssuedEInvoiceRejectionReason
 {
+    use CastsFromMixed;
+
     public ?string $reason;
 
     public ?string $eiStatus;
@@ -18,18 +22,12 @@ readonly class IssuedEInvoiceRejectionReason
 
     public function __construct(mixed $parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        if (! is_array($parameters)) {
-            $parameters = [];
-        }
-
-        $this->reason = $parameters['reason'] ?? null;
-        $this->eiStatus = $parameters['ei_status'] ?? null;
-        $this->solution = $parameters['solution'] ?? null;
-        $this->code = $parameters['code'] ?? null;
-        $this->date = $parameters['date'] ?? null;
+        $this->reason = self::nullableString($parameters, 'reason');
+        $this->eiStatus = self::nullableString($parameters, 'ei_status');
+        $this->solution = self::nullableString($parameters, 'solution');
+        $this->code = self::nullableString($parameters, 'code');
+        $this->date = self::nullableString($parameters, 'date');
     }
 }

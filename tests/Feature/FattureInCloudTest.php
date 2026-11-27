@@ -2,7 +2,11 @@
 
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Http;
+use OfflineAgency\LaravelFattureInCloudV2\Api\Client;
+use OfflineAgency\LaravelFattureInCloudV2\Exceptions\ConfigurationException;
 use OfflineAgency\LaravelFattureInCloudV2\FattureInCloud;
+use OfflineAgency\LaravelFattureInCloudV2\FattureInCloudManager;
 
 describe('FattureInCloud', function () {
     it('constructs with config defaults', function () {
@@ -77,4 +81,63 @@ describe('FattureInCloud', function () {
         expect($fatture->getCompanyId())->toBe('')
             ->and($fatture->getAccessToken())->toBe('');
     });
-});
+    it('throws when a named company is not configured', function () {
+        new FattureInCloud(companyName: 'acme');
+    })->throws(ConfigurationException::class, "Company 'acme' is not configured");
+
+    it('throws from forCompany when the company is not configured', function () {
+        app(FattureInCloudManager::class)->forCompany('typo');
+    })->throws(ConfigurationException::class, "Company 'typo' is not configured");
+
+    it('throws before sending a request when the company id is missing', function () {
+        Http::fake();
+        Config::set('fatture-in-cloud-v2.companies.default.id', '');
+
+        try {
+            (new Client())->list();
+        } finally {
+            Http::assertNothingSent();
+        }
+    })->throws(ConfigurationException::class, 'FCV2_DEFAULT_ID');
+
+    it('throws before sending a request when the access token is missing', function () {
+        Http::fake();
+        Config::set('fatture-in-cloud-v2.companies.default.bearer', '');
+
+        try {
+            (new Client())->list();
+        } finally {
+            Http::assertNothingSent();
+        }
+    })->throws(ConfigurationException::class, 'FCV2_DEFAULT_BEARER');
+
+    it('names the config key when a named company has no access token', function () {
+        Http::fake();
+        Config::set('fatture-in-cloud-v2.companies.acme', ['id' => '123', 'bearer' => '']);
+
+        (new Client(new FattureInCloud(companyName: 'acme')))->list();
+    })->throws(ConfigurationException::class, "access token (bearer) is missing for company 'acme'. Set companies.acme.bearer");
+
+    it('names the config key when a named company has no id', function () {
+        Http::fake();
+        Config::set('fatture-in-cloud-v2.companies.acme', ['id' => '', 'bearer' => 'token']);
+
+        (new Client(new FattureInCloud(companyName: 'acme')))->list();
+    })->throws(ConfigurationException::class, "company ID is missing for company 'acme'. Set companies.acme.id");
+
+    it('explains how to configure a company when none is configured', function () {
+        Http::fake();
+        Config::set('fatture-in-cloud-v2.companies', []);
+
+        (new Client())->list();
+    })->throws(ConfigurationException::class, 'Configure a company in config/fatture-in-cloud-v2.php or pass it to the FattureInCloud constructor');
+
+    it('does not throw on construction when credentials are empty', function () {
+        Config::set('fatture-in-cloud-v2.companies', []);
+
+        expect(new FattureInCloud())->toBeInstanceOf(FattureInCloud::class);
+    });
+})->covers(
+    FattureInCloud::class,
+    ConfigurationException::class,
+);

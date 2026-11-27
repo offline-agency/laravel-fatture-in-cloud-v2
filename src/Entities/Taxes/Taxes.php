@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Taxes;
 
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
+
 readonly class Taxes
 {
+    use CastsFromMixed;
+
     public ?int $id;
 
     public ?string $type;
@@ -28,23 +32,17 @@ readonly class Taxes
 
     public function __construct(mixed $parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        if (! is_array($parameters)) {
-            $parameters = [];
-        }
-
-        $this->id = $parameters['id'] ?? null;
-        $this->type = $parameters['type'] ?? null;
-        $this->company_id = $parameters['company_id'] ?? null;
-        $this->dueDate = $parameters['due_date'] ?? null;
-        $this->status = $parameters['status'] ?? null;
-        $this->paymentAccount = $parameters['payment_account'] ?? null;
-        $this->amount = isset($parameters['amount']) ? (float) $parameters['amount'] : null;
-        $this->attachmentUrl = $parameters['attachment_url'] ?? null;
-        $this->description = $parameters['description'] ?? null;
-        $this->merged_in = $parameters['merged_in'] ?? null;
+        $this->id = self::nullableInt($parameters, 'id');
+        $this->type = self::nullableString($parameters, 'type');
+        $this->company_id = self::nullableInt($parameters, 'company_id');
+        $this->dueDate = self::nullableString($parameters, 'due_date');
+        $this->status = self::nullableString($parameters, 'status');
+        $this->paymentAccount = self::mixedValue($parameters, 'payment_account');
+        $this->amount = self::nullableFloat($parameters, 'amount');
+        $this->attachmentUrl = self::nullableString($parameters, 'attachment_url');
+        $this->description = self::nullableString($parameters, 'description');
+        $this->merged_in = self::mixedValue($parameters, 'merged_in');
     }
 }

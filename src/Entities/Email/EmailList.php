@@ -11,7 +11,7 @@ readonly class EmailList
      */
     public array $items;
 
-    public function __construct(object $emailResponse)
+    public function __construct(\stdClass $emailResponse)
     {
         $this->items = array_map(function ($email) {
             return new Email($email);

@@ -1,0 +1,52 @@
+name: Bug report
+description: Something doesn't work as documented.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! **Never paste real access tokens, company IDs or customer data.**
+        Security problems go to the [security policy](https://github.com/offline-agency/laravel-fatture-in-cloud-v2/security/policy), not here.
+  - type: input
+    id: package-version
+    attributes:
+      label: Package version
+      description: Run `composer show offline-agency/laravel-fatture-in-cloud-v2`.
+      placeholder: 3.1.0
+    validations:
+      required: true
+  - type: input
+    id: laravel-version
+    attributes:
+      label: Laravel version
+      placeholder: "12.20.0"
+    validations:
+      required: true
+  - type: input
+    id: php-version
+    attributes:
+      label: PHP version
+      placeholder: "8.4.3"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Code to reproduce
+      description: The smallest snippet that shows the problem.
+      render: php
+    validations:
+      required: true
+  - type: textarea
+    id: response
+    attributes:
+      label: API response or error
+      description: The returned `Error` object, exception message or stack trace (redact sensitive data).
+      render: text

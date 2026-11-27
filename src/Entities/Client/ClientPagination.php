@@ -30,7 +30,7 @@ readonly class ClientPagination extends Pagination
 
     public function goToPrevPage(): ClientList|Error|null
     {
-        if (! $this->hasPrevPage()) {
+        if (is_null($this->prevPageUrl)) {
             return null;
         }
 
@@ -39,7 +39,7 @@ readonly class ClientPagination extends Pagination
 
     public function goToNextPage(): ClientList|Error|null
     {
-        if (! $this->hasNextPage()) {
+        if (is_null($this->nextPageUrl)) {
             return null;
         }
 

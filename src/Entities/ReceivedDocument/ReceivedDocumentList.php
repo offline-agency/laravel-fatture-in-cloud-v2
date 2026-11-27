@@ -1,22 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument\ReceivedDocument as ReceivedDocumentEntity;
-use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
-class ReceivedDocumentList
+readonly class ReceivedDocumentList
 {
-    use ListTrait;
+    /**
+     * @var array<ReceivedDocumentEntity>
+     */
+    private array $items;
 
-    private $items;
+    private ReceivedDocumentPagination $pagination;
 
-    private $pagination;
-
-    public function __construct($received_document_response)
+    public function __construct(\stdClass $receivedDocumentResponse)
     {
-        $this->setItems($received_document_response);
-        $this->setPagination($received_document_response);
+        $this->items = array_map(function ($document) {
+            return new ReceivedDocumentEntity($document);
+        }, $receivedDocumentResponse->data);
+
+        $this->pagination = new ReceivedDocumentPagination($receivedDocumentResponse);
     }
 
     /**
@@ -32,17 +37,8 @@ class ReceivedDocumentList
         return $this->pagination;
     }
 
-    private function setItems(
-        $received_document_response
-    ): void {
-        $this->items = array_map(function ($document) {
-            return new ReceivedDocumentEntity($document);
-        }, $received_document_response->data);
-    }
-
-    private function setPagination(
-        $received_document_response
-    ): void {
-        $this->pagination = new ReceivedDocumentPagination($received_document_response);
+    public function hasItems(): bool
+    {
+        return count($this->items) > 0;
     }
 }

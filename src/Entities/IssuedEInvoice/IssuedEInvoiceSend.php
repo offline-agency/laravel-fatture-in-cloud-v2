@@ -4,23 +4,21 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\IssuedEInvoice;
 
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
+
 readonly class IssuedEInvoiceSend
 {
+    use CastsFromMixed;
+
     public ?string $name;
 
     public ?string $date;
 
     public function __construct(mixed $parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        if (! is_array($parameters)) {
-            $parameters = [];
-        }
-
-        $this->name = $parameters['name'] ?? null;
-        $this->date = $parameters['date'] ?? null;
+        $this->name = self::nullableString($parameters, 'name');
+        $this->date = self::nullableString($parameters, 'date');
     }
 }

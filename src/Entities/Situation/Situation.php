@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Situation;
 
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
+
 readonly class Situation
 {
+    use CastsFromMixed;
+
     public float $quoteNumber;
 
     public float $quoteAmount;
@@ -52,35 +56,29 @@ readonly class Situation
 
     public function __construct(mixed $parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        if (! is_array($parameters)) {
-            $parameters = [];
-        }
-
-        $this->quoteNumber = (float) ($parameters['quote_number'] ?? 0);
-        $this->quoteAmount = (float) ($parameters['quote_amount'] ?? 0);
-        $this->proformaNumber = (float) ($parameters['proforma_number'] ?? 0);
-        $this->proformaAmount = (float) ($parameters['proforma_amount'] ?? 0);
-        $this->invoiceNumber = (float) ($parameters['invoice_number'] ?? 0);
-        $this->invoiceAmount = (float) ($parameters['invoice_amount'] ?? 0);
-        $this->receiptNumber = (float) ($parameters['receipt_number'] ?? 0);
-        $this->receiptAmount = (float) ($parameters['receipt_amount'] ?? 0);
-        $this->orderNumber = (float) ($parameters['order_number'] ?? 0);
-        $this->orderAmount = (float) ($parameters['order_amount'] ?? 0);
-        $this->creditNoteNumber = (float) ($parameters['credit_note_number'] ?? 0);
-        $this->creditNoteAmount = (float) ($parameters['credit_note_amount'] ?? 0);
-        $this->deliveryNoteNumber = (float) ($parameters['delivery_note_number'] ?? 0);
-        $this->deliveryNoteAmount = (float) ($parameters['delivery_note_amount'] ?? 0);
-        $this->workReportNumber = (float) ($parameters['work_report_number'] ?? 0);
-        $this->workReportAmount = (float) ($parameters['work_report_amount'] ?? 0);
-        $this->supplierOrderNumber = (float) ($parameters['supplier_order_number'] ?? 0);
-        $this->supplierOrderAmount = (float) ($parameters['supplier_order_amount'] ?? 0);
-        $this->purchaseInvoiceNumber = (float) ($parameters['purchase_invoice_number'] ?? 0);
-        $this->purchaseInvoiceAmount = (float) ($parameters['purchase_invoice_amount'] ?? 0);
-        $this->purchaseCreditNoteNumber = (float) ($parameters['purchase_credit_note_number'] ?? 0);
-        $this->purchaseCreditNoteAmount = (float) ($parameters['purchase_credit_note_amount'] ?? 0);
+        $this->quoteNumber = self::nullableFloat($parameters, 'quote_number') ?? 0.0;
+        $this->quoteAmount = self::nullableFloat($parameters, 'quote_amount') ?? 0.0;
+        $this->proformaNumber = self::nullableFloat($parameters, 'proforma_number') ?? 0.0;
+        $this->proformaAmount = self::nullableFloat($parameters, 'proforma_amount') ?? 0.0;
+        $this->invoiceNumber = self::nullableFloat($parameters, 'invoice_number') ?? 0.0;
+        $this->invoiceAmount = self::nullableFloat($parameters, 'invoice_amount') ?? 0.0;
+        $this->receiptNumber = self::nullableFloat($parameters, 'receipt_number') ?? 0.0;
+        $this->receiptAmount = self::nullableFloat($parameters, 'receipt_amount') ?? 0.0;
+        $this->orderNumber = self::nullableFloat($parameters, 'order_number') ?? 0.0;
+        $this->orderAmount = self::nullableFloat($parameters, 'order_amount') ?? 0.0;
+        $this->creditNoteNumber = self::nullableFloat($parameters, 'credit_note_number') ?? 0.0;
+        $this->creditNoteAmount = self::nullableFloat($parameters, 'credit_note_amount') ?? 0.0;
+        $this->deliveryNoteNumber = self::nullableFloat($parameters, 'delivery_note_number') ?? 0.0;
+        $this->deliveryNoteAmount = self::nullableFloat($parameters, 'delivery_note_amount') ?? 0.0;
+        $this->workReportNumber = self::nullableFloat($parameters, 'work_report_number') ?? 0.0;
+        $this->workReportAmount = self::nullableFloat($parameters, 'work_report_amount') ?? 0.0;
+        $this->supplierOrderNumber = self::nullableFloat($parameters, 'supplier_order_number') ?? 0.0;
+        $this->supplierOrderAmount = self::nullableFloat($parameters, 'supplier_order_amount') ?? 0.0;
+        $this->purchaseInvoiceNumber = self::nullableFloat($parameters, 'purchase_invoice_number') ?? 0.0;
+        $this->purchaseInvoiceAmount = self::nullableFloat($parameters, 'purchase_invoice_amount') ?? 0.0;
+        $this->purchaseCreditNoteNumber = self::nullableFloat($parameters, 'purchase_credit_note_number') ?? 0.0;
+        $this->purchaseCreditNoteAmount = self::nullableFloat($parameters, 'purchase_credit_note_amount') ?? 0.0;
     }
 }

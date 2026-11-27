@@ -1,0 +1,34 @@
+# Laravel Fatture in Cloud
+
+> Laravel SDK for the Fatture in Cloud API v2 (Italian invoicing and e-invoicing platform). Composer package `offline-agency/laravel-fatture-in-cloud-v2`, MIT licensed, for PHP 8.4+ and Laravel 12/13. Create and send invoices, send electronic invoices (fattura elettronica) to SDI, and manage clients, suppliers, products, receipts, taxes (F24), archive, cashbook, price lists and webhooks.
+
+Install with `composer require offline-agency/laravel-fatture-in-cloud-v2`, then set `FCV2_DEFAULT_ID` (company ID) and `FCV2_DEFAULT_BEARER` (access token) in `.env`, and check them with `php artisan fic:test-connection`.
+
+Key facts:
+
+- Access every API resource through the facade `OfflineAgency\LaravelFattureInCloudV2\LaravelFattureInCloudV2Facade`, e.g. `FIC::issuedDocuments()->all(IssuedDocumentType::Invoice)` or `FIC::clients()->create([...])`.
+- Methods return a readonly, typed entity on success, an `Entities\Error` on API errors and an `Illuminate\Support\MessageBag` on local validation errors. They do not throw on API errors.
+- `all()` follows pagination and returns every result; `list()` returns one page with pagination helpers.
+- HTTP 429 rate limits are retried automatically using the `Retry-After` header, with a configurable cap. HTTP 403 is not retried.
+- Multiple Fatture in Cloud companies are supported with `FIC::forCompany('name')`.
+- Requests go through Laravel's HTTP client, so `Http::fake()` works in application tests.
+- Ships Laravel Boost guidelines and an e-invoicing skill for AI coding assistants.
+- Not the official SDK: Fatture in Cloud publishes `fattureincloud/fattureincloud-php-sdk`, a framework-agnostic SDK. This package is the Laravel integration.
+
+## Docs
+
+- [README](https://github.com/offline-agency/laravel-fatture-in-cloud-v2/blob/main/README.md): installation, usage, error handling, pagination, multiple companies, rate limits, testing, FAQ
+- [Upgrade guide](https://github.com/offline-agency/laravel-fatture-in-cloud-v2/blob/main/UPGRADE.md): changes between 2.x, 3.0 and 3.1
+- [Changelog](https://github.com/offline-agency/laravel-fatture-in-cloud-v2/blob/main/CHANGELOG.md)
+- [Architecture](https://github.com/offline-agency/laravel-fatture-in-cloud-v2/blob/main/docs/architecture.md): request lifecycle, retry flow, company resolution
+
+## AI assistant resources
+
+- [Laravel Boost guideline](https://github.com/offline-agency/laravel-fatture-in-cloud-v2/blob/main/resources/boost/guidelines/core.blade.php): rules for using the package correctly
+- [E-invoicing skill](https://github.com/offline-agency/laravel-fatture-in-cloud-v2/blob/main/resources/boost/skills/fatture-in-cloud-e-invoicing/SKILL.md): create an invoice, preview totals, verify the XML, send it to SDI and track its status
+
+## Optional
+
+- [Packagist](https://packagist.org/packages/offline-agency/laravel-fatture-in-cloud-v2)
+- [Fatture in Cloud API reference](https://developers.fattureincloud.it/api-reference)
+- [Fatture in Cloud limits and quotas](https://developers.fattureincloud.it/docs/basics/limits-and-quotas/)

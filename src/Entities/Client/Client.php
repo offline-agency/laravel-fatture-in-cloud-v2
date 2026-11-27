@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Client;
 
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
+
 readonly class Client
 {
+    use CastsFromMixed;
+
     public ?int $id;
 
     public ?string $code;
@@ -82,50 +86,44 @@ readonly class Client
 
     public function __construct(mixed $parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        if (! is_array($parameters)) {
-            $parameters = [];
-        }
-
-        $this->id = $parameters['id'] ?? null;
-        $this->code = $parameters['code'] ?? null;
-        $this->name = $parameters['name'] ?? null;
-        $this->type = $parameters['type'] ?? null;
-        $this->firstName = $parameters['first_name'] ?? null;
-        $this->lastName = $parameters['last_name'] ?? null;
-        $this->contactPerson = $parameters['contact_person'] ?? null;
-        $this->vatNumber = $parameters['vat_number'] ?? null;
-        $this->taxCode = $parameters['tax_code'] ?? null;
-        $this->addressStreet = $parameters['address_street'] ?? null;
-        $this->addressPostalCode = $parameters['address_postal_code'] ?? null;
-        $this->addressCity = $parameters['address_city'] ?? null;
-        $this->addressProvince = $parameters['address_province'] ?? null;
-        $this->addressExtra = $parameters['address_extra'] ?? null;
-        $this->country = $parameters['country'] ?? null;
-        $this->email = $parameters['email'] ?? null;
-        $this->certifiedEmail = $parameters['certified_email'] ?? null;
-        $this->phone = $parameters['phone'] ?? null;
-        $this->fax = $parameters['fax'] ?? null;
-        $this->notes = $parameters['notes'] ?? null;
-        $this->defaultVat = $parameters['default_vat'] ?? null;
-        $this->defaultPaymentTerms = $parameters['default_payment_terms'] ?? null;
-        $this->defaultPaymentTermsType = $parameters['default_payment_terms_type'] ?? null;
-        $this->defaultPaymentMethod = $parameters['default_payment_method'] ?? null;
-        $this->bankName = $parameters['bank_name'] ?? null;
-        $this->bankIban = $parameters['bank_iban'] ?? null;
-        $this->bankSwiftCode = $parameters['bank_swift_code'] ?? null;
-        $this->shippingAddress = $parameters['shipping_address'] ?? null;
-        $this->eInvoice = $parameters['e_invoice'] ?? null;
-        $this->eiCode = $parameters['ei_code'] ?? null;
-        $this->discountHighlight = $parameters['discount_highlight'] ?? null;
-        $this->defaultDiscount = $parameters['default_discount'] ?? null;
-        $this->hasIntentDeclaration = $parameters['has_intent_declaration'] ?? null;
-        $this->intentDeclarationProtocolNumber = $parameters['intent_declaration_protocol_number'] ?? null;
-        $this->intentDeclarationProtocolDate = $parameters['intent_declaration_protocol_date'] ?? null;
-        $this->createdAt = $parameters['created_at'] ?? null;
-        $this->updatedAt = $parameters['updated_at'] ?? null;
+        $this->id = self::nullableInt($parameters, 'id');
+        $this->code = self::nullableString($parameters, 'code');
+        $this->name = self::nullableString($parameters, 'name');
+        $this->type = self::nullableString($parameters, 'type');
+        $this->firstName = self::nullableString($parameters, 'first_name');
+        $this->lastName = self::nullableString($parameters, 'last_name');
+        $this->contactPerson = self::nullableString($parameters, 'contact_person');
+        $this->vatNumber = self::nullableString($parameters, 'vat_number');
+        $this->taxCode = self::nullableString($parameters, 'tax_code');
+        $this->addressStreet = self::nullableString($parameters, 'address_street');
+        $this->addressPostalCode = self::nullableString($parameters, 'address_postal_code');
+        $this->addressCity = self::nullableString($parameters, 'address_city');
+        $this->addressProvince = self::nullableString($parameters, 'address_province');
+        $this->addressExtra = self::nullableString($parameters, 'address_extra');
+        $this->country = self::nullableString($parameters, 'country');
+        $this->email = self::nullableString($parameters, 'email');
+        $this->certifiedEmail = self::nullableString($parameters, 'certified_email');
+        $this->phone = self::nullableString($parameters, 'phone');
+        $this->fax = self::nullableString($parameters, 'fax');
+        $this->notes = self::nullableString($parameters, 'notes');
+        $this->defaultVat = self::mixedValue($parameters, 'default_vat');
+        $this->defaultPaymentTerms = self::nullableInt($parameters, 'default_payment_terms');
+        $this->defaultPaymentTermsType = self::nullableString($parameters, 'default_payment_terms_type');
+        $this->defaultPaymentMethod = self::mixedValue($parameters, 'default_payment_method');
+        $this->bankName = self::nullableString($parameters, 'bank_name');
+        $this->bankIban = self::nullableString($parameters, 'bank_iban');
+        $this->bankSwiftCode = self::nullableString($parameters, 'bank_swift_code');
+        $this->shippingAddress = self::nullableString($parameters, 'shipping_address');
+        $this->eInvoice = self::nullableBool($parameters, 'e_invoice');
+        $this->eiCode = self::nullableString($parameters, 'ei_code');
+        $this->discountHighlight = self::nullableBool($parameters, 'discount_highlight');
+        $this->defaultDiscount = self::nullableFloat($parameters, 'default_discount');
+        $this->hasIntentDeclaration = self::nullableBool($parameters, 'has_intent_declaration');
+        $this->intentDeclarationProtocolNumber = self::nullableString($parameters, 'intent_declaration_protocol_number');
+        $this->intentDeclarationProtocolDate = self::nullableString($parameters, 'intent_declaration_protocol_date');
+        $this->createdAt = self::nullableString($parameters, 'created_at');
+        $this->updatedAt = self::nullableString($parameters, 'updated_at');
     }
 }

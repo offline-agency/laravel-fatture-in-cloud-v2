@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Info;
 
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\Vat as PaymentAccountsEntity;
-use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
-class InfoPaymentAccountsList
+readonly class InfoPaymentAccountsList
 {
-    use ListTrait;
+    /**
+     * @var array<PaymentAccountsEntity>
+     */
+    private array $items;
 
-    private $items;
-
-    private $pagination;
-
-    public function __construct($payment_accounts_response)
+    public function __construct(\stdClass $paymentAccountsResponse)
     {
-        $this->setItems($payment_accounts_response);
+        $this->items = array_map(function ($client) {
+            return new PaymentAccountsEntity($client);
+        }, $paymentAccountsResponse->data);
     }
 
     /**
@@ -28,11 +28,8 @@ class InfoPaymentAccountsList
         return $this->items;
     }
 
-    private function setItems(
-        $payment_accounts_response
-    ): void {
-        $this->items = array_map(function ($client) {
-            return new PaymentAccountsEntity($client);
-        }, $payment_accounts_response->data);
+    public function hasItems(): bool
+    {
+        return count($this->items) > 0;
     }
 }

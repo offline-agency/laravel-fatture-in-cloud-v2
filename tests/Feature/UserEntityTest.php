@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Http;
 use OfflineAgency\LaravelFattureInCloudV2\Api\User;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\User\Company;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\User\Company as CompanyEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\User\CompanyList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\User\User as UserEntity;
@@ -97,4 +98,9 @@ describe('User Entity', function () {
         expect($entity->id)->toBeNull()
             ->and($entity->name)->toBeNull();
     });
-});
+})->covers(
+    User::class,
+    Company::class,
+    CompanyList::class,
+    UserEntity::class,
+);

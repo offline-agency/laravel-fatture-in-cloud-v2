@@ -9,6 +9,9 @@ use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 
+/**
+ * @deprecated Use {@see FattureInCloud} instead. Will be removed in v4.0.
+ */
 class LaravelFattureInCloudV2
 {
     /** @var array<string, mixed>|null */
@@ -41,7 +44,8 @@ class LaravelFattureInCloudV2
 
     private function setBaseUrl(): void
     {
-        $this->baseUrl = (string) config('fatture-in-cloud-v2.baseUrl');
+        $rawUrl = config('fatture-in-cloud-v2.baseUrl');
+        $this->baseUrl = is_string($rawUrl) ? $rawUrl : '';
     }
 
     /**
@@ -57,7 +61,7 @@ class LaravelFattureInCloudV2
             throw new Exception('Set company ID on your config/fatture-in-cloud-v2!');
         }
 
-        $this->company_id = (string) $company_id;
+        $this->company_id = is_scalar($company_id) ? (string) $company_id : '';
     }
 
     private function setHeader(): void
@@ -86,7 +90,7 @@ class LaravelFattureInCloudV2
             throw new Exception('Set bearer on your config/fatture-in-cloud-v2!');
         }
 
-        $this->bearer = (string) $bearer;
+        $this->bearer = is_scalar($bearer) ? (string) $bearer : '';
     }
 
     /**
@@ -99,11 +103,29 @@ class LaravelFattureInCloudV2
 
     private function setCompany(?string $company_name): void
     {
-        /** @var array<string, array<string, mixed>> $companies */
-        $companies = config('fatture-in-cloud-v2.companies');
+        $rawCompanies = config('fatture-in-cloud-v2.companies');
+        $companies = is_array($rawCompanies) ? $rawCompanies : [];
 
-        $this->company = is_null($company_name)
-            ? reset($companies) ?: null
-            : Arr::get($companies, $company_name);
+        if (is_null($company_name)) {
+            $first = reset($companies) ?: null;
+            $this->company = is_array($first) ? self::toStringKeyedArray($first) : null;
+        } else {
+            $named = Arr::get($companies, $company_name);
+            $this->company = is_array($named) ? self::toStringKeyedArray($named) : null;
+        }
+    }
+
+    /**
+     * @param  array<mixed, mixed>  $array
+     * @return array<string, mixed>
+     */
+    private static function toStringKeyedArray(array $array): array
+    {
+        $result = [];
+        foreach ($array as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+
+        return $result;
     }
 }

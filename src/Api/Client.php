@@ -11,6 +11,9 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Client\ClientList;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Clients
+ */
 class Client extends Api
 {
     use ListTrait;
@@ -18,7 +21,7 @@ class Client extends Api
     /**
      * List clients. OPTIONAL query: fields, fieldset, sort, page, per_page, q.
      *
-     * @param  array{fields?: string, fieldset?: string, sort?: string, page?: int, per_page?: int, q?: string}  $additionalData
+     * @param  array<string, mixed>  $additionalData
      */
     public function list(array $additionalData = []): ClientList|Error
     {
@@ -31,7 +34,6 @@ class Client extends Api
             'q',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/entities/clients',
             $additionalData
@@ -49,7 +51,7 @@ class Client extends Api
     /**
      * Get all clients. OPTIONAL query: fields, fieldset, sort, page, per_page, q.
      *
-     * @param  array{fields?: string, fieldset?: string, sort?: string, page?: int, per_page?: int, q?: string}  $additionalData
+     * @param  array<string, mixed>  $additionalData
      * @return array<ClientEntity>|Error
      */
     public function all(array $additionalData = []): array|Error
@@ -84,7 +86,6 @@ class Client extends Api
             'fieldset',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/entities/clients/'.$clientId,
             $additionalData
@@ -104,7 +105,6 @@ class Client extends Api
      */
     public function delete(int $clientId): string|Error
     {
-        /** @var object $response */
         $response = $this->destroy(
             'c/'.$this->companyId.'/entities/clients/'.$clientId
         );
@@ -132,7 +132,6 @@ class Client extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/entities/clients',
             $body
@@ -163,7 +162,6 @@ class Client extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->put(
             'c/'.$this->companyId.'/entities/clients/'.$clientId,
             $body

@@ -30,7 +30,7 @@ readonly class TaxesPagination extends Pagination
 
     public function goToPrevPage(): TaxesList|Error|null
     {
-        if (! $this->hasPrevPage()) {
+        if (is_null($this->prevPageUrl)) {
             return null;
         }
 
@@ -39,7 +39,7 @@ readonly class TaxesPagination extends Pagination
 
     public function goToNextPage(): TaxesList|Error|null
     {
-        if (! $this->hasNextPage()) {
+        if (is_null($this->nextPageUrl)) {
             return null;
         }
 
@@ -52,7 +52,8 @@ readonly class TaxesPagination extends Pagination
     {
         $queryParams = $this->getQueryParams($url);
 
-        $type = (string) ($queryParams['type'] ?? '');
+        $rawType = $queryParams['type'] ?? '';
+        $type = is_string($rawType) ? $rawType : '';
         unset($queryParams['type']);
 
         $taxes = new Taxes();

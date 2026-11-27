@@ -11,7 +11,7 @@ readonly class PriceListList
      */
     public array $items;
 
-    public function __construct(object $priceListResponse)
+    public function __construct(\stdClass $priceListResponse)
     {
         $this->items = array_map(function ($priceList) {
             return new PriceList($priceList);

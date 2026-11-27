@@ -4,38 +4,41 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\ReceivedDocument;
 
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
+
 readonly class ReceivedDocumentPreCreateInfo
 {
+    use CastsFromMixed;
+
     public mixed $default_values;
 
     public mixed $items_default_values;
 
+    /** @var array<mixed>|null */
     public ?array $countries_list;
 
+    /** @var array<mixed>|null */
     public ?array $currencies_list;
 
+    /** @var array<mixed>|null */
     public ?array $categories_list;
 
+    /** @var array<mixed>|null */
     public ?array $payment_accounts_list;
 
+    /** @var array<mixed>|null */
     public ?array $vat_types_list;
 
     public function __construct(mixed $parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        if (! is_array($parameters)) {
-            $parameters = [];
-        }
-
-        $this->default_values = $parameters['default_values'] ?? null;
-        $this->items_default_values = $parameters['items_default_values'] ?? null;
-        $this->countries_list = $parameters['countries_list'] ?? null;
-        $this->currencies_list = $parameters['currencies_list'] ?? null;
-        $this->categories_list = $parameters['categories_list'] ?? null;
-        $this->payment_accounts_list = $parameters['payment_accounts_list'] ?? null;
-        $this->vat_types_list = $parameters['vat_types_list'] ?? null;
+        $this->default_values = self::mixedValue($parameters, 'default_values');
+        $this->items_default_values = self::mixedValue($parameters, 'items_default_values');
+        $this->countries_list = self::nullableArray($parameters, 'countries_list');
+        $this->currencies_list = self::nullableArray($parameters, 'currencies_list');
+        $this->categories_list = self::nullableArray($parameters, 'categories_list');
+        $this->payment_accounts_list = self::nullableArray($parameters, 'payment_accounts_list');
+        $this->vat_types_list = self::nullableArray($parameters, 'vat_types_list');
     }
 }

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Webhook;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Webhook\WebhookSubscription;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Webhook\WebhookSubscription as WebhookEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Webhook\WebhookSubscriptionList;
 
@@ -141,29 +142,17 @@ describe('Webhook', function () {
             ->and($response->sink)->toBe('https://example.com/new-hook');
     });
 
-    it('validates on create webhook subscription', function () {
+    it('validates required fields on create webhook subscription', function (array $body, string $expectedKey) {
         $api = new Webhook();
-        $response = $api->create([]);
+        $response = $api->create($body);
 
         expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data');
-    });
-
-    it('validates sink on create webhook subscription', function () {
-        $api = new Webhook();
-        $response = $api->create(['data' => ['types' => ['it.fattureincloud.api.v2.client.created']]]);
-
-        expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data.sink');
-    });
-
-    it('validates types on create webhook subscription', function () {
-        $api = new Webhook();
-        $response = $api->create(['data' => ['sink' => 'https://example.com/hook']]);
-
-        expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data.types');
-    });
+            ->and($response->messages())->toHaveKey($expectedKey);
+    })->with([
+        'missing data' => [[], 'data'],
+        'missing sink' => [['data' => ['types' => ['it.fattureincloud.api.v2.client.created']]], 'data.sink'],
+        'missing types' => [['data' => ['sink' => 'https://example.com/hook']], 'data.types'],
+    ]);
 
     it('edits a webhook subscription', function () {
         $subscriptionId = 'sub_abc123';
@@ -257,4 +246,8 @@ describe('Webhook', function () {
         expect($entity->id)->toBeNull()
             ->and($entity->sink)->toBeNull();
     });
-});
+})->covers(
+    Webhook::class,
+    WebhookSubscription::class,
+    WebhookSubscriptionList::class,
+);

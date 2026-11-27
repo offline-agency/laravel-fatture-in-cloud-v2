@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Settings;
 
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
+
 readonly class PaymentAccount
 {
+    use CastsFromMixed;
+
     public ?int $id;
 
     public ?string $name;
@@ -22,20 +26,14 @@ readonly class PaymentAccount
 
     public function __construct(mixed $parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        if (! is_array($parameters)) {
-            $parameters = [];
-        }
-
-        $this->id = $parameters['id'] ?? null;
-        $this->name = $parameters['name'] ?? null;
-        $this->type = $parameters['type'] ?? null;
-        $this->iban = $parameters['iban'] ?? null;
-        $this->sia = $parameters['sia'] ?? null;
-        $this->cuc = $parameters['cuc'] ?? null;
-        $this->virtual = $parameters['virtual'] ?? null;
+        $this->id = self::nullableInt($parameters, 'id');
+        $this->name = self::nullableString($parameters, 'name');
+        $this->type = self::nullableString($parameters, 'type');
+        $this->iban = self::nullableString($parameters, 'iban');
+        $this->sia = self::nullableString($parameters, 'sia');
+        $this->cuc = self::nullableString($parameters, 'cuc');
+        $this->virtual = self::nullableBool($parameters, 'virtual');
     }
 }

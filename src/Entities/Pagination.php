@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities;
 
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
+
 readonly class Pagination
 {
+    use CastsFromMixed;
+
     public ?int $currentPage;
 
     public ?string $firstPageUrl;
@@ -29,25 +33,23 @@ readonly class Pagination
     public ?int $total;
 
     /**
-     * @param  object|array|null  $parameters
+     * @param  object|array<string, mixed>|null  $parameters
      */
     public function __construct($parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        $this->currentPage = $parameters['current_page'] ?? null;
-        $this->firstPageUrl = $parameters['first_page_url'] ?? null;
-        $this->from = $parameters['from'] ?? null;
-        $this->lastPage = $parameters['last_page'] ?? null;
-        $this->lastPageUrl = $parameters['last_page_url'] ?? null;
-        $this->nextPageUrl = $parameters['next_page_url'] ?? null;
-        $this->path = $parameters['path'] ?? null;
-        $this->perPage = $parameters['per_page'] ?? null;
-        $this->prevPageUrl = $parameters['prev_page_url'] ?? null;
-        $this->to = $parameters['to'] ?? null;
-        $this->total = $parameters['total'] ?? null;
+        $this->currentPage = self::nullableInt($parameters, 'current_page');
+        $this->firstPageUrl = self::nullableString($parameters, 'first_page_url');
+        $this->from = self::nullableInt($parameters, 'from');
+        $this->lastPage = self::nullableInt($parameters, 'last_page');
+        $this->lastPageUrl = self::nullableString($parameters, 'last_page_url');
+        $this->nextPageUrl = self::nullableString($parameters, 'next_page_url');
+        $this->path = self::nullableString($parameters, 'path');
+        $this->perPage = self::nullableInt($parameters, 'per_page');
+        $this->prevPageUrl = self::nullableString($parameters, 'prev_page_url');
+        $this->to = self::nullableInt($parameters, 'to');
+        $this->total = self::nullableInt($parameters, 'total');
     }
 
     public function isSinglePage(): bool
@@ -65,16 +67,24 @@ readonly class Pagination
         return ! is_null($this->prevPageUrl);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getQueryParams(string $url): array
     {
         $query = parse_url($url, PHP_URL_QUERY);
 
-        if (! $query) {
+        if (! is_string($query)) {
             return [];
         }
 
         parse_str($query, $params);
 
-        return $params;
+        $result = [];
+        foreach ($params as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+
+        return $result;
     }
 }

@@ -15,7 +15,7 @@ readonly class ProductList
 
     public ProductPagination $pagination;
 
-    public function __construct(object $productResponse)
+    public function __construct(\stdClass $productResponse)
     {
         $this->items = array_map(function ($product) {
             return new ProductEntity($product);

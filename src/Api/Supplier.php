@@ -11,10 +11,16 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\Supplier as Supplier
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Supplier\SupplierList;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
+/**
+ * @see https://developers.fattureincloud.it/api-reference#tag/Suppliers
+ */
 class Supplier extends Api
 {
     use ListTrait;
 
+    /**
+     * @param  array<string, mixed>  $additionalData
+     */
     public function list(array $additionalData = []): SupplierList|Error
     {
         $additionalData = $this->data($additionalData, [
@@ -26,7 +32,6 @@ class Supplier extends Api
             'q',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/entities/suppliers',
             $additionalData
@@ -42,6 +47,7 @@ class Supplier extends Api
     }
 
     /**
+     * @param  array<string, mixed>  $additionalData
      * @return array<SupplierEntity>|Error
      */
     public function all(array $additionalData = []): array|Error
@@ -64,6 +70,9 @@ class Supplier extends Api
         }, $allSuppliers);
     }
 
+    /**
+     * @param  array<string, mixed>  $additionalData
+     */
     public function detail(int $supplierId, array $additionalData = []): SupplierEntity|Error
     {
         $additionalData = $this->data($additionalData, [
@@ -71,7 +80,6 @@ class Supplier extends Api
             'fieldset',
         ]);
 
-        /** @var object $response */
         $response = $this->get(
             'c/'.$this->companyId.'/entities/suppliers/'.$supplierId,
             $additionalData
@@ -88,7 +96,6 @@ class Supplier extends Api
 
     public function delete(int $supplierId): string|Error
     {
-        /** @var object $response */
         $response = $this->destroy(
             'c/'.$this->companyId.'/entities/suppliers/'.$supplierId
         );
@@ -100,6 +107,9 @@ class Supplier extends Api
         return 'Supplier deleted';
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function create(array $body = []): SupplierEntity|Error|MessageBag
     {
         $validator = Validator::make($body, [
@@ -111,7 +121,6 @@ class Supplier extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->post(
             'c/'.$this->companyId.'/entities/suppliers',
             $body
@@ -126,6 +135,9 @@ class Supplier extends Api
         return new SupplierEntity($supplier);
     }
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function edit(int $supplierId, array $body = []): SupplierEntity|Error|MessageBag
     {
         $validator = Validator::make($body, [
@@ -137,7 +149,6 @@ class Supplier extends Api
             return $validator->errors();
         }
 
-        /** @var object $response */
         $response = $this->put(
             'c/'.$this->companyId.'/entities/suppliers/'.$supplierId,
             $body

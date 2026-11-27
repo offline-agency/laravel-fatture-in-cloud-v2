@@ -1,0 +1,22 @@
+name: Feature request
+description: Suggest a new feature or a missing Fatture in Cloud endpoint.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe your use case.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How would you like to call it? A code snippet of the API you'd like is ideal.
+      render: php
+  - type: input
+    id: endpoint
+    attributes:
+      label: Related Fatture in Cloud endpoint
+      description: Link to the endpoint in the [API reference](https://developers.fattureincloud.it/api-reference), if any.

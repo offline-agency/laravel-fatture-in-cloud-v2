@@ -158,59 +158,20 @@ describe('Taxes Entity', function () {
         expect($response)->toBeInstanceOf(TaxesEntity::class);
     });
 
-    it('validates tax creation', function () {
+    it('validates required fields on create tax entry', function (array $body, string $expectedKey) {
         $api = new Taxes();
-        $response = $api->create([]);
+        $response = $api->create($body);
 
         expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data');
-    });
-
-    it('validates data.type on create tax entry', function () {
-        $api = new Taxes();
-        $response = $api->create([
-            'data' => [
-                'type' => 'invalid_type',
-                'entity' => ['name' => 'Test S.R.L'],
-                'due_date' => '2024-01-01',
-                'amount' => 100,
-                'description' => 'Desc',
-            ],
-        ]);
-
-        expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data.type');
-    });
-
-    it('validates data.entity.name on create tax entry', function () {
-        $api = new Taxes();
-        $response = $api->create([
-            'data' => [
-                'type' => 'expense',
-                'due_date' => '2024-01-01',
-                'amount' => 100,
-                'description' => 'Desc',
-            ],
-        ]);
-
-        expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data.entity.name');
-    });
-
-    it('validates data.due_date and data.amount and data.description on create tax entry', function () {
-        $api = new Taxes();
-        $response = $api->create([
-            'data' => [
-                'type' => 'expense',
-                'entity' => ['name' => 'Test S.R.L'],
-            ],
-        ]);
-
-        expect($response)->toBeInstanceOf(MessageBag::class)
-            ->messages()->toHaveKey('data.due_date')
-            ->messages()->toHaveKey('data.amount')
-            ->messages()->toHaveKey('data.description');
-    });
+            ->and($response->messages())->toHaveKey($expectedKey);
+    })->with([
+        'missing data' => [[], 'data'],
+        'invalid type' => [['data' => ['type' => 'invalid_type', 'entity' => ['name' => 'Test S.R.L'], 'due_date' => '2024-01-01', 'amount' => 100, 'description' => 'Desc']], 'data.type'],
+        'missing entity name' => [['data' => ['type' => 'expense', 'due_date' => '2024-01-01', 'amount' => 100, 'description' => 'Desc']], 'data.entity.name'],
+        'missing due_date' => [['data' => ['type' => 'expense', 'entity' => ['name' => 'Test S.R.L']]], 'data.due_date'],
+        'missing amount' => [['data' => ['type' => 'expense', 'entity' => ['name' => 'Test S.R.L']]], 'data.amount'],
+        'missing description' => [['data' => ['type' => 'expense', 'entity' => ['name' => 'Test S.R.L']]], 'data.description'],
+    ]);
 
     it('handles error on create tax entry', function () {
         Http::fake([
@@ -232,6 +193,36 @@ describe('Taxes Entity', function () {
         ]);
 
         expect($response)->toBeInstanceOf(Error::class);
+    });
+
+    it('normalizes due_date when editing a tax entry', function () {
+        $documentId = 1;
+
+        Http::fake([
+            'c/*/taxes/'.$documentId => Http::response([
+                'data' => [
+                    'id' => $documentId,
+                    'type' => 'expense',
+                    'entity' => ['name' => 'Updated S.R.L'],
+                ],
+            ], 200),
+        ]);
+
+        $api = new Taxes();
+        $response = $api->edit($documentId, [
+            'data' => [
+                'entity' => ['name' => 'Updated S.R.L'],
+                // Deliberately not zero-padded: edit() must normalize it
+                // before the request leaves.
+                'due_date' => '2026-8-24',
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(TaxesEntity::class);
+
+        Http::assertSent(function ($request) {
+            return $request['data']['due_date'] === '2026-08-24';
+        });
     });
 
     it('edits a tax entry', function () {
@@ -469,6 +460,16 @@ describe('Taxes Entity', function () {
             ->and($entity->type)->toBeNull();
     });
 
+    it('reports whether the taxes list has items', function () {
+        $withItems = new TaxesList(json_decode((new TaxesFakeResponse())->getTaxesFakeList()));
+        $emptyResponse = json_decode((new TaxesFakeResponse())->getTaxesFakeList());
+        $emptyResponse->data = [];
+        $empty = new TaxesList($emptyResponse);
+
+        expect($withItems->hasItems())->toBeTrue()
+            ->and($empty->hasItems())->toBeFalse();
+    });
+
     it('navigates taxes list to next page', function () {
         $taxesList = new TaxesList(json_decode(
             (new TaxesFakeResponse())->getTaxesFakeList([
@@ -573,4 +574,10 @@ describe('Taxes Entity', function () {
         expect($response)->toBeInstanceOf(TaxesEntity::class)
             ->and($response->id)->toBe($mergedId);
     });
-});
+})->covers(
+    Taxes::class,
+    TaxesEntity::class,
+    TaxesAttachment::class,
+    TaxesList::class,
+    TaxesPagination::class,
+);

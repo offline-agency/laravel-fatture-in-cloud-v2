@@ -15,7 +15,7 @@ readonly class IssuedDocumentList
 
     public IssuedDocumentPagination $pagination;
 
-    public function __construct(object $issuedDocumentResponse)
+    public function __construct(\stdClass $issuedDocumentResponse)
     {
         $this->items = array_map(function ($document) {
             return new IssuedDocumentEntity($document);

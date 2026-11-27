@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Product;
 
+use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
+
 readonly class Product
 {
+    use CastsFromMixed;
+
     public ?int $id;
 
     public ?string $name;
@@ -46,32 +50,26 @@ readonly class Product
 
     public function __construct(mixed $parameters = null)
     {
-        if (is_object($parameters)) {
-            $parameters = get_object_vars($parameters);
-        }
+        $parameters = self::normalizeParameters($parameters);
 
-        if (! is_array($parameters)) {
-            $parameters = [];
-        }
-
-        $this->id = $parameters['id'] ?? null;
-        $this->name = $parameters['name'] ?? null;
-        $this->code = $parameters['code'] ?? null;
-        $this->netPrice = $parameters['net_price'] ?? null;
-        $this->grossPrice = $parameters['gross_price'] ?? null;
-        $this->useGrossPrice = $parameters['use_gross_price'] ?? null;
-        $this->defaultVat = $parameters['default_vat'] ?? null;
-        $this->netCost = $parameters['net_cost'] ?? null;
-        $this->measure = $parameters['measure'] ?? null;
-        $this->description = $parameters['description'] ?? null;
-        $this->category = $parameters['category'] ?? null;
-        $this->notes = $parameters['notes'] ?? null;
-        $this->inStock = $parameters['in_stock'] ?? null;
-        $this->stockInitial = $parameters['stock_initial'] ?? null;
-        $this->stockCurrent = $parameters['stock_current'] ?? null;
-        $this->averageCost = $parameters['average_cost'] ?? null;
-        $this->averagePrice = $parameters['average_price'] ?? null;
-        $this->createdAt = $parameters['created_at'] ?? null;
-        $this->updatedAt = $parameters['updated_at'] ?? null;
+        $this->id = self::nullableInt($parameters, 'id');
+        $this->name = self::nullableString($parameters, 'name');
+        $this->code = self::nullableString($parameters, 'code');
+        $this->netPrice = self::nullableFloat($parameters, 'net_price');
+        $this->grossPrice = self::nullableFloat($parameters, 'gross_price');
+        $this->useGrossPrice = self::nullableBool($parameters, 'use_gross_price');
+        $this->defaultVat = self::mixedValue($parameters, 'default_vat');
+        $this->netCost = self::nullableFloat($parameters, 'net_cost');
+        $this->measure = self::nullableString($parameters, 'measure');
+        $this->description = self::nullableString($parameters, 'description');
+        $this->category = self::nullableString($parameters, 'category');
+        $this->notes = self::nullableString($parameters, 'notes');
+        $this->inStock = self::nullableBool($parameters, 'in_stock');
+        $this->stockInitial = self::nullableFloat($parameters, 'stock_initial');
+        $this->stockCurrent = self::nullableFloat($parameters, 'stock_current');
+        $this->averageCost = self::nullableFloat($parameters, 'average_cost');
+        $this->averagePrice = self::nullableFloat($parameters, 'average_price');
+        $this->createdAt = self::nullableString($parameters, 'created_at');
+        $this->updatedAt = self::nullableString($parameters, 'updated_at');
     }
 }

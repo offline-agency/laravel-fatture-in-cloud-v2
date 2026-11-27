@@ -13,7 +13,7 @@ readonly class CompanyList
      */
     public array $items;
 
-    public function __construct(object $userCompanyResponse)
+    public function __construct(\stdClass $userCompanyResponse)
     {
         $this->items = array_map(function ($company) {
             return new CompanyEntity($company);
