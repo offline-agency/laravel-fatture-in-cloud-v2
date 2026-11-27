@@ -5,6 +5,7 @@ use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Archive;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Archive\Archive as ArchiveEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Archive\ArchiveList;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Archive\ArchivePagination;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 
 describe('Archive', function () {
@@ -363,4 +364,9 @@ describe('Archive', function () {
         expect($entity->id)->toBeNull()
             ->and($entity->description)->toBeNull();
     });
-})->covers(Archive::class);
+})->covers(
+    Archive::class,
+    ArchiveEntity::class,
+    ArchiveList::class,
+    ArchivePagination::class,
+);

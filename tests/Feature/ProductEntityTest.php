@@ -11,6 +11,7 @@ use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\ProductPagination;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovement;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Product\StockMovementList;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\ProductFakeResponse;
+use OfflineAgency\LaravelFattureInCloudV2\Traits\ListTrait;
 
 describe('Product Entity', function () {
     it('lists products', function () {
@@ -543,4 +544,12 @@ describe('Product Entity', function () {
         expect($entity->id)->toBeNull()
             ->and($entity->date)->toBeNull();
     });
-})->covers(Product::class);
+})->covers(
+    Product::class,
+    ProductEntity::class,
+    ProductList::class,
+    ProductPagination::class,
+    StockMovement::class,
+    StockMovementList::class,
+    ListTrait::class,
+);

@@ -409,4 +409,11 @@ describe('Receipt Entity', function () {
         expect($entity->id)->toBeNull()
             ->and($entity->date)->toBeNull();
     });
-})->covers(Receipt::class);
+})->covers(
+    Receipt::class,
+    ReceiptEntity::class,
+    ReceiptList::class,
+    ReceiptMonthlyTotals::class,
+    ReceiptPagination::class,
+    ReceiptPreCreateInfo::class,
+);

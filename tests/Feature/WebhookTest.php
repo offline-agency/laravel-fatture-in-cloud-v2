@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Webhook;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Webhook\WebhookSubscription;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Webhook\WebhookSubscription as WebhookEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Webhook\WebhookSubscriptionList;
 
@@ -245,4 +246,8 @@ describe('Webhook', function () {
         expect($entity->id)->toBeNull()
             ->and($entity->sink)->toBeNull();
     });
-})->covers(Webhook::class);
+})->covers(
+    Webhook::class,
+    WebhookSubscription::class,
+    WebhookSubscriptionList::class,
+);

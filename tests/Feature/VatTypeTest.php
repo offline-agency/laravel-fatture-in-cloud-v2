@@ -205,4 +205,8 @@ describe('VatType', function () {
         expect($entity->id)->toBeNull()
             ->and($entity->value)->toBeNull();
     });
-})->covers(VatType::class);
+})->covers(
+    VatType::class,
+    VatTypeEntity::class,
+    VatTypeList::class,
+);

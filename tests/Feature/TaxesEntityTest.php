@@ -195,6 +195,36 @@ describe('Taxes Entity', function () {
         expect($response)->toBeInstanceOf(Error::class);
     });
 
+    it('normalizes due_date when editing a tax entry', function () {
+        $documentId = 1;
+
+        Http::fake([
+            'c/*/taxes/'.$documentId => Http::response([
+                'data' => [
+                    'id' => $documentId,
+                    'type' => 'expense',
+                    'entity' => ['name' => 'Updated S.R.L'],
+                ],
+            ], 200),
+        ]);
+
+        $api = new Taxes();
+        $response = $api->edit($documentId, [
+            'data' => [
+                'entity' => ['name' => 'Updated S.R.L'],
+                // Deliberately not zero-padded: edit() must normalize it
+                // before the request leaves.
+                'due_date' => '2026-8-24',
+            ],
+        ]);
+
+        expect($response)->toBeInstanceOf(TaxesEntity::class);
+
+        Http::assertSent(function ($request) {
+            return $request['data']['due_date'] === '2026-08-24';
+        });
+    });
+
     it('edits a tax entry', function () {
         $documentId = 1;
 
@@ -430,6 +460,16 @@ describe('Taxes Entity', function () {
             ->and($entity->type)->toBeNull();
     });
 
+    it('reports whether the taxes list has items', function () {
+        $withItems = new TaxesList(json_decode((new TaxesFakeResponse())->getTaxesFakeList()));
+        $emptyResponse = json_decode((new TaxesFakeResponse())->getTaxesFakeList());
+        $emptyResponse->data = [];
+        $empty = new TaxesList($emptyResponse);
+
+        expect($withItems->hasItems())->toBeTrue()
+            ->and($empty->hasItems())->toBeFalse();
+    });
+
     it('navigates taxes list to next page', function () {
         $taxesList = new TaxesList(json_decode(
             (new TaxesFakeResponse())->getTaxesFakeList([
@@ -534,4 +574,10 @@ describe('Taxes Entity', function () {
         expect($response)->toBeInstanceOf(TaxesEntity::class)
             ->and($response->id)->toBe($mergedId);
     });
-})->covers(Taxes::class);
+})->covers(
+    Taxes::class,
+    TaxesEntity::class,
+    TaxesAttachment::class,
+    TaxesList::class,
+    TaxesPagination::class,
+);

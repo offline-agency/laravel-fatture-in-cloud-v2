@@ -159,4 +159,5 @@ describe('Info List Entities', function () {
     InfoProductsCategoriesList::class,
     InfoReceivedDocumentCategoriesList::class,
     InfoRevenueCentersList::class,
+    Vat::class,
 );

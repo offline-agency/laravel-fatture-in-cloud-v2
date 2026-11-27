@@ -8,8 +8,8 @@ use OfflineAgency\LaravelFattureInCloudV2\FattureInCloud;
 use OfflineAgency\LaravelFattureInCloudV2\FattureInCloudManager;
 
 covers(
-    ConnectorInterface::class,
-    FattureInCloudManagerInterface::class,
+    FattureInCloud::class,
+    FattureInCloudManager::class,
 );
 
 describe('Contracts', function () {

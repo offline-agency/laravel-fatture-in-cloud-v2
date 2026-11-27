@@ -771,4 +771,14 @@ describe('Issued Document Entity', function () {
         expect($response)->toBeInstanceOf(IssuedDocumentEntity::class)
             ->and($response->id)->toBe($mergedId);
     });
-})->covers(IssuedDocument::class);
+})->covers(
+    IssuedDocument::class,
+    IssuedDocumentEntity::class,
+    IssuedDocumentAttachment::class,
+    IssuedDocumentEmail::class,
+    IssuedDocumentList::class,
+    IssuedDocumentPagination::class,
+    IssuedDocumentPreCreateInfo::class,
+    IssuedDocumentScheduleEmail::class,
+    IssuedDocumentTotals::class,
+);

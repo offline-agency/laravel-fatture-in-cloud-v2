@@ -146,4 +146,9 @@ describe('Issued E-Invoice Entity', function () {
         expect($entity->reason)->toBeNull()
             ->and($entity->code)->toBeNull();
     });
-})->covers(IssuedEInvoice::class);
+})->covers(
+    IssuedEInvoice::class,
+    IssuedEInvoiceRejectionReason::class,
+    IssuedEInvoiceSend::class,
+    IssuedEInvoiceVerifyXML::class,
+);

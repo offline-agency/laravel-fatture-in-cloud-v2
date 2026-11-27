@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Http;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Info;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\InfoList;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\PaymentAccount;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\PaymentAccount as PaymentAccountEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Info\Vat as VatEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Tests\Fake\InfoFakeResponse;
@@ -125,4 +126,8 @@ describe('Info Entity', function () {
         expect($entity->id)->toBeNull()
             ->and($entity->name)->toBeNull();
     });
-})->covers(Info::class);
+})->covers(
+    Info::class,
+    InfoList::class,
+    PaymentAccount::class,
+);

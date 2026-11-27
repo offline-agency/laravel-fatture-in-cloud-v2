@@ -49,6 +49,27 @@ describe('NormalizesDatesTrait', function () {
         'array' => [['2024-01-01']],
     ]);
 
+    it('normalizeDateToYmd lets an overflowing date roll over, as createFromFormat does', function () {
+        // Documents existing behaviour rather than endorsing it: February 30th rolls into March.
+        expect($this->helper->normalizeDateToYmd('2026-02-30'))->toBe('2026-03-02');
+    });
+
+    it('normalizeDateToYmd falls back to the DateTime constructor for other formats', function (string $input) {
+        expect($this->helper->normalizeDateToYmd($input))->toBe('2026-08-24');
+    })->with([
+        'slashes' => ['2026/08/24'],
+        'd-m-Y' => ['24-08-2026'],
+        'ISO 8601 with time' => ['2026-08-24T10:00:00+02:00'],
+    ]);
+
+    it('normalizeDateToYmd returns null for d/m/Y, which PHP reads as m/d/Y', function () {
+        expect($this->helper->normalizeDateToYmd('24/08/2026'))->toBeNull();
+    });
+
+    it('normalizeDateToYmd returns null for non-string scalars', function (mixed $input) {
+        expect($this->helper->normalizeDateToYmd($input))->toBeNull();
+    })->with(['float' => [1.5], 'bool' => [true]]);
+
     // --- isValidYmd ---
     it('isValidYmd returns true for valid zero-padded date', function () {
         expect($this->helper->isValidYmd('2024-01-15'))->toBeTrue();

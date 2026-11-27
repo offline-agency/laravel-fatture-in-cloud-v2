@@ -5,6 +5,7 @@ use Illuminate\Support\MessageBag;
 use OfflineAgency\LaravelFattureInCloudV2\Api\Cashbook;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\CashBook\CashbookEntry;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\CashBook\CashbookList;
+use OfflineAgency\LaravelFattureInCloudV2\Entities\CashBook\CashbookPagination;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\Error;
 
 describe('Cashbook', function () {
@@ -301,6 +302,21 @@ describe('Cashbook', function () {
         expect($cashbookList->getPagination()->goToNextPage())->toBeInstanceOf(CashbookList::class);
     });
 
+    it('returns a message bag when the next page url lacks the date range', function () {
+        $cashbookList = new CashbookList(json_decode(json_encode([
+            'data' => [['id' => 1, 'kind' => 'cashbook']],
+            // Cashbook::list() requires date_from and date_to, so a page URL
+            // without them cannot be followed: changePage() short-circuits.
+            'next_page_url' => 'https://fake_url/cashbook?per_page=10&page=2',
+        ])));
+
+        $response = $cashbookList->getPagination()->goToNextPage();
+
+        expect($response)->toBeInstanceOf(MessageBag::class)
+            ->messages()->toHaveKey('date_from')
+            ->messages()->toHaveKey('date_to');
+    });
+
     it('returns null navigating cashbook to next page when no next page url', function () {
         $cashbookList = new CashbookList(json_decode(json_encode([
             'data' => [['id' => 1]],
@@ -388,4 +404,9 @@ describe('Cashbook', function () {
         expect($entity->id)->toBeNull()
             ->and($entity->kind)->toBeNull();
     });
-})->covers(Cashbook::class);
+})->covers(
+    Cashbook::class,
+    CashbookEntry::class,
+    CashbookList::class,
+    CashbookPagination::class,
+);

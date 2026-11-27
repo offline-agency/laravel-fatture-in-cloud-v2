@@ -592,6 +592,16 @@ describe('Received Document Entity', function () {
             ->and((array) $parsed->additional_data)->toHaveKey('per_page', '10');
     });
 
+    it('reports whether the received document list has items', function () {
+        $withItems = new ReceivedDocumentList(json_decode((new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList()));
+        $emptyResponse = json_decode((new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList());
+        $emptyResponse->data = [];
+        $empty = new ReceivedDocumentList($emptyResponse);
+
+        expect($withItems->hasItems())->toBeTrue()
+            ->and($empty->hasItems())->toBeFalse();
+    });
+
     it('navigates received document list to next page', function () {
         $list = new ReceivedDocumentList(json_decode(
             (new ReceivedDocumentFakeResponse())->getReceivedDocumentsFakeList([
@@ -699,4 +709,12 @@ describe('Received Document Entity', function () {
         expect($entity->amount_due)->toBeNull()
             ->and($entity->payments_sum)->toBeNull();
     });
-})->covers(ReceivedDocument::class);
+})->covers(
+    ReceivedDocument::class,
+    ReceivedDocumentEntity::class,
+    ReceivedDocumentAttachment::class,
+    ReceivedDocumentList::class,
+    ReceivedDocumentPagination::class,
+    ReceivedDocumentPreCreateInfo::class,
+    ReceivedDocumentTotals::class,
+);
