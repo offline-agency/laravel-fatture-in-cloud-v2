@@ -1,13 +1,24 @@
 {
     "name": "offline-agency/laravel-fatture-in-cloud-v2",
-    "description": "A wrapper plugin with Fatture in Cloud Api V2 written in Laravel PHP",
+    "description": "Laravel SDK for the Fatture in Cloud API v2: invoices, e-invoicing (fatturazione elettronica), clients, products and more, with typed entities, auto-pagination, rate-limit handling and multi-company support.",
     "keywords": [
         "laravel",
-        "integration",
-        "api",
-        "fatture in cloud"
+        "laravel-package",
+        "laravel-boost",
+        "fatture-in-cloud",
+        "fattureincloud",
+        "fatture in cloud api",
+        "fatturazione elettronica",
+        "fattura elettronica",
+        "e-invoicing",
+        "invoicing",
+        "invoice",
+        "sdi",
+        "italy",
+        "api-client",
+        "sdk"
     ],
-    "homepage": "https://github.com/offline-agency/laravel-fatture-in-cloud-v2",
+    "homepage": "https://docs.offlineagency.com/laravel-fatture-in-cloud-v2/",
     "license": "MIT",
     "type": "library",
     "authors": [
@@ -16,20 +27,32 @@
             "email": "info@offlineagency.it"
         }
     ],
+    "support": {
+        "issues": "https://github.com/offline-agency/laravel-fatture-in-cloud-v2/issues",
+        "source": "https://github.com/offline-agency/laravel-fatture-in-cloud-v2",
+        "docs": "https://docs.offlineagency.com/laravel-fatture-in-cloud-v2/",
+        "security": "https://github.com/offline-agency/laravel-fatture-in-cloud-v2/security/policy"
+    },
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/offline-agency"
+        }
+    ],
     "require": {
         "php": "^8.4",
         "ext-json": "*",
         "guzzlehttp/guzzle": "^7.9",
-        "illuminate/container": "^11.0|^12.0|^13.0",
-        "illuminate/http": "^11.0|^12.0|^13.0",
-        "illuminate/support": "^11.0|^12.0|^13.0"
+        "illuminate/container": "^12.0|^13.0",
+        "illuminate/http": "^12.0|^13.0",
+        "illuminate/support": "^12.0|^13.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
         "larastan/larastan": "^3.1",
         "laravel/pint": "^1.29",
-        "orchestra/testbench": "^9.0|^10.0|^11.0",
-        "pestphp/pest": "^3.7",
+        "orchestra/testbench": "^10.0|^11.0",
+        "pestphp/pest": "^4.0|^5.0",
         "phpstan/phpstan": "^2.1"
     },
     "autoload": {
@@ -44,7 +67,7 @@
     },
     "scripts": {
         "test": "vendor/bin/pest --parallel",
-        "test:coverage": "vendor/bin/pest --parallel --coverage --min=80",
+        "test:coverage": "vendor/bin/pest --parallel --coverage --min=100",
         "format": "vendor/bin/pint",
         "format:test": "vendor/bin/pint --test",
         "analyse": "vendor/bin/phpstan analyse --no-progress",

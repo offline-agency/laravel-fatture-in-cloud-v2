@@ -1,0 +1,14 @@
+version: 2
+updates:
+  # Keep CI actions current. Composer dependencies are not tracked here: this is a
+  # library without a committed lockfile, and its version ranges are tested in CI
+  # with both highest and lowest resolvable versions.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      github-actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: "chore(ci)"
