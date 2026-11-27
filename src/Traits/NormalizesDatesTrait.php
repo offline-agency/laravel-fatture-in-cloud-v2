@@ -43,11 +43,6 @@ trait NormalizesDatesTrait
             return $date->format(self::DATE_FORMAT_YMD);
         }
 
-        $date = \DateTime::createFromFormat('Y-n-j', $value);
-        if ($date !== false) {
-            return $date->format(self::DATE_FORMAT_YMD);
-        }
-
         try {
             $date = new \DateTime($value);
 

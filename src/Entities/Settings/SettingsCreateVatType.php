@@ -7,6 +7,9 @@ namespace OfflineAgency\LaravelFattureInCloudV2\Entities\Settings;
 use OfflineAgency\LaravelFattureInCloudV2\Entities\AbstractEntity;
 use OfflineAgency\LaravelFattureInCloudV2\Traits\CastsFromMixed;
 
+/**
+ * @deprecated Not used by any API method of this package. Will be removed in 4.0.
+ */
 readonly class SettingsCreateVatType extends AbstractEntity
 {
     use CastsFromMixed;
